@@ -28,6 +28,9 @@ export interface User {
 
 export interface Sesion {
     accessToken:string?;
+    message:string;
+    url:string;
+    displayname:string;
 }
 
 export interface LoginDto {
