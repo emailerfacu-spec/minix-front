@@ -4,8 +4,8 @@
 	import { Content } from '@/components/ui/card';
   import { apiBase } from '@/stores/url';
 
-  $effect(async()=>{
-      await getPosts();
+  $effect(()=>{
+       getPosts();
   });
 
   let posts: Post[] = $state([]);
