@@ -31,7 +31,7 @@
 					<Button type="submit" class="w-full">Login</Button>
 
 					<FieldDescription class="text-center">
-						No tenes una cuenta? <a href="##">Registrate</a>
+						No tenes una cuenta? <a href="/register">Registrate</a>
 					</FieldDescription>
 				</Field>
 			</FieldGroup>
