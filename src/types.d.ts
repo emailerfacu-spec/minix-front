@@ -25,3 +25,19 @@ export interface User {
 	followingCount: number;
 	refreshTokens: RefreshToken[];
 }
+
+export interface Sesion {
+    accessToken:string?;
+}
+
+export interface LoginDto {
+    username: string?;
+    password: string?;
+}
+
+export interface RegisterDto {
+    username: string?;
+    email: string?;
+    password: string?;
+    displayName: string?;
+}

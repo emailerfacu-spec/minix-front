@@ -1,11 +1,11 @@
 import { writable } from 'svelte/store';
-import type { User } from '../../types';
+import type { Sesion } from '../../types';
 
-export const currentUser = writable<User | null>(null);
+export const currentSesion = writable<Sesion| null>(null);
 
-export const userStore = {
-	subscribe: currentUser.subscribe,
-	set: currentUser.set,
-	update: currentUser.update,
-	reset: () => currentUser.set(null)
+export const sesionStore = {
+	subscribe: currentSesion.subscribe,
+	set: currentSesion.set,
+	update: currentSesion.update,
+	reset: () => currentSesion.set(null)
 };
