@@ -23,7 +23,7 @@ export async function login(e:FormDataEvent,dto: LoginDto, callbackfn:()=>void){
         });
         if (req.ok) {
             const token = await req.json();
-            sesionStore.set({ accessToken: token })
+            sesionStore.set(token);
             goto("/")
         } else {
             callbackfn();
