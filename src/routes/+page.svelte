@@ -2,12 +2,29 @@
 	import Card from '@/components/ui/card/card.svelte';
 	import type { Post } from '../types';
 	import { Content } from '@/components/ui/card';
+  import { apiBase } from '@/stores/url';
 
-	interface Props {
-		posts: Post[];
-	}
+  $effect(()=>{
+       getPosts();
+  });
 
-	let { posts = [] }: Props = $props();
+  let posts: Post[] = $state([]);
+
+  async function getPosts() {
+	    const { subscribe } = apiBase;
+	    let baseUrl: string = '';
+
+	    subscribe((value) => {
+		      baseUrl = value;
+	    })();
+
+	    const req = await fetch(`${baseUrl}/api/posts/timeline?pageSize=3`);
+	    if (req.ok){
+          posts = await req.json();
+      }
+
+  }
+
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">

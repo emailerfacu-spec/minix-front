@@ -1,32 +1,44 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Card from '$lib/components/ui/card/index.js';
-	import * as Field from '$lib/components/ui/field/index.js';
+	import * as Card from '../components/ui/card';
+	import * as Field from '$lib/components/ui/field';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import type { ComponentProps } from 'svelte';
+	import type { RegisterDto } from '../../types';
+	import { register } from '@/hooks/register';
 
-	let { ...restProps }: ComponentProps<typeof Card.Root> = $props();
+  let {showAlert = $bindable() } = $props();
+
+  const setAlert = () => showAlert = true;
+
+  let dto: RegisterDto = $state({password: "", username: "", email:"", displayName: ""});
+
 </script>
 
-<Card.Root {...restProps}>
+<Card.Root>
 	<Card.Header>
 		<Card.Title>Registrarse</Card.Title>
 		<hr />
 	</Card.Header>
 	<Card.Content>
-		<form>
+		  <form onsubmit={(e)=>register(e, dto, setAlert)}>
 			<Field.Group>
 				<Field.Field>
-					<Field.Label for="name">Nombre Completo</Field.Label>
-					<Input id="name" type="text" placeholder="Juan Pepe" required />
+					<Field.Label for="name">Nombre de Usuario</Field.Label>
+					<Input id="name" bind:value={dto.username} type="text" placeholder="JPepe" required />
 				</Field.Field>
+
+				<Field.Field>
+					<Field.Label for="name">Nombre Visible</Field.Label>
+					<Input type="text" bind:value={dto.displayName} placeholder="Juan Pepe" required />
+				</Field.Field>
+
 				<Field.Field>
 					<Field.Label for="email">Email</Field.Label>
-					<Input id="email" type="email" placeholder="m@ejemplo.com" required />
+					<Input id="email" type="email" bind:value={dto.email} placeholder="m@ejemplo.com" required />
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="password">Contraseña</Field.Label>
-					<Input id="password" type="password" required />
+					<Input id="password" type="password" bind:value={dto.password} required />
 					<Field.Description>Debe de tener por lo menos 8 caracteres.</Field.Description>
 				</Field.Field>
 				<Field.Field>
