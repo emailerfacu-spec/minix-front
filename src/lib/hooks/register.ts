@@ -1,5 +1,4 @@
 import { apiBase } from "@/stores/url";
-import { sesionStore } from "@/stores/usuario";
 import { goto } from "$app/navigation";
 import type { RegisterDto } from "../../types";
 
@@ -24,9 +23,7 @@ export async function register(e:FormDataEvent,dto: RegisterDto, callbackfn:()=>
         });
         if (req.ok) {
             const data= await req.json();
-            goto("/login", { state: {
-                message: data.message,
-            }});
+            goto("/login?msg="+data.message);
         } else {
             callbackfn();
         }
