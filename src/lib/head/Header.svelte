@@ -7,6 +7,7 @@
 	import { sesionStore } from '@/stores/usuario';
 	import { onMount } from 'svelte';
 	import { apiBase } from '@/stores/url';
+	import { goto } from '$app/navigation';
 
 	let menuOpen = $state(false);
 	const toggleMenu = () => (menuOpen = !menuOpen);
@@ -40,6 +41,7 @@
           console.log("fallo el lougout")
       } finally{
           sesionStore.reset();
+          goto("/");
       }
 
   }
