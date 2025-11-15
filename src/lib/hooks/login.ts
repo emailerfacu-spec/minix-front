@@ -19,6 +19,7 @@ export async function login(e:FormDataEvent,dto: LoginDto, callbackfn:()=>void){
             headers:{
                 "Content-Type": "application/json"
             },
+            credentials: 'include',
             body: JSON.stringify(dto)
         });
         if (req.ok) {
