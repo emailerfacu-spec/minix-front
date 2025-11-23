@@ -16,7 +16,7 @@
 
 <DropdownMenu>
 	<DropdownMenuTrigger>
-		<Avatar>
+		<Avatar class="border-2 border-zinc-950">
 			<AvatarImage src={$sesionStore?.url} />
 			<AvatarFallback>{$sesionStore?.displayName[0]}</AvatarFallback>
 		</Avatar>
