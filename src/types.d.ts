@@ -27,10 +27,10 @@ export interface User {
 }
 
 export interface Sesion {
-    accessToken:string?;
-    message:string;
-    url:string;
-    displayname:string;
+	accessToken: string?;
+	message: string;
+	url: string;
+	displayName: string;
 }
 
 export interface LoginDto {
