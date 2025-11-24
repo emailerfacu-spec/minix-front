@@ -9,9 +9,10 @@
 	import CardFooter from '@/components/ui/card/card-footer.svelte';
 	import { posts, setPosts } from '@/stores/posts';
 
-	$effect(async () => {
-	  setPosts(await getPosts());
-
+	$effect(() => {
+		(async () => {
+			setPosts(await getPosts());
+		})();
 	});
 
 	async function getPosts() {
