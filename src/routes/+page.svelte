@@ -1,13 +1,11 @@
 <script lang="ts">
 	import Card from '@/components/ui/card/card.svelte';
-	import type { Post } from '../types';
 	import { Content } from '@/components/ui/card';
 	import { apiBase } from '@/stores/url';
 	import { sesionStore } from '@/stores/usuario';
 	import CrearPost from '@/components/crear-post.svelte';
-	import CardHeader from '@/components/ui/card/card-header.svelte';
-	import CardFooter from '@/components/ui/card/card-footer.svelte';
 	import { posts, setPosts } from '@/stores/posts';
+	import PostCard from '@/components/PostCard.svelte';
 
 	$effect(() => {
 		(async () => {
@@ -46,33 +44,7 @@
 				</Card>
 			{:else}
 				{#each $posts as post}
-					<Card>
-					    <CardHeader>
-							<div class="flex flex-col space-y-2">
-								<div class="flex items-center justify-between">
-									<span class="text-sm font-medium">{post.authorId}</span>
-									<span class="text-xs text-muted-foreground"
-										>{post.createdAt.replace("T", " ").split(".")[0]}</span
-									>
-								</div>
-							</div>
-						</CardHeader>
-						<Content>
-							<p class="text-sm">{post.content}</p>
-							{#if post.imageUrl}
-								<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
-							{/if}
-						</Content>
-						<CardFooter>
-							<div class="flex items-center justify-between pt-2 gap-2 text-xs text-muted-foreground">
-								<span>{post.likesCount} likes</span>
-								<span>{post.repliesCount} replies</span>
-								{#if post.isEdited}
-									<span>Editado</span>
-								{/if}
-							</div>
-						</CardFooter>
-					</Card>
+					<PostCard {post} />
 				{/each}
 			{/if}
 		</div>
