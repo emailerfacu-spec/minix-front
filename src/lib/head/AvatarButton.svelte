@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import AvatarFallback from '@/components/ui/avatar/avatar-fallback.svelte';
 	import AvatarImage from '@/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '@/components/ui/avatar/avatar.svelte';
@@ -23,9 +24,9 @@
 	</DropdownMenuTrigger>
 	<DropdownMenuContent>
 		<DropdownMenuGroup>
-			<DropdownMenuItem>
-				<a href={'/'}> Mi Perfil </a>
-			</DropdownMenuItem>
+			<DropdownMenuItem onclick={() => goto('/' + $sesionStore?.username)}
+				>Mi Perfil</DropdownMenuItem
+			>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem onclick={async () => await logout(menuOpen)}>Cerrar Sesion</DropdownMenuItem
 			>

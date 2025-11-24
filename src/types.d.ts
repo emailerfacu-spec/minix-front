@@ -32,6 +32,7 @@ export interface Sesion {
 	message: string;
 	url: string;
 	displayName: string;
+	username: string;
 }
 
 export interface LoginDto {
