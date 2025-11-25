@@ -1,6 +1,6 @@
 import { dev } from '$app/environment';
-import { writable } from 'svelte/store';
+import { readable } from 'svelte/store';
 
-export const apiBase = writable(
+export const apiBase = readable(
 	dev ? 'http://localhost:5000' : 'https://minix-back-dsuk.onrender.com'
 );

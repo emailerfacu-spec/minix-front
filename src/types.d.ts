@@ -1,6 +1,10 @@
 export interface Post {
 	_id: string;
+	id: string;
 	authorId: string;
+	authorDisplayName: string;
+	authorImageUrl: string;
+	authorName: string;
 	content: string;
 	imageUrl?: string;
 	parentPostId?: string;
@@ -51,4 +55,22 @@ export interface CreatePostDto {
 	content: string;
 	imageUrl: string?;
 	parentPostId: string?;
+}
+
+export interface PostResponseDto {
+	id: string;
+	authorId: string;
+	authorImageUrl: string?;
+	authorDisplayName: string;
+	authorName: string;
+	content: string;
+	imageUrl: string?;
+	parentPostId: string?;
+	likesCount: number;
+	repliesCount: number;
+	createdAt: string;
+	updatedAt: string?;
+	isEdited: boolean;
+	visibility: string;
+	hashtags: string[]?;
 }

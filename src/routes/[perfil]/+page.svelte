@@ -9,12 +9,19 @@
 	import type { Post } from '../../types.js';
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
 	import { fade, slide } from 'svelte/transition';
+	import PostCard from '@/components/PostCard.svelte';
+	import { posts, setPosts, updatePostStore } from '@/stores/posts.js';
+	import InputGroup from '@/components/ui/input-group/input-group.svelte';
+	import InputGroupTextarea from '@/components/ui/input-group/input-group-textarea.svelte';
+	import InputGroupAddon from '@/components/ui/input-group/input-group-addon.svelte';
+	import { updatePost } from '@/hooks/updatePost.js';
+	import ModalEditar from './modalEditar.svelte';
 
 	let { params } = $props();
 
-	let posts: Post[] = $state([]);
 	let cargando = $state(true);
 	let mensajeError = $state('');
+	let postAModificar: Post | null = $state(null);
 
 	const { subscribe } = apiBase;
 	let baseUrl: string = '';
@@ -33,7 +40,7 @@
 				method: 'GET'
 			});
 			if (req.ok) {
-				posts = await req.json();
+				setPosts(await req.json());
 				return;
 			}
 			mensajeError = 'Fallo al obtener los datos';
@@ -43,10 +50,23 @@
 			cargando = false;
 		}
 	}
+
+	async function handleEditar(e: SubmitEvent) {
+		e.preventDefault();
+		//		post.content = 'test';
+		if (postAModificar == null) return;
+		await updatePost(
+			postAModificar,
+			(postnuevo: Post) => updatePostStore(postAModificar!.id, postnuevo),
+
+			mensajeError
+		);
+		postAModificar = null;
+	}
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
-	<div class="w-full max-w-2xl">
+	<div class="w-full max-w-6xl">
 		<Card class="mb-2 overflow-hidden">
 			<CardContent>
 				<div class="flex justify-center">
@@ -87,6 +107,19 @@
 					</CardContent>
 				</Card>
 			</div>
+		{:else}
+			<div class="flex flex-col gap-2">
+				{#each $posts as post}
+					<div out:slide>
+						<PostCard {post} bind:postAModificar />
+					</div>
+				{/each}
+			</div>
 		{/if}
 	</div>
 </div>
+{#if postAModificar}
+	<div in:fade>
+		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
+	</div>
+{/if}

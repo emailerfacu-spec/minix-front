@@ -29,7 +29,7 @@
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
-	<div class="w-full max-w-2xl">
+	<div class="w-full max-w-6xl">
 		<div class="flex flex-col gap-2">
 			{#if $sesionStore !== null}
 				<CrearPost />

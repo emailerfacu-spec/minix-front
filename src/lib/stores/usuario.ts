@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Sesion } from '../../types';
 import { apiBase } from '@/stores/url';
@@ -29,7 +29,7 @@ if (browser) {
 if (browser) {
 	const refreshAccessToken = async () => {
 		try {
-			const response = await fetch(baseUrl + '/api/auth/refresh', {
+			const response = await fetch(get(apiBase) + '/api/auth/refresh', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
