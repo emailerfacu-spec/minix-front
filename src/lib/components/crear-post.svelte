@@ -30,7 +30,7 @@
 				//credentials: 'include',
 				headers: {
 					'Content-Type': 'application/json',
-					"Authorization": `Bearer ${$sesionStore?.accessToken}`
+					Authorization: `Bearer ${$sesionStore?.accessToken}`
 				},
 
 				body: JSON.stringify(data)
@@ -51,11 +51,21 @@
 			cargando = false;
 		}
 	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.ctrlKey && e.key === 'Enter') {
+			handlePost(e);
+		}
+	}
 </script>
 
 <form onsubmit={(e: Event) => handlePost(e)}>
 	<InputGroup>
-		<InputGroupTextarea bind:value={mensaje} maxlength="280" placeholder="Alguna novedad?"
+		<InputGroupTextarea
+			bind:value={mensaje}
+			maxlength="280"
+			placeholder="Alguna novedad?"
+			onkeydown={handleKeydown}
 		></InputGroupTextarea>
 
 		<InputGroupAddon align="block-end" class="bg-">
