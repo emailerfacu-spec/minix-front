@@ -109,8 +109,8 @@
 			</div>
 		{:else}
 			<div class="flex flex-col gap-2">
-				{#each $posts as post}
-					<div out:slide>
+				{#each $posts as post (post.id)}
+					<div transition:slide>
 						<PostCard {post} bind:postAModificar />
 					</div>
 				{/each}
