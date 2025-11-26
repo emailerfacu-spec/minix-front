@@ -63,7 +63,7 @@
 	<InputGroup>
 		<InputGroupTextarea
 			bind:value={mensaje}
-			maxlength="280"
+			maxlength={280}
 			placeholder="Alguna novedad?"
 			onkeydown={handleKeydown}
 		></InputGroupTextarea>
