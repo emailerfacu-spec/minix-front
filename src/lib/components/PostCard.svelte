@@ -26,7 +26,6 @@
 	import DialogHeader from './ui/dialog/dialog-header.svelte';
 	import DialogTitle from './ui/dialog/dialog-title.svelte';
 	import DialogDescription from './ui/dialog/dialog-description.svelte';
-	import { updatePost } from '@/hooks/updatePost';
 	import { sesionStore } from '@/stores/usuario';
 
 	interface postProp {
