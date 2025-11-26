@@ -4,8 +4,11 @@
 	import { apiBase } from '@/stores/url';
 	import { sesionStore } from '@/stores/usuario';
 	import CrearPost from '@/components/crear-post.svelte';
-	import { posts, setPosts } from '@/stores/posts';
+	import { posts, setPosts, updatePostStore } from '@/stores/posts';
 	import PostCard from '@/components/PostCard.svelte';
+	import type { Post } from '../types';
+	import ModalEditar from './[perfil]/modalEditar.svelte';
+	import { updatePost } from '@/hooks/updatePost';
 
 	$effect(() => {
 		(async () => {
@@ -26,6 +29,21 @@
 			return await req.json();
 		}
 	}
+
+	let postAModificar: Post | null = $state(null);
+	let mensajeError = $state('');
+
+	async function handleEditar(e: SubmitEvent) {
+		e.preventDefault();
+		if (postAModificar == null) return;
+		await updatePost(
+			postAModificar,
+			(postnuevo: Post) => updatePostStore(postAModificar!.id, postnuevo),
+
+			mensajeError
+		);
+		postAModificar = null;
+	}
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
@@ -44,9 +62,14 @@
 				</Card>
 			{:else}
 				{#each $posts as post}
-					<PostCard {post} />
+					<PostCard {post} bind:postAModificar />
 				{/each}
 			{/if}
 		</div>
 	</div>
 </div>
+{#if postAModificar}
+	<div in:fade>
+		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
+	</div>
+{/if}
