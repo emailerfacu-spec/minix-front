@@ -9,6 +9,7 @@
 	import type { Post } from '../types';
 	import ModalEditar from './[perfil]/modalEditar.svelte';
 	import { updatePost } from '@/hooks/updatePost';
+	import { fade, slide } from 'svelte/transition';
 
 	$effect(() => {
 		(async () => {
@@ -61,8 +62,10 @@
 					</Content>
 				</Card>
 			{:else}
-				{#each $posts as post}
-					<PostCard {post} bind:postAModificar />
+				{#each $posts as post (post.id)}
+					<div transition:slide>
+						<PostCard {post} bind:postAModificar />
+					</div>
 				{/each}
 			{/if}
 		</div>
