@@ -10,6 +10,9 @@
 	import { sesionStore } from '@/stores/usuario';
 	import type { CreatePostDto } from '../../types';
 	import { addPost } from '@/stores/posts';
+	import { Tooltip, TooltipProvider } from './ui/tooltip';
+	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
+	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 
 	let mensaje = $state('');
 
@@ -76,15 +79,24 @@
 					</p>
 					/ 280
 				</Kbd>
-				<InputGroupButton
-					variant="default"
-					type="submit"
-					class="transform rounded-full transition-transform ease-in hover:scale-120"
-					size="xs"
-				>
-					<p>Publicar</p>
-					<ArrowUpIcon />
-				</InputGroupButton>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger class="*: flex">
+							<InputGroupButton
+								variant="default"
+								type="submit"
+								class="transform rounded-full transition-transform ease-in hover:scale-120"
+								size="xs"
+							>
+								<p>Publicar</p>
+								<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+							</InputGroupButton>
+						</TooltipTrigger>
+						<TooltipContent>
+							<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</div>
 		</InputGroupAddon>
 	</InputGroup>

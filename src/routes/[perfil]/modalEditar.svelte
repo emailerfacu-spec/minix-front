@@ -11,6 +11,9 @@
 	import DialogDescription from '@/components/ui/dialog/dialog-description.svelte';
 	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
+	import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
+	import TooltipTrigger from '@/components/ui/tooltip/tooltip-trigger.svelte';
+	import TooltipContent from '@/components/ui/tooltip/tooltip-content.svelte';
 
 	interface Props {
 		post: Post | null;
@@ -53,15 +56,26 @@
 								</p>
 								/ 280
 							</Kbd>
-							<InputGroupButton
-								variant="default"
-								type="submit"
-								class="transform rounded-full transition-transform ease-in hover:scale-120"
-								size="xs"
-							>
-								<p>Modificar</p>
-								<ArrowUpIcon />
-							</InputGroupButton>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger>
+										<InputGroupButton
+											variant="default"
+											type="submit"
+											class="transform rounded-full transition-transform ease-in hover:scale-120"
+											size="xs"
+										>
+											<p class="flex items-center gap-1">
+												Modificar
+												<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+											</p>
+										</InputGroupButton>
+									</TooltipTrigger>
+									<TooltipContent>
+										<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</div>
 					</InputGroupAddon>
 				</InputGroup>
