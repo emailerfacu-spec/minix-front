@@ -85,6 +85,7 @@
 						<TooltipTrigger class="*: flex">
 							<InputGroupButton
 								variant="default"
+								disabled={cargando}
 								type="submit"
 								class="transform rounded-full transition-transform ease-in hover:scale-120"
 								size="xs"
