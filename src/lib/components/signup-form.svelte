@@ -5,8 +5,11 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import type { RegisterDto } from '../../types';
 	import { register } from '@/hooks/register';
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 
   let {showAlert = $bindable() } = $props();
+
+  let cargando = $state(false);
 
   const setAlert = () => showAlert = true;
 
@@ -48,7 +51,14 @@
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
-						<Button type="submit">Crear Cuenta</Button>
+						<Button type="submit">
+							{#if cargando}
+								<Loader2Icon class="animate-spin" />
+								Creando Cuenta...
+							{:else}
+								Crear Cuenta
+							{/if}
+						</Button>
 						<Field.Description class="px-6 text-center">
 							Tenes una cuenta? <a href="/login">Iniciar Sesion</a>
 						</Field.Description>
