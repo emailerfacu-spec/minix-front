@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { apiBase } from '@/stores/url';
 	import Ban from '@lucide/svelte/icons/ban';
+	import PenLine from '@lucide/svelte/icons/pen-line';
 	import Card from '@/components/ui/card/card.svelte';
 	import Avatar from '@/components/ui/avatar/avatar.svelte';
 	import AvatarImage from '@/components/ui/avatar/avatar-image.svelte';
@@ -14,12 +15,21 @@
 	import { updatePost } from '@/hooks/updatePost.js';
 	import ModalEditar from './modalEditar.svelte';
 	import { page } from '$app/state';
+	import Button from '@/components/ui/button/button.svelte';
+	import { Dialog } from '@/components/ui/dialog/index.js';
+	import CrearPost from '@/components/crear-post.svelte';
+	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
+	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
+	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
 
 	let { params } = $props();
 
 	let cargando = $state(true);
 	let mensajeError = $state('');
 	let postAModificar: Post | null = $state(null);
+
+	let showCrearPost = $state(false);
+	const toggleCrearPost = () => (showCrearPost = !showCrearPost);
 
 	const { subscribe } = apiBase;
 	let baseUrl: string = '';
@@ -83,7 +93,22 @@
 				</h3>
 			</CardContent>
 		</Card>
-		<h1 class="mt-10 scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl">Posts:</h1>
+
+		<h1
+			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
+		>
+			Posts:
+			<Button
+				variant="ghost"
+				class="m-1 rounded-full bg-blue-600"
+				onclick={() => {
+					showCrearPost = true;
+				}}
+			>
+				<PenLine />
+			</Button>
+		</h1>
+
 		<hr class="mb-8" />
 		{#if cargando}
 			<div out:slide>
@@ -121,3 +146,20 @@
 		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
+
+<div transition:fade>
+	<Dialog open={showCrearPost}>
+		<DialogHeader>
+			<DialogTitle>Crear Publicacion</DialogTitle>
+		</DialogHeader>
+		<DialogContent
+			onkeydown={(e: KeyboardEvent) => {
+				if (e.ctrlKey && e.key === 'Enter') {
+					showCrearPost = false;
+				}
+			}}
+		>
+			<CrearPost />
+		</DialogContent>
+	</Dialog>
+</div>
