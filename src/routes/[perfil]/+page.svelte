@@ -21,6 +21,7 @@
 	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
 	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
+	import { sesionStore } from '@/stores/usuario.js';
 
 	let { params } = $props();
 
@@ -98,15 +99,17 @@
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>
 			Posts:
-			<Button
-				variant="ghost"
-				class="m-1 rounded-full bg-blue-600"
-				onclick={() => {
-					showCrearPost = true;
-				}}
-			>
-				<PenLine />
-			</Button>
+			{#if params.perfil == $sesionStore?.username}
+				<Button
+					variant="ghost"
+					class="m-1 rounded-full bg-blue-600"
+					onclick={() => {
+						showCrearPost = true;
+					}}
+				>
+					<PenLine />
+				</Button>
+			{/if}
 		</h1>
 
 		<hr class="mb-8" />
@@ -148,10 +151,7 @@
 {/if}
 
 <div transition:fade>
-	<Dialog open={showCrearPost}>
-		<DialogHeader>
-			<DialogTitle>Crear Publicacion</DialogTitle>
-		</DialogHeader>
+	<Dialog open={showCrearPost} onOpenChange={() => (showCrearPost = false)}>
 		<DialogContent
 			onkeydown={(e: KeyboardEvent) => {
 				if (e.ctrlKey && e.key === 'Enter') {
@@ -159,6 +159,7 @@
 				}
 			}}
 		>
+			<DialogTitle>Crear Publicacion</DialogTitle>
 			<CrearPost />
 		</DialogContent>
 	</Dialog>
