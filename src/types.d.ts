@@ -74,3 +74,15 @@ export interface PostResponseDto {
 	visibility: string;
 	hashtags: string[]?;
 }
+
+export interface UserResponseDto {
+	id: string;
+	username: string;
+	displayName: string;
+	email: string;
+	bio: string;
+	profileImageUrl: string;
+	followersCount: number;
+	followingCount: number;
+	createdAt: string;
+}

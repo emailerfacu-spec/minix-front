@@ -11,11 +11,9 @@
 	import { fade, slide } from 'svelte/transition';
 	import PostCard from '@/components/PostCard.svelte';
 	import { posts, setPosts, updatePostStore } from '@/stores/posts.js';
-	import InputGroup from '@/components/ui/input-group/input-group.svelte';
-	import InputGroupTextarea from '@/components/ui/input-group/input-group-textarea.svelte';
-	import InputGroupAddon from '@/components/ui/input-group/input-group-addon.svelte';
 	import { updatePost } from '@/hooks/updatePost.js';
 	import ModalEditar from './modalEditar.svelte';
+	import { page } from '$app/state';
 
 	let { params } = $props();
 
@@ -78,7 +76,7 @@
 				<h1
 					class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl"
 				>
-					{'test'}
+					{page.data.displayName}
 				</h1>
 				<h3 class="scroll-m-20 text-center text-2xl tracking-tight text-muted-foreground">
 					@{params.perfil}
