@@ -27,6 +27,11 @@
 			<DropdownMenuItem onclick={() => goto('/' + $sesionStore?.username)}
 				>Mi Perfil</DropdownMenuItem
 			>
+			<!-- WIP -->
+			{#if true}
+				<DropdownMenuItem onclick={() => goto('/admin')}>Menu Admin</DropdownMenuItem>
+			{/if}
+
 			<DropdownMenuSeparator />
 			<DropdownMenuItem onclick={async () => await logout(menuOpen)}>Cerrar Sesion</DropdownMenuItem
 			>
