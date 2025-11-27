@@ -4,6 +4,7 @@
 	import InputGroupTextarea from './ui/input-group/input-group-textarea.svelte';
 	import InputGroup from './ui/input-group/input-group.svelte';
 	import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import Kbd from './ui/kbd/kbd.svelte';
 
 	import { apiBase } from '@/stores/url';
@@ -88,8 +89,13 @@
 								class="transform rounded-full transition-transform ease-in hover:scale-120"
 								size="xs"
 							>
-								<p>Publicar</p>
-								<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+								{#if cargando}
+									<Loader2Icon class="animate-spin" />
+									Publicando...
+								{:else}
+									Publicar
+									<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+								{/if}
 							</InputGroupButton>
 						</TooltipTrigger>
 						<TooltipContent>
