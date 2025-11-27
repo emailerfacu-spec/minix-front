@@ -37,6 +37,7 @@ export interface Sesion {
 	url: string;
 	displayName: string;
 	username: string;
+	isAdmin: boolean;
 }
 
 export interface LoginDto {

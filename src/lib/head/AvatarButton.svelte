@@ -27,8 +27,7 @@
 			<DropdownMenuItem onclick={() => goto('/' + $sesionStore?.username)}
 				>Mi Perfil</DropdownMenuItem
 			>
-			<!-- WIP -->
-			{#if true}
+			{#if $sesionStore?.isAdmin}
 				<DropdownMenuItem onclick={() => goto('/admin')}>Menu Admin</DropdownMenuItem>
 			{/if}
 
