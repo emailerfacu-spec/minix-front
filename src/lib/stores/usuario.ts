@@ -91,4 +91,5 @@ if (browser) {
 	};
 
 	setInterval(refreshAccessToken, 30 * 1000); // Check every 30 seconds
+	refreshAccessToken();
 }
