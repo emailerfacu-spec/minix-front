@@ -4,7 +4,7 @@ import { redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { UserResponseDto } from '../../../types.js';
 
-export const ssr = true;
+export const ssr = false;
 
 export async function load({}) {
 	const response = await fetch(get(apiBase) + '/api/admin/users', {
