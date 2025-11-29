@@ -11,7 +11,7 @@
 	import { sesionStore } from '@/stores/usuario';
 	import type { CreatePostDto } from '../../types';
 	import { addPost } from '@/stores/posts';
-	import { Tooltip, TooltipProvider } from './ui/tooltip';
+	import { Tooltip } from './ui/tooltip';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 
@@ -80,30 +80,28 @@
 					</p>
 					/ 280
 				</Kbd>
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger class="*: flex">
-							<InputGroupButton
-								variant="default"
-								disabled={cargando}
-								type="submit"
-								class="transform rounded-full transition-transform ease-in hover:scale-120"
-								size="xs"
-							>
-								{#if cargando}
-									<Loader2Icon class="animate-spin" />
-									Publicando...
-								{:else}
-									Publicar
-									<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
-								{/if}
-							</InputGroupButton>
-						</TooltipTrigger>
-						<TooltipContent>
-							<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger class="*: flex">
+						<InputGroupButton
+							variant="default"
+							disabled={cargando}
+							type="submit"
+							class="transform rounded-full transition-transform ease-in hover:scale-120"
+							size="xs"
+						>
+							{#if cargando}
+								<Loader2Icon class="animate-spin" />
+								Publicando...
+							{:else}
+								Publicar
+								<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+							{/if}
+						</InputGroupButton>
+					</TooltipTrigger>
+					<TooltipContent>
+						<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
+					</TooltipContent>
+				</Tooltip>
 			</div>
 		</InputGroupAddon>
 	</InputGroup>
