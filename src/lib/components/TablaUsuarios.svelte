@@ -54,7 +54,7 @@
 			<TableRow>
 				<TableCell>@{usuario.username}</TableCell>
 				<TableCell>{usuario.displayName}</TableCell>
-				<TableCell>?</TableCell>
+				<TableCell class="text-center">{usuario.postsCount}</TableCell>
 				<TableCell>{usuario.createdAt.replace('Z', ' ').replace('T', ' | ')}</TableCell>
 				<TableCell class="flex gap-2">
 					<Tooltip>

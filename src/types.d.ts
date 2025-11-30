@@ -87,4 +87,5 @@ export interface UserResponseDto {
 	followersCount: number;
 	followingCount: number;
 	createdAt: string;
+	postsCount: number;
 }
