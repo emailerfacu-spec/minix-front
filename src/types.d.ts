@@ -15,6 +15,7 @@ export interface Post {
 	isEdited: boolean;
 	visibility: string;
 	hashtags?: string[];
+	isLiked: boolean;
 }
 
 export interface User {
