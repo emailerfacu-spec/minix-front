@@ -52,7 +52,11 @@
 	<TableBody>
 		{#each usuarios as usuario}
 			<TableRow>
-				<TableCell>@{usuario.username}</TableCell>
+				<TableCell
+					>@<a href={'/' + usuario.username}>
+						{usuario.username}
+					</a>
+				</TableCell>
 				<TableCell>{usuario.displayName}</TableCell>
 				<TableCell class="text-center">{usuario.postsCount}</TableCell>
 				<TableCell>{usuario.createdAt.replace('Z', ' ').replace('T', ' | ')}</TableCell>
