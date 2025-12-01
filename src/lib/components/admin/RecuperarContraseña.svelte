@@ -82,7 +82,7 @@
 </div>
 <div transition:fade>
 	<Dialog open={openMensaje} onOpenChange={() => (openMensaje = false)}>
-		{$inspect(error)}
+		<!-- {$inspect(error)} -->
 		<DialogContent>{error === '' ? 'Se modificó el usuario' : error}</DialogContent>
 	</Dialog>
 </div>
