@@ -8,6 +8,7 @@
 	import type { UserResponseDto } from '../../types';
 	import Button from './ui/button/button.svelte';
 	import KeyIcon from '@lucide/svelte/icons/key';
+	import UserPen from '@lucide/svelte/icons/user-pen';
 	import { Tooltip } from './ui/tooltip';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
@@ -22,6 +23,7 @@
 	let { usuarios }: Props = $props();
 
 	let open = $state(false);
+	const openModificarUsuario = $state(false);
 
 	//si ponia contraseña en español quedaba muy largo el nombre
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
@@ -69,7 +71,14 @@
 							<p>Recuperar Contraseña</p>
 						</TooltipContent>
 					</Tooltip>
-					<Button></Button>
+					<Tooltip>
+						<TooltipTrigger>
+							<Button><UserPen /></Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>Modificar Usuario</p>
+						</TooltipContent>
+					</Tooltip>
 					<Button></Button>
 				</TableCell>
 			</TableRow>
