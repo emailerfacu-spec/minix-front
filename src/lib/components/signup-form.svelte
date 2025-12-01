@@ -13,8 +13,14 @@
 
   const setAlert = () => showAlert = true;
 
+
   let dto: RegisterDto = $state({password: "", username: "", email:"", displayName: ""});
 
+const handleSubmit = async (e: Event) => {
+	cargando = true;
+	await register(e, dto, setAlert);
+	cargando = false;
+}
 </script>
 
 <Card.Root>
@@ -23,7 +29,7 @@
 		<hr />
 	</Card.Header>
 	<Card.Content>
-		  <form onsubmit={(e)=>register(e, dto, setAlert)}>
+		  <form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
 					<Field.Label for="name">Nombre de Usuario</Field.Label>
@@ -51,10 +57,10 @@
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
-						<Button type="submit">
+						<Button type="submit" disabled={cargando}>
 							{#if cargando}
-								<Loader2Icon class="animate-spin" />
 								Creando Cuenta...
+								<Loader2Icon class="animate-spin" />
 							{:else}
 								Crear Cuenta
 							{/if}
