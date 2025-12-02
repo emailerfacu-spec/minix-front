@@ -7,20 +7,19 @@
 	import { register } from '@/hooks/register';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 
-  let {showAlert = $bindable() } = $props();
+	let { showAlert = $bindable() } = $props();
 
-  let cargando = $state(false);
+	let cargando = $state(false);
 
-  const setAlert = () => showAlert = true;
+	const setAlert = () => (showAlert = true);
 
+	let dto: RegisterDto = $state({ password: '', username: '', email: '', displayName: '' });
 
-  let dto: RegisterDto = $state({password: "", username: "", email:"", displayName: ""});
-
-const handleSubmit = async (e: Event) => {
-	cargando = true;
-	await register(e, dto, setAlert);
-	cargando = false;
-}
+	const handleSubmit = async (e: SubmitEvent) => {
+		cargando = true;
+		await register(e, dto, setAlert);
+		cargando = false;
+	};
 </script>
 
 <Card.Root>
@@ -29,7 +28,7 @@ const handleSubmit = async (e: Event) => {
 		<hr />
 	</Card.Header>
 	<Card.Content>
-		  <form onsubmit={handleSubmit}>
+		<form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
 					<Field.Label for="name">Nombre de Usuario</Field.Label>
@@ -43,7 +42,13 @@ const handleSubmit = async (e: Event) => {
 
 				<Field.Field>
 					<Field.Label for="email">Email</Field.Label>
-					<Input id="email" type="email" bind:value={dto.email} placeholder="m@ejemplo.com" required />
+					<Input
+						id="email"
+						type="email"
+						bind:value={dto.email}
+						placeholder="m@ejemplo.com"
+						required
+					/>
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="password">Contraseña</Field.Label>
