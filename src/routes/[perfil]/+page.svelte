@@ -81,7 +81,7 @@
 				<div class="flex justify-center">
 					<Avatar class="mt-2 scale-250 border-2 border-slate-950">
 						<AvatarImage></AvatarImage>
-						<AvatarFallback>{params.perfil[0].toUpperCase()}</AvatarFallback>
+						<AvatarFallback>{page.data.displayName[0].toUpperCase()}</AvatarFallback>
 					</Avatar>
 				</div>
 				<h1
