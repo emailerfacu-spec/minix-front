@@ -3,7 +3,7 @@ import type { LoginDto } from "../../types";
 import { sesionStore } from "@/stores/usuario";
 import { goto } from "$app/navigation";
 
-export async function login(e:FormDataEvent,dto: LoginDto, callbackfn:()=>void){
+export async function login(e:SubmitEvent, dto: LoginDto, callbackfn:()=>void){
     e.preventDefault();
     if (dto.password == "" || dto.username == "") return;
     try {

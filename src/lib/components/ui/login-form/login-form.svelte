@@ -6,19 +6,19 @@
 	import type { LoginDto } from '../../../../types';
 	import { login } from '@/hooks/login';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
-  let {id, showAlert = $bindable() } = $props();
+	let { id, showAlert = $bindable() } = $props();
 
-  let dto: LoginDto = $state({password: "", username: ""});
+	let dto: LoginDto = $state({ password: '', username: '' });
 
-  const setAlert = () => showAlert = true;
+	const setAlert = () => (showAlert = true);
 
-  let cargando = $state(false);
+	let cargando = $state(false);
 
-  const handleSubmit = async (e: Event) => {
+	const handleSubmit = async (e: SubmitEvent) => {
 		cargando = true;
 		await login(e, dto, setAlert);
 		cargando = false;
-	}
+	};
 </script>
 
 <Card.Root class="mx-auto w-full max-w-sm">
@@ -27,7 +27,7 @@
 		<Card.Description>ingrese su usuario para logearse en la cuenta</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		  <form onsubmit={handleSubmit}>
+		<form onsubmit={handleSubmit}>
 			<FieldGroup>
 				<Field>
 					<FieldLabel for="email-{id}">Usuario</FieldLabel>
