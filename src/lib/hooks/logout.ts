@@ -1,14 +1,15 @@
 import { goto } from '$app/navigation';
 import { apiBase } from '@/stores/url';
 import { sesionStore } from '@/stores/usuario';
+import { get } from 'svelte/store';
 
 export async function logout(menuOpen: boolean) {
 	try {
-		const req = await fetch($apiBase + '/api/auth/logout', {
+		const req = await fetch(get(apiBase) + '/api/auth/logout', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${$sesionStore.accessToken}`
+				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
 			},
 			credentials: 'include'
 		});
