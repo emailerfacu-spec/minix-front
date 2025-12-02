@@ -3,7 +3,7 @@ import { get } from 'svelte/store';
 import { sesionStore } from '@/stores/usuario';
 import type { Post } from '../../types';
 
-export async function likePublicacion(post: Post) {
+export async function likePost(post: Post) {
 	try {
 		const req = await fetch(get(apiBase) + `/api/posts/${post.id}/like`, {
 			method: post.isLiked ? 'DELETE' : 'POST',

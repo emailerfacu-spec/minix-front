@@ -29,7 +29,7 @@
 	import DialogTitle from './ui/dialog/dialog-title.svelte';
 	import DialogDescription from './ui/dialog/dialog-description.svelte';
 	import { sesionStore } from '@/stores/usuario';
-	import { likePublicacion } from '@/hooks/likePublicacion';
+	import { likePost } from '@/hooks/likePost';
 
 	interface postProp {
 		post: Post;
@@ -61,7 +61,7 @@
 
 	async function likeHandler() {
 		cargandoLike = true;
-		let { message, ok } = await likePublicacion(post);
+		let { message, ok } = await likePost(post);
 		if (ok) {
 			if (post.isLiked) {
 				post.likesCount--;
