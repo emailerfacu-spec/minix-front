@@ -1,15 +1,7 @@
 <script lang="ts">
 	import CardContent from '@/components/ui/card/card-content.svelte';
 	import Card from '@/components/ui/card/card.svelte';
-	import TableBody from '@/components/ui/table/table-body.svelte';
-	import TableHead from '@/components/ui/table/table-head.svelte';
-	import TableHeader from '@/components/ui/table/table-header.svelte';
-	import TableRow from '@/components/ui/table/table-row.svelte';
-	import Table from '@/components/ui/table/table.svelte';
-	import type { User } from '../../../types';
 	import CardDescription from '@/components/ui/card/card-description.svelte';
-	import Spinner from '@/components/ui/spinner/spinner.svelte';
-	import TableCell from '@/components/ui/table/table-cell.svelte';
 	import { page } from '$app/state';
 	import TablaUsuarios from '@/components/TablaUsuarios.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
