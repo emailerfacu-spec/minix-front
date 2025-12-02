@@ -15,18 +15,22 @@
 	import RecuperarContraseña from './admin/RecuperarContraseña.svelte';
 	import { Dialog } from './ui/dialog';
 	import DialogContent from './ui/dialog/dialog-content.svelte';
+	import ModificarUsuario from './admin/ModificarUsuario.svelte';
+	import { fade } from 'svelte/transition';
 
 	interface Props {
 		usuarios: UserResponseDto[];
 	}
 
-	let { usuarios }: Props = $props();
+	let { usuarios = $bindable() }: Props = $props();
 
 	let open = $state(false);
-	const openModificarUsuario = $state(false);
+	let openModificarUsuario = $state(false);
 
 	//si ponia contraseña en español quedaba muy largo el nombre
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
+
+	let usuarioModificar: UserResponseDto | null = $state(null);
 
 	$effect(() => {
 		if (!open) {
@@ -38,9 +42,13 @@
 		open = true;
 		usuarioCambioPass = usuario;
 	}
+
+	function handleModificar(usuario: UserResponseDto) {
+		openModificarUsuario = true;
+		usuarioModificar = usuario;
+	}
 </script>
 
-<!-- {$inspect(usuarios)} -->
 <Table>
 	<TableHeader>
 		<TableRow>
@@ -73,7 +81,7 @@
 					</Tooltip>
 					<Tooltip>
 						<TooltipTrigger>
-							<Button><UserPen /></Button>
+							<Button onclick={() => handleModificar(usuario)}><UserPen /></Button>
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>Modificar Usuario</p>
@@ -86,3 +94,4 @@
 	</TableBody>
 </Table>
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
+<ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />

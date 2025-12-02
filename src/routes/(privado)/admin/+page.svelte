@@ -8,6 +8,7 @@
 	import CardHeader from '@/components/ui/card/card-header.svelte';
 
 	let cargando = $state(true);
+	let usuarios = $state(page.data.usuarios);
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
@@ -22,15 +23,9 @@
 			</CardHeader>
 			<CardContent>
 				{#if page.data.usuarios.length === 0}
-					{#if page.data.error}
-						<CardDescription class="flex items-center justify-center space-x-2 text-destructive">
-							<span class="text-sm">Error al cargar usuarios.</span>
-						</CardDescription>
-					{:else}
-						<CardDescription>No hay posts que mostar</CardDescription>
-					{/if}
+					<CardDescription>No hay posts que mostar</CardDescription>
 				{:else}
-					<TablaUsuarios usuarios={page.data.usuarios}></TablaUsuarios>
+					<TablaUsuarios bind:usuarios></TablaUsuarios>
 				{/if}
 			</CardContent>
 		</Card>
