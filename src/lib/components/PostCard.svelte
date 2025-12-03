@@ -136,6 +136,7 @@
 		<div class="-mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
 			<Button
 				variant="ghost"
+				disabled={!$sesionStore?.accessToken}
 				class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg"
 				onclick={() => likeHandler()}
 			>
