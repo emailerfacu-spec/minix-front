@@ -22,6 +22,9 @@
 	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
 	import { sesionStore } from '@/stores/usuario.js';
+	import CardHeader from '@/components/ui/card/card-header.svelte';
+	import CardTitle from '@/components/ui/card/card-title.svelte';
+	import Badge from '@/components/ui/badge/badge.svelte';
 
 	let { params } = $props();
 
@@ -62,7 +65,6 @@
 
 	async function handleEditar(e: SubmitEvent) {
 		e.preventDefault();
-		//		post.content = 'test';
 		if (postAModificar == null) return;
 		await updatePost(
 			postAModificar,
@@ -76,24 +78,53 @@
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		<Card class="mb-2 overflow-hidden">
-			<CardContent>
-				<div class="flex justify-center">
-					<Avatar class="mt-2 scale-250 border-2 border-slate-950">
-						<AvatarImage></AvatarImage>
-						<AvatarFallback>{page.data.displayName[0].toUpperCase()}</AvatarFallback>
-					</Avatar>
-				</div>
-				<h1
-					class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl"
-				>
-					{page.data.displayName}
-				</h1>
-				<h3 class="scroll-m-20 text-center text-2xl tracking-tight text-muted-foreground">
-					@{params.perfil}
-				</h3>
-			</CardContent>
-		</Card>
+		<div class="flex gap-2">
+			<Card class="mb-2 flex w-3/4 overflow-hidden">
+				<CardContent>
+					<div class="flex justify-center">
+						<Avatar class="mt-2 scale-250 border-2 border-slate-950">
+							<AvatarImage></AvatarImage>
+							<AvatarFallback>{page.data.displayName?.[0]?.toUpperCase() || ''}</AvatarFallback>
+						</Avatar>
+					</div>
+					<h1
+						class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl"
+					>
+						{page.data.displayName}
+					</h1>
+					<h3 class="scroll-m-20 text-center text-2xl tracking-tight text-muted-foreground">
+						@{params.perfil}
+					</h3>
+					<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
+						{page.data.bio}
+					</p>
+				</CardContent>
+			</Card>
+			<aside class="flex w-1/4 flex-col gap-2">
+				<Card class="w-full">
+					<CardContent>
+						<CardHeader class="flex justify-between">
+							<CardTitle>Seguidores:</CardTitle>
+							<Badge variant="secondary">{page.data.seguidos.length}</Badge>
+						</CardHeader>
+						<CardContent>
+							<!-- Seguidos -->
+						</CardContent>
+					</CardContent>
+				</Card>
+				<Card class="w-full">
+					<CardContent>
+						<CardHeader class="flex justify-between">
+							<CardTitle>Seguidos:</CardTitle>
+							<Badge variant="secondary">{page.data.seguidores.length}</Badge>
+						</CardHeader>
+						<CardContent>
+							<!-- Seguidores -->
+						</CardContent>
+					</CardContent>
+				</Card>
+			</aside>
+		</div>
 
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
