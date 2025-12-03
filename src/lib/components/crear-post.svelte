@@ -23,21 +23,18 @@
 	async function handlePost(e: Event) {
 		e.preventDefault();
 		try {
-			const data: CreatePostDto = {
-				content: mensaje,
-				imageUrl: null,
-				parentPostId: null
-			};
+			const formData = new FormData();
+			formData.append('content', mensaje);
+			// formData.append('imageUrl', '');
+			// formData.append('parentPostId', '');
 
 			const req = fetch($apiBase + '/api/posts', {
 				method: 'POST',
 				//credentials: 'include',
 				headers: {
-					'Content-Type': 'application/json',
 					Authorization: `Bearer ${$sesionStore?.accessToken}`
 				},
-
-				body: JSON.stringify(data)
+				body: formData
 			});
 			cargando = true;
 
