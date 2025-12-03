@@ -11,13 +11,19 @@
 
 	import Spinner from './ui/spinner/spinner.svelte';
 	import { checkUsername } from '@/hooks/checkUsername';
+	import { checkEmail } from '@/hooks/checkEmail';
 
 	let { showAlert = $bindable() } = $props();
 
 	let cargando = $state(false);
 
+	let repetirContraseña = $state('');
+
 	let checkeandoUsuario: boolean | null = $state(null);
 	let esUsuarioValido = $state(false);
+
+	let checkeandoEmail: boolean | null = $state(null);
+	let esEmailValido = $state(false);
 
 	async function checkUsuario() {
 		checkeandoUsuario = true;
@@ -25,11 +31,19 @@
 		checkeandoUsuario = false;
 	}
 
+	async function checkEmaill() {
+		checkeandoEmail = true;
+		esEmailValido = await checkEmail(dto.email);
+		checkeandoEmail = false;
+	}
 	const setAlert = () => (showAlert = true);
 
 	let dto: RegisterDto = $state({ password: '', username: '', email: '', displayName: '' });
 
 	const handleSubmit = async (e: SubmitEvent) => {
+		if (esUsuarioValido == false) return;
+		if (repetirContraseña !== dto.password) return;
+
 		cargando = true;
 		await register(e, dto, setAlert);
 		cargando = false;
@@ -73,13 +87,25 @@
 				</Field.Field>
 
 				<Field.Field>
-					<Field.Label for="email">Email</Field.Label>
+					<div class="flex justify-between">
+						<Field.Label for="email">Email</Field.Label>
+						{#if checkeandoEmail == null}
+							<div hidden></div>
+						{:else if checkeandoEmail == true}
+							<Spinner></Spinner>
+						{:else if esEmailValido}
+							<Check class="text-green-500" />
+						{:else}
+							<Cross class="text-red-500" />
+						{/if}
+					</div>
 					<Input
 						id="email"
 						type="email"
 						bind:value={dto.email}
 						placeholder="m@ejemplo.com"
 						required
+						onchange={checkEmaill}
 					/>
 				</Field.Field>
 				<Field.Field>
@@ -89,7 +115,7 @@
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="confirm-password">Confirmar Contraseña</Field.Label>
-					<Input id="confirm-password" type="password" required />
+					<Input id="confirm-password" type="password" required bind:value={repetirContraseña} />
 					<Field.Description>Confirma la contraseña</Field.Description>
 				</Field.Field>
 				<Field.Group>
