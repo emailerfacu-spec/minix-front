@@ -85,7 +85,9 @@
 								Aceptar
 							{/if}
 						</Button>
-						<Button variant="secondary" disabled={cargando}>Cerrar</Button>
+						<Button variant="secondary" disabled={cargando} onclick={() => (open = !open)}
+							>Cerrar</Button
+						>
 					</div>
 				</div>
 			</form>
