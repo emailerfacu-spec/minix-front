@@ -8,8 +8,8 @@ export async function load({ params }) {
   const usuario: UserResponseDto | null = await obtenerUsuarioPorUsername(params.perfil);
   if(!usuario) error(404, 'No se encontro el usuario, ' + params.perfil);
 
-  const seguidos = await obtenerSeguidosPorUsuario(usuario.id);
-  const seguidores = await obtenerSeguidoresPorUsuario(usuario.id);
+  const seguidos = await obtenerSeguidosPorUsuario(usuario.id, 3);
+  const seguidores = await obtenerSeguidoresPorUsuario(usuario.id, 3);
 
   return { ...usuario, seguidos, seguidores };
 }

@@ -104,22 +104,38 @@
 				<Card class="w-full">
 					<CardContent>
 						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidores:</CardTitle>
+							<CardTitle>Seguidos:</CardTitle>
 							<Badge variant="secondary">{page.data.seguidos.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							<!-- Seguidos -->
+							{#if page.data.seguidos.length === 0}
+								<h3>No hay Seguidos</h3>
+							{:else}
+								{#each page.data.seguidos as seguidos (seguidos.id)}
+									<p class="text-muted-foreground">
+										{seguidos.username}
+									</p>
+								{/each}
+							{/if}
 						</CardContent>
 					</CardContent>
 				</Card>
 				<Card class="w-full">
 					<CardContent>
 						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidos:</CardTitle>
+							<CardTitle>Seguidores:</CardTitle>
 							<Badge variant="secondary">{page.data.seguidores.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							<!-- Seguidores -->
+							{#if page.data.seguidores.length === 0}
+								<h3>No hay Seguidores</h3>
+							{:else}
+								{#each page.data.seguidores as seguidores (seguidores.id)}
+									<p class="text-muted-foreground">
+										{seguidores.username}
+									</p>
+								{/each}
+							{/if}
 						</CardContent>
 					</CardContent>
 				</Card>
