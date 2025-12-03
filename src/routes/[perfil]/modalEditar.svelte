@@ -14,6 +14,7 @@
 	import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
 	import TooltipTrigger from '@/components/ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from '@/components/ui/tooltip/tooltip-content.svelte';
+	import Spinner from '@/components/ui/spinner/spinner.svelte';
 
 	interface Props {
 		post: Post | null;
@@ -21,10 +22,20 @@
 	}
 	let { post = $bindable(), callbackfn }: Props = $props();
 
-	function handleKeydown(e: KeyboardEvent) {
+	let cargando = $state(false);
+
+	async function handleKeydown(e: KeyboardEvent) {
 		if (e.ctrlKey && e.key === 'Enter') {
-			callbackfn(e);
+			cargando = true;
+			await callbackfn(e);
+			cargando = false;
 		}
+	}
+	async function onsubmit(e: SubmitEvent) {
+		e.preventDefault();
+		cargando = true;
+		await callbackfn(e);
+		cargando = false;
 	}
 </script>
 
@@ -34,11 +45,7 @@
 			<DialogTitle>Editar Publicacion</DialogTitle>
 		</DialogHeader>
 		<DialogDescription>
-			<form
-				onsubmit={(e: SubmitEvent) => {
-					callbackfn(e);
-				}}
-			>
+			<form {onsubmit}>
 				<InputGroup>
 					<InputGroupTextarea
 						bind:value={post!.content}
@@ -61,13 +68,19 @@
 									<TooltipTrigger>
 										<InputGroupButton
 											variant="default"
+											disabled={cargando}
 											type="submit"
 											class="transform rounded-full transition-transform ease-in hover:scale-120"
 											size="xs"
 										>
 											<p class="flex items-center gap-1">
-												Modificar
-												<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+												{#if cargando}
+													<Spinner />
+													Cargando...
+												{:else}
+													Modificar
+													<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+												{/if}
 											</p>
 										</InputGroupButton>
 									</TooltipTrigger>
