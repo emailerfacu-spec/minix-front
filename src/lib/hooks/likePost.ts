@@ -4,9 +4,10 @@ import { sesionStore } from '@/stores/usuario';
 import type { Post } from '../../types';
 
 export async function likePost(post: Post) {
+  let method = post.isLiked ? "DELETE" : "POST";
 	try {
 		const req = await fetch(get(apiBase) + `/api/posts/${post.id}/like`, {
-			method: post.isLiked ? 'DELETE' : 'POST',
+			method: method,
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
