@@ -5,17 +5,16 @@ import { sesionStore } from '@/stores/usuario';
 
 export async function updatePost(post: Post, callbackfn: Function, message: string) {
 	try {
-		const data = {
-			content: post.content,
-			imageUrl: post.imageUrl
-		};
+    const formData = new FormData();
+    formData.append("content", post.content);
+    formData.append("imageUrl", post.imageUrl||"");
+
 		const req = await fetch(get(apiBase) + `/api/posts/${post.id}`, {
 			method: 'PUT',
 			headers: {
-				'Content-Type': 'application/json',
 				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
 			},
-			body: JSON.stringify(data)
+			body: formData
 		});
 		if (req.ok) {
 			const newpost: PostResponseDto = await req.json();
