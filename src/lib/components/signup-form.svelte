@@ -6,10 +6,24 @@
 	import type { RegisterDto } from '../../types';
 	import { register } from '@/hooks/register';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
+	import Check from '@lucide/svelte/icons/check';
+	import Cross from '@lucide/svelte/icons/x';
+
+	import Spinner from './ui/spinner/spinner.svelte';
+	import { checkUsername } from '@/hooks/checkUsername';
 
 	let { showAlert = $bindable() } = $props();
 
 	let cargando = $state(false);
+
+	let checkeandoUsuario: boolean | null = $state(null);
+	let esUsuarioValido = $state(false);
+
+	async function checkUsuario() {
+		checkeandoUsuario = true;
+		esUsuarioValido = await checkUsername(dto.username);
+		checkeandoUsuario = false;
+	}
 
 	const setAlert = () => (showAlert = true);
 
@@ -31,8 +45,26 @@
 		<form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
-					<Field.Label for="name">Nombre de Usuario</Field.Label>
-					<Input id="name" bind:value={dto.username} type="text" placeholder="JPepe" required />
+					<div class="flex justify-between">
+						<Field.Label for="name">Nombre de Usuario</Field.Label>
+						{#if checkeandoUsuario == null}
+							<div hidden></div>
+						{:else if checkeandoUsuario == true}
+							<Spinner></Spinner>
+						{:else if esUsuarioValido}
+							<Check class="text-green-500" />
+						{:else}
+							<Cross class="text-red-500" />
+						{/if}
+					</div>
+					<Input
+						id="name"
+						bind:value={dto.username}
+						type="text"
+						placeholder="JPepe"
+						required
+						onchange={checkUsuario}
+					/>
 				</Field.Field>
 
 				<Field.Field>
