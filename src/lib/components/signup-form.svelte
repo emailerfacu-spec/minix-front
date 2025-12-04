@@ -29,6 +29,9 @@
 
 	let coinsidenLasPass = $derived(repetirContraseña == dto.password);
 
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[A-Za-z\d\W_]*$/;
+	let esContraseñaValida = $derived(passwordRegex.test(dto.password));
+
 	async function checkUsuario() {
 		checkeandoUsuario = true;
 		esUsuarioValido = await checkUsername(dto.username);
@@ -45,6 +48,7 @@
 	const handleSubmit = async (e: SubmitEvent) => {
 		if (esUsuarioValido == false) return;
 		if (!coinsidenLasPass) return;
+		if (!esContraseñaValida) return;
 
 		cargando = true;
 		await register(e, dto, setAlert);
@@ -112,8 +116,17 @@
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="password">Contraseña</Field.Label>
-					<Input id="password" type="password" bind:value={dto.password} required />
-					<Field.Description>Debe de tener por lo menos 8 caracteres.</Field.Description>
+					<Input
+						id="password"
+						type="password"
+						bind:value={dto.password}
+						required
+						class={{ 'border-red-500': dto.password && !esContraseñaValida }}
+					/>
+					<Field.Description
+						>Debe de tener por lo menos 8 caracteres, una minúscula, una mayúscula, un número y un
+						carácter especial.</Field.Description
+					>
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="confirm-password">Confirmar Contraseña</Field.Label>
@@ -128,7 +141,7 @@
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
-						<Button type="submit" disabled={cargando || !coinsidenLasPass}>
+						<Button type="submit" disabled={cargando || !coinsidenLasPass || !esContraseñaValida}>
 							{#if cargando}
 								Creando Cuenta...
 								<Loader2Icon class="animate-spin" />
