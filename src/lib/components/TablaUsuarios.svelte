@@ -17,6 +17,7 @@
 	import DialogContent from './ui/dialog/dialog-content.svelte';
 	import ModificarUsuario from './admin/ModificarUsuario.svelte';
 	import { fade } from 'svelte/transition';
+	import type { Unsubscriber } from 'svelte/store';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -31,6 +32,17 @@
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
 
 	let usuarioModificar: UserResponseDto | null = $state(null);
+
+	let search = $state("");
+	let usuariosFiltrados = $derived(
+    usuarios.filter((u) =>
+        u.username.toLowerCase().startsWith(search.toLowerCase()) ||
+        u.displayName.toLowerCase().startsWith(search.toLowerCase())
+    	)
+	);
+	//let usuariosFiltrados = $derived(() => usuarios.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()) || u.displayName.toLowerCase().includes(search.toLowerCase())));
+	//let usuariosFiltrados = $derived(usuarios.filter(u => u.username.toLowerCase().includes(search.toLowerCase()) || u.displayName.toLowerCase().includes(search.toLowerCase())));
+	//$: usuariosFiltrados = usuarios.filter(u => u.username.toLowerCase().includes(search.toLowerCase()) || u.displayName.toLowerCase().includes(search.toLowerCase()));
 
 	$effect(() => {
 		if (!open) {
@@ -49,6 +61,14 @@
 	}
 </script>
 
+<div class="mb-4">
+	<input type= "text"
+	placeholder="Buscar usuario..." 
+	bind:value={search}
+	class="border px-3 py-2 rounded w-full"
+	/>
+</div>
+
 <Table>
 	<TableHeader>
 		<TableRow>
@@ -60,7 +80,7 @@
 		</TableRow>
 	</TableHeader>
 	<TableBody>
-		{#each usuarios as usuario}
+		{#each usuariosFiltrados as usuario}
 			<TableRow>
 				<TableCell
 					>@<a href={'/' + usuario.username}>
