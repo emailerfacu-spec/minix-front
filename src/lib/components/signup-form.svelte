@@ -25,6 +25,10 @@
 	let checkeandoEmail: boolean | null = $state(null);
 	let esEmailValido = $state(false);
 
+	let dto: RegisterDto = $state({ password: '', username: '', email: '', displayName: '' });
+
+	let coinsidenLasPass = $derived(repetirContraseña == dto.password);
+
 	async function checkUsuario() {
 		checkeandoUsuario = true;
 		esUsuarioValido = await checkUsername(dto.username);
@@ -38,11 +42,9 @@
 	}
 	const setAlert = () => (showAlert = true);
 
-	let dto: RegisterDto = $state({ password: '', username: '', email: '', displayName: '' });
-
 	const handleSubmit = async (e: SubmitEvent) => {
 		if (esUsuarioValido == false) return;
-		if (repetirContraseña !== dto.password) return;
+		if (!coinsidenLasPass) return;
 
 		cargando = true;
 		await register(e, dto, setAlert);
@@ -115,12 +117,18 @@
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="confirm-password">Confirmar Contraseña</Field.Label>
-					<Input id="confirm-password" type="password" required bind:value={repetirContraseña} />
+					<Input
+						id="confirm-password"
+						type="password"
+						required
+						bind:value={repetirContraseña}
+						class={{ 'border-red-500': !coinsidenLasPass }}
+					/>
 					<Field.Description>Confirma la contraseña</Field.Description>
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
-						<Button type="submit" disabled={cargando}>
+						<Button type="submit" disabled={cargando || !coinsidenLasPass}>
 							{#if cargando}
 								Creando Cuenta...
 								<Loader2Icon class="animate-spin" />
