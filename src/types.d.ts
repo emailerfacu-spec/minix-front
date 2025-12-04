@@ -47,10 +47,10 @@ export interface LoginDto {
 }
 
 export interface RegisterDto {
-	username: string?;
-	email: string?;
+	username: string;
+	email: string;
 	password: string?;
-	displayName: string?;
+	displayName: string;
 }
 
 export interface CreatePostDto {

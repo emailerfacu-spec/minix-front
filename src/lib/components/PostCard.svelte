@@ -137,7 +137,7 @@
 			<Button
 				variant="ghost"
 				disabled={!$sesionStore?.accessToken}
-				class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg"
+				class={`${post.isLiked ? 'bg-blue-500/30' : 'bg-accent'} flex items-center gap-2 rounded-full p-3 text-lg`}
 				onclick={() => likeHandler()}
 			>
 				<p>
