@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
+	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
+	import MessageCircle from '@lucide/svelte/icons/message-circle-more';
 	import Pen from '@lucide/svelte/icons/pen';
 	import type { Post } from '../../types';
 	import Button from './ui/button/button.svelte';
@@ -27,6 +29,7 @@
 	import DialogTitle from './ui/dialog/dialog-title.svelte';
 	import DialogDescription from './ui/dialog/dialog-description.svelte';
 	import { sesionStore } from '@/stores/usuario';
+	import { likePost } from '@/hooks/likePost';
 
 	interface postProp {
 		post: Post;
@@ -38,6 +41,8 @@
 	let cargandoBorrar = $state(false);
 	let mensajeError = $state('');
 	let cargandoEditar = $state(false);
+	let cargandoLike = $state(false);
+	let errorLike = $state(false);
 
 	async function handleBorrar() {
 		await deletePost(
@@ -50,8 +55,26 @@
 		);
 	}
 
-	async function handleEditar() {
+	function handleEditar() {
 		postAModificar = post;
+	}
+
+	async function likeHandler() {
+		cargandoLike = true;
+		let { message, ok } = await likePost(post);
+		if (ok) {
+			if (post.isLiked) {
+				post.likesCount--;
+			} else {
+				post.likesCount++;
+			}
+			post.isLiked = !post.isLiked;
+		} else {
+			errorLike = true;
+			mensajeError = message;
+		}
+		updatePostStore(post.id, post);
+		cargandoLike = false;
 	}
 </script>
 
@@ -60,10 +83,12 @@
 		<div class="flex flex-col">
 			<div class="flex items-center justify-between">
 				<div class="flex gap-3">
-					<Avatar>
-						<AvatarImage></AvatarImage>
-						<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
-					</Avatar>
+					<a href={`/${post.authorName}`}>
+						<Avatar>
+							<AvatarImage></AvatarImage>
+							<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
+						</Avatar>
+					</a>
 					<div class="flex space-x-2">
 						<span class="text-lg font-medium">{post.authorDisplayName}</span>
 						<span class="text-lg text-muted-foreground">@{post.authorName}</span>
@@ -72,7 +97,7 @@
 				{#if post.authorName === $sesionStore?.username}
 					<DropdownMenu>
 						<DropdownMenuTrigger>
-							<Button variant="ghost" class="rounded-full"><Ellipsis /></Button>
+							<Button variant="ghost" class=" rounded-full bg-accent"><Ellipsis /></Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
 							<DropdownMenuGroup>
@@ -101,16 +126,32 @@
 			</div>
 		</div>
 	</CardHeader>
-	<Content>
-		<p class="text-sm">{post.content}</p>
+	<Content class="mx-5 -mt-4 rounded-full bg-accent p-6">
+		<p class=" text-sm">{post.content}</p>
 		{#if post.imageUrl}
 			<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
 		{/if}
 	</Content>
 	<CardFooter>
-		<div class="flex items-center justify-between gap-2 pt-2 text-xs text-muted-foreground">
-			<span>{post.likesCount} likes</span>
-			<span>{post.repliesCount} replies</span>
+		<div class="-mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+			<Button
+				variant="ghost"
+				disabled={!$sesionStore?.accessToken}
+				class={`${post.isLiked ? 'bg-blue-500/30' : 'bg-accent'} flex items-center gap-2 rounded-full p-3 text-lg`}
+				onclick={() => likeHandler()}
+			>
+				<p>
+					{post.likesCount}
+				</p>
+				<ThumbsUp />
+			</Button>
+			<Button variant="ghost" class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg">
+				<p>
+					{post.repliesCount}
+				</p>
+				<MessageCircle />
+			</Button>
+
 			<span class="text-xs text-muted-foreground"
 				>{post.createdAt.replace('T', ' ').split('.')[0]}</span
 			>
@@ -120,7 +161,7 @@
 		</div>
 	</CardFooter>
 </Card>
-{#if mensajeError}
+{#if mensajeError || errorLike}
 	<Dialog>
 		<DialogContent>
 			<DialogHeader>

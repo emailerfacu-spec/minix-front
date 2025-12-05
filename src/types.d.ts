@@ -15,6 +15,7 @@ export interface Post {
 	isEdited: boolean;
 	visibility: string;
 	hashtags?: string[];
+	isLiked: boolean;
 }
 
 export interface User {
@@ -37,6 +38,7 @@ export interface Sesion {
 	url: string;
 	displayName: string;
 	username: string;
+	isAdmin: boolean;
 }
 
 export interface LoginDto {
@@ -45,10 +47,10 @@ export interface LoginDto {
 }
 
 export interface RegisterDto {
-	username: string?;
-	email: string?;
+	username: string;
+	email: string;
 	password: string?;
-	displayName: string?;
+	displayName: string;
 }
 
 export interface CreatePostDto {
@@ -73,4 +75,17 @@ export interface PostResponseDto {
 	isEdited: boolean;
 	visibility: string;
 	hashtags: string[]?;
+}
+
+export interface UserResponseDto {
+	id: string;
+	username: string;
+	displayName: string;
+	email: string;
+	bio: string;
+	profileImageUrl: string;
+	followersCount: number;
+	followingCount: number;
+	createdAt: string;
+	postsCount: number;
 }

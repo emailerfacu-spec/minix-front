@@ -27,8 +27,43 @@ if (browser) {
 	});
 }
 if (browser) {
+	const decodeJWT = (token: string) => {
+		try {
+			const base64Url = token.split('.')[1];
+			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+			const jsonPayload = decodeURIComponent(
+				atob(base64)
+					.split('')
+					.map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+					.join('')
+			);
+
+			return JSON.parse(jsonPayload);
+		} catch (error) {
+			console.error('Error decodificando JWT:', error);
+			return null;
+		}
+	};
+
+	const shouldRefreshToken = (sesion: Sesion | null): boolean => {
+		if (!sesion || !sesion.accessToken) return false;
+
+		const decoded = decodeJWT(sesion.accessToken);
+		if (!decoded || !decoded.exp) return false;
+
+		const expirationTime = decoded.exp * 1000;
+		const currentTime = Date.now();
+		const timeUntilExpiration = expirationTime - currentTime;
+
+		return timeUntilExpiration <= 60 * 1000; // 1 minuto
+	};
+
 	const refreshAccessToken = async () => {
 		try {
+			const sesion = get(currentSesion);
+			if (!shouldRefreshToken(sesion)) return;
+
+			console.log('refrescando token');
 			const response = await fetch(get(apiBase) + '/api/auth/refresh', {
 				method: 'POST',
 				headers: {
@@ -46,14 +81,15 @@ if (browser) {
 					return sesion;
 				});
 			} else {
-				console.error('Error refreshing token:', response.statusText);
+				console.error('Error refrescando token:', response.statusText);
 				currentSesion.set(null);
 			}
 		} catch (error) {
-			console.error('Error refreshing token:', error);
+			console.error('Error refrescando token:', error);
 			currentSesion.set(null);
 		}
 	};
 
-	setInterval(refreshAccessToken, 10 * 60 * 1000);
+	setInterval(refreshAccessToken, 30 * 1000); // Check every 30 seconds
+	refreshAccessToken();
 }

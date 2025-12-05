@@ -5,13 +5,55 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import type { RegisterDto } from '../../types';
 	import { register } from '@/hooks/register';
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
+	import Check from '@lucide/svelte/icons/check';
+	import Cross from '@lucide/svelte/icons/x';
 
-  let {showAlert = $bindable() } = $props();
+	import Spinner from './ui/spinner/spinner.svelte';
+	import { checkUsername } from '@/hooks/checkUsername';
+	import { checkEmail } from '@/hooks/checkEmail';
 
-  const setAlert = () => showAlert = true;
+	let { showAlert = $bindable() } = $props();
 
-  let dto: RegisterDto = $state({password: "", username: "", email:"", displayName: ""});
+	let cargando = $state(false);
 
+	let repetirContraseña = $state('');
+
+	let checkeandoUsuario: boolean | null = $state(null);
+	let esUsuarioValido = $state(false);
+
+	let checkeandoEmail: boolean | null = $state(null);
+	let esEmailValido = $state(false);
+
+	let dto: RegisterDto = $state({ password: '', username: '', email: '', displayName: '' });
+
+	let coinsidenLasPass = $derived(repetirContraseña == dto.password);
+
+	const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])[A-Za-z\d\W_]*$/;
+	let esContraseñaValida = $derived(passwordRegex.test(dto.password));
+
+	async function checkUsuario() {
+		checkeandoUsuario = true;
+		esUsuarioValido = await checkUsername(dto.username);
+		checkeandoUsuario = false;
+	}
+
+	async function checkEmaill() {
+		checkeandoEmail = true;
+		esEmailValido = await checkEmail(dto.email);
+		checkeandoEmail = false;
+	}
+	const setAlert = () => (showAlert = true);
+
+	const handleSubmit = async (e: SubmitEvent) => {
+		if (esUsuarioValido == false) return;
+		if (!coinsidenLasPass) return;
+		if (!esContraseñaValida) return;
+
+		cargando = true;
+		await register(e, dto, setAlert);
+		cargando = false;
+	};
 </script>
 
 <Card.Root>
@@ -20,11 +62,29 @@
 		<hr />
 	</Card.Header>
 	<Card.Content>
-		  <form onsubmit={(e)=>register(e, dto, setAlert)}>
+		<form onsubmit={handleSubmit}>
 			<Field.Group>
 				<Field.Field>
-					<Field.Label for="name">Nombre de Usuario</Field.Label>
-					<Input id="name" bind:value={dto.username} type="text" placeholder="JPepe" required />
+					<div class="flex justify-between">
+						<Field.Label for="name">Nombre de Usuario</Field.Label>
+						{#if checkeandoUsuario == null}
+							<div hidden></div>
+						{:else if checkeandoUsuario == true}
+							<Spinner></Spinner>
+						{:else if esUsuarioValido}
+							<Check class="text-green-500" />
+						{:else}
+							<Cross class="text-red-500" />
+						{/if}
+					</div>
+					<Input
+						id="name"
+						bind:value={dto.username}
+						type="text"
+						placeholder="JPepe"
+						required
+						onchange={checkUsuario}
+					/>
 				</Field.Field>
 
 				<Field.Field>
@@ -33,22 +93,62 @@
 				</Field.Field>
 
 				<Field.Field>
-					<Field.Label for="email">Email</Field.Label>
-					<Input id="email" type="email" bind:value={dto.email} placeholder="m@ejemplo.com" required />
+					<div class="flex justify-between">
+						<Field.Label for="email">Email</Field.Label>
+						{#if checkeandoEmail == null}
+							<div hidden></div>
+						{:else if checkeandoEmail == true}
+							<Spinner></Spinner>
+						{:else if esEmailValido}
+							<Check class="text-green-500" />
+						{:else}
+							<Cross class="text-red-500" />
+						{/if}
+					</div>
+					<Input
+						id="email"
+						type="email"
+						bind:value={dto.email}
+						placeholder="m@ejemplo.com"
+						required
+						onchange={checkEmaill}
+					/>
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="password">Contraseña</Field.Label>
-					<Input id="password" type="password" bind:value={dto.password} required />
-					<Field.Description>Debe de tener por lo menos 8 caracteres.</Field.Description>
+					<Input
+						id="password"
+						type="password"
+						bind:value={dto.password}
+						required
+						class={{ 'border-red-500': dto.password && !esContraseñaValida }}
+					/>
+					<Field.Description
+						>Debe de tener por lo menos 8 caracteres, una minúscula, una mayúscula, un número y un
+						carácter especial.</Field.Description
+					>
 				</Field.Field>
 				<Field.Field>
 					<Field.Label for="confirm-password">Confirmar Contraseña</Field.Label>
-					<Input id="confirm-password" type="password" required />
+					<Input
+						id="confirm-password"
+						type="password"
+						required
+						bind:value={repetirContraseña}
+						class={{ 'border-red-500': !coinsidenLasPass }}
+					/>
 					<Field.Description>Confirma la contraseña</Field.Description>
 				</Field.Field>
 				<Field.Group>
 					<Field.Field>
-						<Button type="submit">Crear Cuenta</Button>
+						<Button type="submit" disabled={cargando || !coinsidenLasPass || !esContraseñaValida}>
+							{#if cargando}
+								Creando Cuenta...
+								<Loader2Icon class="animate-spin" />
+							{:else}
+								Crear Cuenta
+							{/if}
+						</Button>
 						<Field.Description class="px-6 text-center">
 							Tenes una cuenta? <a href="/login">Iniciar Sesion</a>
 						</Field.Description>

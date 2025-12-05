@@ -4,13 +4,14 @@
 	import InputGroupTextarea from './ui/input-group/input-group-textarea.svelte';
 	import InputGroup from './ui/input-group/input-group.svelte';
 	import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import Kbd from './ui/kbd/kbd.svelte';
 
 	import { apiBase } from '@/stores/url';
 	import { sesionStore } from '@/stores/usuario';
 	import type { CreatePostDto } from '../../types';
 	import { addPost } from '@/stores/posts';
-	import { Tooltip, TooltipProvider } from './ui/tooltip';
+	import { Tooltip } from './ui/tooltip';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 
@@ -22,21 +23,18 @@
 	async function handlePost(e: Event) {
 		e.preventDefault();
 		try {
-			const data: CreatePostDto = {
-				content: mensaje,
-				imageUrl: null,
-				parentPostId: null
-			};
+			const formData = new FormData();
+			formData.append('content', mensaje);
+			// formData.append('imageUrl', '');
+			// formData.append('parentPostId', '');
 
 			const req = fetch($apiBase + '/api/posts', {
 				method: 'POST',
 				//credentials: 'include',
 				headers: {
-					'Content-Type': 'application/json',
 					Authorization: `Bearer ${$sesionStore?.accessToken}`
 				},
-
-				body: JSON.stringify(data)
+				body: formData
 			});
 			cargando = true;
 
@@ -79,24 +77,28 @@
 					</p>
 					/ 280
 				</Kbd>
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger class="*: flex">
-							<InputGroupButton
-								variant="default"
-								type="submit"
-								class="transform rounded-full transition-transform ease-in hover:scale-120"
-								size="xs"
-							>
-								<p>Publicar</p>
+				<Tooltip>
+					<TooltipTrigger class="*: flex">
+						<InputGroupButton
+							variant="default"
+							disabled={cargando}
+							type="submit"
+							class="transform rounded-full transition-transform ease-in hover:scale-120"
+							size="xs"
+						>
+							{#if cargando}
+								<Loader2Icon class="animate-spin" />
+								Publicando...
+							{:else}
+								Publicar
 								<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
-							</InputGroupButton>
-						</TooltipTrigger>
-						<TooltipContent>
-							<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+							{/if}
+						</InputGroupButton>
+					</TooltipTrigger>
+					<TooltipContent>
+						<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
+					</TooltipContent>
+				</Tooltip>
 			</div>
 		</InputGroupAddon>
 	</InputGroup>

@@ -10,26 +10,13 @@
 	import ModalEditar from './[perfil]/modalEditar.svelte';
 	import { updatePost } from '@/hooks/updatePost';
 	import { fade, slide } from 'svelte/transition';
+	import { getPosts } from '@/hooks/getPosts';
 
 	$effect(() => {
 		(async () => {
 			setPosts(await getPosts());
 		})();
 	});
-
-	async function getPosts() {
-		const { subscribe } = apiBase;
-		let baseUrl: string = '';
-
-		subscribe((value) => {
-			baseUrl = value;
-		})();
-
-		const req = await fetch(`${baseUrl}/timeline?pageSize=20`);
-		if (req.ok) {
-			return await req.json();
-		}
-	}
 
 	let postAModificar: Post | null = $state(null);
 	let mensajeError = $state('');

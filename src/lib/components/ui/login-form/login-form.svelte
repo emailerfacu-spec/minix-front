@@ -5,11 +5,20 @@
 	import { FieldGroup, Field, FieldLabel, FieldDescription } from '@/components/ui/field';
 	import type { LoginDto } from '../../../../types';
 	import { login } from '@/hooks/login';
-  let {id, showAlert = $bindable() } = $props();
+	import Loader2Icon from '@lucide/svelte/icons/loader-2';
+	let { id, showAlert = $bindable() } = $props();
 
-  let dto: LoginDto = $state({password: "", username: ""});
+	let dto: LoginDto = $state({ password: '', username: '' });
 
-  const setAlert = () => showAlert = true;
+	const setAlert = () => (showAlert = true);
+
+	let cargando = $state(false);
+
+	const handleSubmit = async (e: SubmitEvent) => {
+		cargando = true;
+		await login(e, dto, setAlert);
+		cargando = false;
+	};
 </script>
 
 <Card.Root class="mx-auto w-full max-w-sm">
@@ -18,7 +27,7 @@
 		<Card.Description>ingrese su usuario para logearse en la cuenta</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		  <form onsubmit="{(e)=>login(e,dto, setAlert)}">
+		<form onsubmit={handleSubmit}>
 			<FieldGroup>
 				<Field>
 					<FieldLabel for="email-{id}">Usuario</FieldLabel>
@@ -34,7 +43,14 @@
 					<Input bind:value={dto.password} type="password" required />
 				</Field>
 				<Field>
-					<Button type="submit" class="w-full">Login</Button>
+					<Button type="submit" class="w-full" disabled={cargando}>
+						{#if cargando}
+							Cargando...
+							<Loader2Icon class="animate-spin" />
+						{:else}
+							Login
+						{/if}
+					</Button>
 
 					<FieldDescription class="text-center">
 						No tenes una cuenta? <a href="/register">Registrate</a>

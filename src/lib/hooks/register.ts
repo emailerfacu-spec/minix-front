@@ -2,7 +2,7 @@ import { apiBase } from "@/stores/url";
 import { goto } from "$app/navigation";
 import type { RegisterDto } from "../../types";
 
-export async function register(e:FormDataEvent,dto: RegisterDto, callbackfn:()=>void){
+export async function register(e: SubmitEvent, dto: RegisterDto, callbackfn:()=>void){
     e.preventDefault();
     if (dto.password == "" || dto.username == "" ||
         !dto.email?.includes("@") || dto.displayName=="") return;
