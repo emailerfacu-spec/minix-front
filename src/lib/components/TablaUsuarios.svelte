@@ -18,6 +18,7 @@
 	import ModificarUsuario from './admin/ModificarUsuario.svelte';
 	import { fade } from 'svelte/transition';
 	import type { Unsubscriber } from 'svelte/store';
+	import Input from './ui/input/input.svelte';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -113,8 +114,8 @@
 </script>
 
 <div class="mb-4">
-	<input type= "text"
-	placeholder="Buscar usuario..." 
+	<Input type= "text"
+	placeholder="Buscar usuario..."
 	bind:value={search}
 	class="border px-3 py-2 rounded w-full"
 	/>
