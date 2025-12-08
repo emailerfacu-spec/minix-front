@@ -5,21 +5,17 @@
 	import InputGroup from './ui/input-group/input-group.svelte';
 	import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
 	import Paperclip from '@lucide/svelte/icons/paperclip';
+	import Trash from '@lucide/svelte/icons/trash-2';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import Kbd from './ui/kbd/kbd.svelte';
-
-	import { apiBase } from '@/stores/url';
-	import { sesionStore } from '@/stores/usuario';
-	import type { CreatePostDto } from '../../types';
-	import { addPost } from '@/stores/posts';
 	import { Tooltip } from './ui/tooltip';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import { publicarPost } from '@/hooks/publicarPost';
-	import Button from './ui/button/button.svelte';
-	import InputGroupInput from './ui/input-group/input-group-input.svelte';
+	import { filtrarImagen } from '@/utils';
 
 	let mensaje = $state('');
+	let imagen: File | null = $state(null);
 
 	let cargando = $state(false);
 	let mostrarError = $state('');
@@ -29,7 +25,7 @@
 		cargando = true;
 		const formData = new FormData();
 		formData.append('content', mensaje);
-		// formData.append('imageUrl', '');
+		formData.append('imagen', imagen);
 		// formData.append('parentPostId', '');
 		mostrarError = await publicarPost(formData);
 		if (mostrarError == '') mensaje = '';
@@ -41,12 +37,29 @@
 			handlePost(e);
 		}
 	}
+
+	function handleDrop(e: Event) {
+		const target = e.target as HTMLInputElement;
+		const file = target?.files?.[0];
+		imagen = filtrarImagen(file);
+	}
+	function seleccionarImagen() {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.accept = '.png,.jpg,.jpeg,.gif,.webp';
+		input.onchange = () => {
+			const file = input.files?.[0];
+			imagen = filtrarImagen(file);
+		};
+		input.click();
+	}
 </script>
 
 <form onsubmit={(e: Event) => handlePost(e)}>
 	<InputGroup>
 		<InputGroupTextarea
 			bind:value={mensaje}
+			ondrop={handleDrop}
 			maxlength={280}
 			placeholder="Alguna novedad?"
 			onkeydown={handleKeydown}
@@ -61,7 +74,32 @@
 					/ 280
 				</Kbd>
 				<div class="flex items-center gap-2">
-					<InputGroupButton size="icon-sm" variant="outline" class="rounded-full">
+					{#if imagen}
+						<button class="h-6 w-6 overflow-hidden rounded-full" onclick={() => (imagen = null)}>
+							<div class="relative h-full w-full">
+								<img
+									src={URL.createObjectURL(imagen)}
+									alt="imagen seleccionada"
+									class="h-full w-full object-cover"
+									onload={(e) => {
+										const target = e.currentTarget as HTMLImageElement;
+										URL.revokeObjectURL(target.src);
+									}}
+								/>
+								<div
+									class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100"
+								>
+									<Trash class="h-4 w-4 text-white" />
+								</div>
+							</div>
+						</button>
+					{/if}
+					<InputGroupButton
+						size="icon-sm"
+						variant="outline"
+						onclick={seleccionarImagen}
+						class={`${imagen ? 'bg-blue-500/30!' : ''} rounded-full`}
+					>
 						<Paperclip />
 					</InputGroupButton>
 					<Tooltip>
