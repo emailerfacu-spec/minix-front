@@ -17,8 +17,7 @@ export function filtrarImagen(file: File) {
 		const allowed = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'];
 		if (allowed.includes(file.type)) {
 			return file;
-		} else{
-      return null;
 		}
 	}
+  return null;
 }
