@@ -34,11 +34,11 @@
 
 	let usuarioModificar: UserResponseDto | null = $state(null);
 
-	let search = $state("");
+	let search = $state('');
 
 	type SortKey = 'username' | 'displayName' | 'postsCount' | 'createdAt';
-    let sortBy = $state<SortKey | null>(null);
-    let sortDirection = $state<'asc' | 'desc'>('asc');
+	let sortBy = $state<SortKey | null>(null);
+	let sortDirection = $state<'asc' | 'desc'>('asc');
 
 	function ordenarPor(campo: SortKey) {
 		if (sortBy === campo) {
@@ -50,51 +50,39 @@
 	}
 
 	let usuariosFiltrados = $derived(
-    usuarios
-        .filter((u) =>
-            u.username.toLowerCase().startsWith(search.toLowerCase()) ||
-            u.displayName.toLowerCase().startsWith(search.toLowerCase())
-        )
-        .toSorted((a, b) => {
-            if (!sortBy) return 0;
+		usuarios
+			.filter(
+				(u) =>
+					u.username.toLowerCase().startsWith(search.toLowerCase()) ||
+					u.displayName.toLowerCase().startsWith(search.toLowerCase())
+			)
+			.toSorted((a, b) => {
+				if (!sortBy) return 0;
 
-            const key: SortKey = sortBy;
+				const key: SortKey = sortBy;
 
-            if (key === 'createdAt') {
-                const ta = new Date(a.createdAt).getTime();
-                const tb = new Date(b.createdAt).getTime();
-                return sortDirection === 'asc' ? ta - tb : tb - ta;
-            }
+				if (key === 'createdAt') {
+					const ta = new Date(a.createdAt).getTime();
+					const tb = new Date(b.createdAt).getTime();
+					return sortDirection === 'asc' ? ta - tb : tb - ta;
+				}
 
-            if (key === 'postsCount') {
-                return sortDirection === 'asc'
-                    ? a.postsCount - b.postsCount
-                    : b.postsCount - a.postsCount;
-            }
+				if (key === 'postsCount') {
+					return sortDirection === 'asc'
+						? a.postsCount - b.postsCount
+						: b.postsCount - a.postsCount;
+				}
 
-            const sa = a[key].toString().toLowerCase();
-            const sb = b[key].toString().toLowerCase();
-            return sortDirection === 'asc'
-                ? sa.localeCompare(sb)
-                : sb.localeCompare(sa);
-        })
+				const sa = a[key].toString().toLowerCase();
+				const sb = b[key].toString().toLowerCase();
+				return sortDirection === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
+			})
 	);
 
 	function getSortIcon(campo: SortKey) {
-    	if (sortBy !== campo) return "";             // no ícono si no está ordenando por esa columna
-    	return sortDirection === "asc" ? "↑" : "↓";  // ascendente / descendente
+		if (sortBy !== campo) return '';
+		return sortDirection === 'asc' ? '↑' : '↓';
 	}
-
-	
-	//let usuariosFiltrados = $derived(
-    //usuarios.filter((u) =>
-    //    u.username.toLowerCase().startsWith(search.toLowerCase()) ||
-    //    u.displayName.toLowerCase().startsWith(search.toLowerCase())
-    //	)
-	//);
-
-	
-
 
 	$effect(() => {
 		if (!open) {
@@ -114,27 +102,28 @@
 </script>
 
 <div class="mb-4">
-	<Input type= "text"
-	placeholder="Buscar usuario..."
-	bind:value={search}
-	class="border px-3 py-2 rounded w-full"
+	<Input
+		type="text"
+		placeholder="Buscar usuario..."
+		bind:value={search}
+		class="w-full rounded border px-3 py-2"
 	/>
 </div>
 
 <Table>
 	<TableHeader>
 		<TableRow>
-			<TableHead onclick={() => ordenarPor("username")} class="cursor-pointer select-none">
-				Usuario {getSortIcon("username")}
+			<TableHead onclick={() => ordenarPor('username')} class="cursor-pointer select-none">
+				Usuario {getSortIcon('username')}
 			</TableHead>
-			<TableHead onclick={() => ordenarPor("displayName")} class="cursor-pointer select-none">
-				Nombre {getSortIcon("displayName")}
+			<TableHead onclick={() => ordenarPor('displayName')} class="cursor-pointer select-none">
+				Nombre {getSortIcon('displayName')}
 			</TableHead>
-			<TableHead onclick={() => ordenarPor("postsCount")} class="cursor-pointer select-none">
-				Cantidad de posts {getSortIcon("postsCount")}
+			<TableHead onclick={() => ordenarPor('postsCount')} class="cursor-pointer select-none">
+				Cantidad de posts {getSortIcon('postsCount')}
 			</TableHead>
-			<TableHead onclick={() => ordenarPor("createdAt")} class="cursor-pointer select-none">
-				Fecha de Creacion {getSortIcon("createdAt")}
+			<TableHead onclick={() => ordenarPor('createdAt')} class="cursor-pointer select-none">
+				Fecha de Creacion {getSortIcon('createdAt')}
 			</TableHead>
 			<TableHead>Acciones</TableHead>
 		</TableRow>

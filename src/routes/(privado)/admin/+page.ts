@@ -14,7 +14,6 @@ export async function load({}) {
 			Authorization: `Bearer ${get(sesionStore)?.accessToken}`
 		}
 	});
-
 	if (response.status === 401) {
 		throw redirect(302, '/');
 	}

@@ -4,19 +4,23 @@ import { get } from "svelte/store"
 
 export interface AdminUpdateUsuario {
   id:string,
-  displayName: string,
-  bio: string,
+  displayName: string | null,
+  bio: string | null,
   profileImage:boolean,
-  oldImageUrl:string
+  image:File,
+  profileImageUrl:string|null
 }
 
-export async function updateUsuario(usuario: AdminUpdateUsuario) {
+export async function updateUsuario(usuario: Partial<AdminUpdateUsuario>) {
 
   const formData = new FormData();
-  formData.append('displayName', usuario.displayName);
-  formData.append('bio', usuario.bio);
-  if (usuario.profileImage) {
-    formData.append('profileImageUrl', usuario.oldImageUrl);
+  if (usuario.displayName) formData.append('displayName', usuario.displayName);
+  if (usuario.bio) formData.append('bio', usuario.bio);
+  if (usuario.image) formData.append('profileImage', usuario.image);
+  if (usuario.profileImage){
+    if (usuario.profileImageUrl) formData.append('profileImageUrl', 'null');
+  }else{
+    if (usuario.profileImageUrl) formData.append('profileImageUrl', usuario.profileImageUrl);
   }
 
   try {
