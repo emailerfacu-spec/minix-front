@@ -53,15 +53,10 @@
 			<nav class="me-2 items-center space-x-6 text-sm font-medium md:flex">
 				<ButtonTheme />
 			</nav>
-			<div class="md:hidden">
-				{#if $sesionStore !== null}
-					<AvatarButton></AvatarButton>
-				{/if}
-			</div>
 		</div>
 
 		<!-- Desktop menu -->
-		<div class="hidden flex-1 items-center justify-end md:flex">
+		<div class="flex items-center justify-end md:flex">
 			{#if showCerrarSesion}
 				{#if $sesionStore !== null}
 					<AvatarButton></AvatarButton>
@@ -83,53 +78,5 @@
 				</ButtonGroup>
 			{/if}
 		</div>
-
-		<!-- Mobile menu button -->
-		<button class="me-3 rounded-md md:hidden" onclick={toggleMenu} aria-label="Toggle menu">
-			{#if menuOpen}
-				<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width={2}
-						d="M6 18L18 6M6 6l12 12"
-					/>
-				</svg>
-			{:else}
-				<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width={2}
-						d="M4 6h16M4 12h16M4 18h16"
-					/>
-				</svg>
-			{/if}
-		</button>
 	</div>
-
-	<!-- Mobile menu -->
-	{#if menuOpen}
-		<div class="md:hidden" transition:slide>
-			<div class="space-y-1 border-t bg-background/95 px-2 pt-2 pb-3">
-				<!---
-				{#if showCerrarSesion}{:else}
-				-->
-				<Button
-					variant={page.url.pathname !== '/login' ? 'outline' : 'secondary'}
-					href="/login"
-					class="mb-2 w-full justify-start text-foreground/60 transition-colors hover:text-foreground/80"
-					onclick={() => (menuOpen = false)}>Iniciar Sesion</Button
-				>
-				<Button
-					variant={page.url.pathname !== '/register' ? 'outline' : 'secondary'}
-					href="/register"
-					class="w-full justify-start text-foreground/60 transition-colors hover:text-foreground/80"
-					onclick={() => (menuOpen = false)}
-					>Registrarse
-				</Button>
-				<!-- {/if} -->
-			</div>
-		</div>
-	{/if}
 </header>
