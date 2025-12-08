@@ -25,10 +25,15 @@
 		cargando = true;
 		const formData = new FormData();
 		formData.append('content', mensaje);
-		formData.append('imagen', imagen);
+		if (imagen) {
+			formData.append('image', imagen);
+		}
 		// formData.append('parentPostId', '');
 		mostrarError = await publicarPost(formData);
-		if (mostrarError == '') mensaje = '';
+		if (mostrarError == '') {
+			mensaje = '';
+			imagen = null;
+		}
 		cargando = false;
 	}
 
