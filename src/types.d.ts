@@ -7,6 +7,7 @@ export interface Post {
 	authorName: string;
 	content: string;
 	imageUrl?: string;
+	image?: File | null;
 	parentPostId?: string;
 	likesCount: number;
 	repliesCount: number;
