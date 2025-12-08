@@ -4,6 +4,7 @@
 	import InputGroupTextarea from './ui/input-group/input-group-textarea.svelte';
 	import InputGroup from './ui/input-group/input-group.svelte';
 	import ArrowUpIcon from '@lucide/svelte/icons/arrow-up';
+	import Paperclip from '@lucide/svelte/icons/paperclip';
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import Kbd from './ui/kbd/kbd.svelte';
 
@@ -15,6 +16,8 @@
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import { publicarPost } from '@/hooks/publicarPost';
+	import Button from './ui/button/button.svelte';
+	import InputGroupInput from './ui/input-group/input-group-input.svelte';
 
 	let mensaje = $state('');
 
@@ -57,28 +60,33 @@
 					</p>
 					/ 280
 				</Kbd>
-				<Tooltip>
-					<TooltipTrigger class="*: flex">
-						<InputGroupButton
-							variant="default"
-							disabled={cargando}
-							type="submit"
-							class="transform rounded-full transition-transform ease-in hover:scale-120"
-							size="xs"
-						>
-							{#if cargando}
-								<Loader2Icon class="animate-spin" />
-								Publicando...
-							{:else}
-								Publicar
-								<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
-							{/if}
-						</InputGroupButton>
-					</TooltipTrigger>
-					<TooltipContent>
-						<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
-					</TooltipContent>
-				</Tooltip>
+				<div class="flex items-center gap-2">
+					<InputGroupButton size="icon-sm" variant="outline" class="rounded-full">
+						<Paperclip />
+					</InputGroupButton>
+					<Tooltip>
+						<TooltipTrigger class="*: flex">
+							<InputGroupButton
+								variant="default"
+								disabled={cargando}
+								type="submit"
+								class="transform rounded-full transition-transform ease-in hover:scale-120"
+								size="xs"
+							>
+								{#if cargando}
+									<Loader2Icon class="animate-spin" />
+									Publicando...
+								{:else}
+									Publicar
+									<ArrowUpIcon class="mt-0.5 h-3.5! w-3.5!" />
+								{/if}
+							</InputGroupButton>
+						</TooltipTrigger>
+						<TooltipContent>
+							<Kbd>Ctrl</Kbd>+<Kbd>Enter</Kbd>
+						</TooltipContent>
+					</Tooltip>
+				</div>
 			</div>
 		</InputGroupAddon>
 	</InputGroup>
