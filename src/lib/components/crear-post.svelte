@@ -14,6 +14,7 @@
 	import { Tooltip } from './ui/tooltip';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
+	import { publicarPost } from '@/hooks/publicarPost';
 
 	let mensaje = $state('');
 
@@ -22,35 +23,14 @@
 
 	async function handlePost(e: Event) {
 		e.preventDefault();
-		try {
-			const formData = new FormData();
-			formData.append('content', mensaje);
-			// formData.append('imageUrl', '');
-			// formData.append('parentPostId', '');
-
-			const req = fetch($apiBase + '/api/posts', {
-				method: 'POST',
-				//credentials: 'include',
-				headers: {
-					Authorization: `Bearer ${$sesionStore?.accessToken}`
-				},
-				body: formData
-			});
-			cargando = true;
-
-			const res = await req;
-			if (res.ok) {
-				mensaje = '';
-				const post = await res.json();
-				addPost(post);
-				return;
-			}
-			mostrarError = 'No se pudo crear el post.';
-		} catch {
-			mostrarError = 'Fallo al alcanzar el servidor';
-		} finally {
-			cargando = false;
-		}
+		cargando = true;
+		const formData = new FormData();
+		formData.append('content', mensaje);
+		// formData.append('imageUrl', '');
+		// formData.append('parentPostId', '');
+		mostrarError = await publicarPost(formData);
+		if (mostrarError == '') mensaje = '';
+		cargando = false;
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
