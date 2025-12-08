@@ -16,6 +16,7 @@
 
 	let mensaje = $state('');
 	let imagen: File | null = $state(null);
+	let hoverimg = $state(false);
 
 	let cargando = $state(false);
 	let mostrarError = $state('');
@@ -44,8 +45,10 @@
 	}
 
 	function handleDrop(e: Event) {
-		const target = e.target as HTMLInputElement;
-		const file = target?.files?.[0];
+		e.preventDefault();
+		const dt = (e as DragEvent).dataTransfer;
+		const file = dt?.files?.[0];
+		if (file === undefined) return;
 		imagen = filtrarImagen(file);
 	}
 	function seleccionarImagen() {
@@ -54,6 +57,7 @@
 		input.accept = '.png,.jpg,.jpeg,.gif,.webp';
 		input.onchange = () => {
 			const file = input.files?.[0];
+			if (file === undefined) return;
 			imagen = filtrarImagen(file);
 		};
 		input.click();
@@ -64,6 +68,9 @@
 	<InputGroup>
 		<InputGroupTextarea
 			bind:value={mensaje}
+			ondragover={(e) => {
+				e.preventDefault();
+			}}
 			ondrop={handleDrop}
 			maxlength={280}
 			placeholder="Alguna novedad?"
@@ -82,19 +89,30 @@
 					{#if imagen}
 						<button class="h-6 w-6 overflow-hidden rounded-full" onclick={() => (imagen = null)}>
 							<div class="relative h-full w-full">
-								<img
-									src={URL.createObjectURL(imagen)}
-									alt="imagen seleccionada"
-									class="h-full w-full object-cover"
-									onload={(e) => {
-										const target = e.currentTarget as HTMLImageElement;
-										URL.revokeObjectURL(target.src);
-									}}
-								/>
 								<div
-									class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100"
+									class="relative h-full w-full"
+									role="presentation"
+									onmouseenter={() => (hoverimg = true)}
+									onmouseleave={() => (hoverimg = false)}
 								>
-									<Trash class="h-4 w-4 text-white" />
+									<div class={{ 'brightness-50': hoverimg }}>
+										<img
+											src={URL.createObjectURL(imagen)}
+											alt="imagen seleccionada"
+											class="h-full w-full object-cover"
+											onload={(e) => {
+												const target = e.currentTarget as HTMLImageElement;
+												URL.revokeObjectURL(target.src);
+											}}
+										/>
+									</div>
+									<div
+										class="absolute inset-0 flex items-center justify-center"
+										class:opacity-100={hoverimg}
+										class:opacity-0={!hoverimg}
+									>
+										<Trash class="h-4 w-4 text-white" />
+									</div>
 								</div>
 							</div>
 						</button>
