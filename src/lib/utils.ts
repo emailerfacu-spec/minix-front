@@ -12,7 +12,7 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
 
-export function filtrarImagen(file) {
+export function filtrarImagen(file: File) {
   if (file) {
 		const allowed = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'];
 		if (allowed.includes(file.type)) {
