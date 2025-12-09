@@ -128,10 +128,15 @@
 	</CardHeader>
 	<Content class="mx-5 -mt-4 rounded-full bg-accent p-6">
 		<p class=" text-sm">{post.content}</p>
-		{#if post.imageUrl}
-			<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
-		{/if}
 	</Content>
+
+	{#if post.imageUrl}
+		<div class="flex justify-center">
+			<Content class="mx-5   w-fit  rounded-4xl bg-accent p-6">
+				<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
+			</Content>
+		</div>
+	{/if}
 	<CardFooter>
 		<div class="-mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
 			<Button
