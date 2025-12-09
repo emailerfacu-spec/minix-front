@@ -25,7 +25,6 @@
 	import CardHeader from '@/components/ui/card/card-header.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
-	import Pen from '@lucide/svelte/icons/pen';
 	import CardCargando from '@/components/CardCargando.svelte';
 	import CardError from '@/components/CardError.svelte';
 	import CardPerfil from '@/components/CardPerfil.svelte';
@@ -41,6 +40,7 @@
 
 	const { subscribe } = apiBase;
 	let baseUrl: string = '';
+	let data = $state(page.data);
 
 	subscribe((value) => {
 		baseUrl = value;
@@ -83,19 +83,19 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		<div class="flex gap-2">
-			<CardPerfil data={page.data} />
+			<CardPerfil bind:data />
 			<aside class="flex w-1/4 flex-col gap-2">
 				<Card class="w-full">
 					<CardContent>
 						<CardHeader class="flex justify-between">
 							<CardTitle>Seguidos:</CardTitle>
-							<Badge variant="secondary">{page.data.seguidos.length}</Badge>
+							<Badge variant="secondary">{data.seguidos.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							{#if page.data.seguidos.length === 0}
+							{#if data.seguidos.length === 0}
 								<h3>No hay Seguidos</h3>
 							{:else}
-								{#each page.data.seguidos as seguidos (seguidos.id)}
+								{#each data.seguidos as seguidos (seguidos.id)}
 									<p class="text-muted-foreground">
 										{seguidos.username}
 									</p>
@@ -108,13 +108,13 @@
 					<CardContent>
 						<CardHeader class="flex justify-between">
 							<CardTitle>Seguidores:</CardTitle>
-							<Badge variant="secondary">{page.data.seguidores.length}</Badge>
+							<Badge variant="secondary">{data.seguidores.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							{#if page.data.seguidores.length === 0}
+							{#if data.seguidores.length === 0}
 								<h3>No hay Seguidores</h3>
 							{:else}
-								{#each page.data.seguidores as seguidores (seguidores.id)}
+								{#each data.seguidores as seguidores (seguidores.id)}
 									<p class="text-muted-foreground">
 										{seguidores.username}
 									</p>

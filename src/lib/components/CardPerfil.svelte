@@ -9,8 +9,10 @@
 	import Button from './ui/button/button.svelte';
 	import { updateImagenDePerfil } from '@/hooks/updateImagenDePerfil';
 	import { updateUsuario } from '@/hooks/updateUsuario';
+	import { sesionStore } from '@/stores/usuario';
+	import { obtenerUsuarioPorUsername } from '@/hooks/obtenerUsuario';
 
-	let { data, messageError = $bindable() } = $props();
+	let { data = $bindable() } = $props();
 
 	let cargando = $state(false);
 	let hoverimg = $state(false);
@@ -33,7 +35,12 @@
 		if (image === null) return;
 		cargando = true;
 		await updateUsuario({ id: data.id, profileImage: true, image: image });
+		let ret = await obtenerUsuarioPorUsername(data.username);
+		if (ret) {
+			data = { ...data, ...ret };
+		}
 		cargando = false;
+		hoverimg = false;
 	}
 </script>
 
@@ -46,7 +53,7 @@
 				<Skeleton class="h-8 w-48" />
 				<Skeleton class="h-16 w-3/4 rounded-full" />
 			</div>
-		{:else}
+		{:else if $sesionStore?.isAdmin || $sesionStore?.username == data.username}
 			<button
 				class="relative flex w-full items-center justify-center"
 				onmouseenter={() => (hoverimg = true)}
@@ -72,6 +79,26 @@
 					<Pen class="text-white" />
 				</div>
 			</button>
+			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
+				{data.displayName}
+			</h1>
+			<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
+				{data.bio}
+			</p>
+		{:else}
+			<div class="relative flex w-full items-center justify-center">
+				<Avatar
+					class={{
+						'brightness-0': hoverimg,
+						'relative z-0 mt-2 scale-250 border-2 border-slate-950 transition-all': true
+					}}
+				>
+					<AvatarImage src={data.imageUrl} alt="Imagen de perfil"></AvatarImage>
+					<AvatarFallback class="select-none">
+						{data.displayName?.[0]?.toUpperCase() || ''}
+					</AvatarFallback>
+				</Avatar>
+			</div>
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
 				{data.displayName}
 			</h1>
