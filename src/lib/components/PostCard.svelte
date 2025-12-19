@@ -44,6 +44,16 @@
 	let cargandoLike = $state(false);
 	let errorLike = $state(false);
 
+	let contenido = $derived(() => {
+		let t = post.content.replaceAll('\n', '<br>');
+		t = t.replace(
+			/#\w*/gm,
+			(match) =>
+				`<a class="hover:text-blue-200 text-blue-400" href="/htag/${match.replace('#', '')}">${match}</a>`
+		);
+		return t;
+	});
+
 	async function handleBorrar() {
 		await deletePost(
 			post,
@@ -127,7 +137,7 @@
 		</div>
 	</CardHeader>
 	<Content class="mx-5 -mt-4 rounded-lg bg-accent p-3">
-		<p class=" text-sm">{@html post.content.replaceAll('\n', '<br>')}</p>
+		<p class=" text-sm">{@html contenido()}</p>
 	</Content>
 
 	{#if post.imageUrl}
