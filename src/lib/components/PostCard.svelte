@@ -126,8 +126,8 @@
 			</div>
 		</div>
 	</CardHeader>
-	<Content class="mx-5 -mt-4 rounded-full bg-accent p-6">
-		<p class=" text-sm">{post.content}</p>
+	<Content class="mx-5 -mt-4 rounded-lg bg-accent p-3">
+		<p class=" text-sm">{@html post.content.replaceAll('\n', '<br>')}</p>
 	</Content>
 
 	{#if post.imageUrl}
