@@ -53,7 +53,10 @@
 	async function obtenerPosts() {
 		try {
 			const req = await fetch(baseUrl + '/api/posts/user/' + params.perfil, {
-				method: 'GET'
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${$sesionStore?.accessToken}`
+				}
 			});
 			if (req.ok) {
 				setPosts(await req.json());
