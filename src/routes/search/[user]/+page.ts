@@ -1,9 +1,8 @@
 import { busquedaUsuarios } from '@/hooks/busquedaUsuarios';
-import type { PageProps } from '../$types';
 import { error } from '@sveltejs/kit';
 import type { UserResponseDto } from '../../../types';
 
-export async function load({ params }: PageProps) {
+export async function load({ params }) {
 	let usuarios: UserResponseDto[] = await busquedaUsuarios(params.user);
 	if (usuarios == null) {
 		return error(500, 'No se pudo alcanzar el servidor.');

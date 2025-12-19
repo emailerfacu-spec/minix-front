@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import UserCard from '@/components/UserCard.svelte';
 
 	let { data } = $props();
