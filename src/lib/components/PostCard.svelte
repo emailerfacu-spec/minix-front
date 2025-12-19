@@ -95,7 +95,7 @@
 				<div class="flex gap-3">
 					<a href={`/${post.authorName}`}>
 						<Avatar>
-							<AvatarImage></AvatarImage>
+							<AvatarImage src={post.authorImageUrl}></AvatarImage>
 							<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
 						</Avatar>
 					</a>
