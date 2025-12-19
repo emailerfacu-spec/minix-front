@@ -142,7 +142,7 @@
 
 	{#if post.imageUrl}
 		<div class="flex justify-center">
-			<Content class="mx-5   w-fit  rounded-4xl bg-accent p-6">
+			<Content class="mx-5 max-w-[25%] rounded-4xl bg-accent p-6">
 				<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
 			</Content>
 		</div>
