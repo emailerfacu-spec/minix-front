@@ -25,6 +25,9 @@
 	import CardHeader from '@/components/ui/card/card-header.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
 	import Badge from '@/components/ui/badge/badge.svelte';
+	import CardCargando from '@/components/CardCargando.svelte';
+	import CardError from '@/components/CardError.svelte';
+	import CardPerfil from '@/components/CardPerfil.svelte';
 
 	let { params } = $props();
 
@@ -37,6 +40,7 @@
 
 	const { subscribe } = apiBase;
 	let baseUrl: string = '';
+	let data = $state(page.data);
 
 	subscribe((value) => {
 		baseUrl = value;
@@ -49,7 +53,10 @@
 	async function obtenerPosts() {
 		try {
 			const req = await fetch(baseUrl + '/api/posts/user/' + params.perfil, {
-				method: 'GET'
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${$sesionStore?.accessToken}`
+				}
 			});
 			if (req.ok) {
 				setPosts(await req.json());
@@ -79,39 +86,19 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		<div class="flex gap-2">
-			<Card class="mb-2 flex w-3/4 overflow-hidden">
-				<CardContent>
-					<div class="flex justify-center">
-						<Avatar class="mt-2 scale-250 border-2 border-slate-950">
-							<AvatarImage></AvatarImage>
-							<AvatarFallback>{page.data.displayName?.[0]?.toUpperCase() || ''}</AvatarFallback>
-						</Avatar>
-					</div>
-					<h1
-						class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl"
-					>
-						{page.data.displayName}
-					</h1>
-					<h3 class="scroll-m-20 text-center text-2xl tracking-tight text-muted-foreground">
-						@{params.perfil}
-					</h3>
-					<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
-						{page.data.bio}
-					</p>
-				</CardContent>
-			</Card>
+			<CardPerfil bind:data />
 			<aside class="flex w-1/4 flex-col gap-2">
 				<Card class="w-full">
 					<CardContent>
 						<CardHeader class="flex justify-between">
 							<CardTitle>Seguidos:</CardTitle>
-							<Badge variant="secondary">{page.data.seguidos.length}</Badge>
+							<Badge variant="secondary">{data.seguidos.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							{#if page.data.seguidos.length === 0}
+							{#if data.seguidos.length === 0}
 								<h3>No hay Seguidos</h3>
 							{:else}
-								{#each page.data.seguidos as seguidos (seguidos.id)}
+								{#each data.seguidos as seguidos (seguidos.id)}
 									<p class="text-muted-foreground">
 										{seguidos.username}
 									</p>
@@ -124,13 +111,13 @@
 					<CardContent>
 						<CardHeader class="flex justify-between">
 							<CardTitle>Seguidores:</CardTitle>
-							<Badge variant="secondary">{page.data.seguidores.length}</Badge>
+							<Badge variant="secondary">{data.seguidores.length}</Badge>
 						</CardHeader>
 						<CardContent>
-							{#if page.data.seguidores.length === 0}
+							{#if data.seguidores.length === 0}
 								<h3>No hay Seguidores</h3>
 							{:else}
-								{#each page.data.seguidores as seguidores (seguidores.id)}
+								{#each data.seguidores as seguidores (seguidores.id)}
 									<p class="text-muted-foreground">
 										{seguidores.username}
 									</p>
@@ -161,25 +148,9 @@
 
 		<hr class="mb-8" />
 		{#if cargando}
-			<div out:slide>
-				<Card>
-					<CardContent class="flex w-full flex-col items-center justify-center">
-						<Spinner class="size-9" />
-						<p class="leading-7 not-first:mt-6">Cargando</p>
-					</CardContent>
-				</Card>
-			</div>
+			<CardCargando />
 		{:else if mensajeError !== ''}
-			<div in:fade>
-				<Card class="border-red-500">
-					<CardContent class="flex w-full flex-col items-center justify-center">
-						<Ban class="scale-120 text-red-500"></Ban>
-						<p class="mt-2 text-lg leading-7 text-red-500">
-							{mensajeError}
-						</p>
-					</CardContent>
-				</Card>
-			</div>
+			<CardError {mensajeError} />
 		{:else}
 			<div class="flex flex-col gap-2">
 				{#each $posts as post (post.id)}

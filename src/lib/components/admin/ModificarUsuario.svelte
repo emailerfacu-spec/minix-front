@@ -18,20 +18,22 @@
 	let { open = $bindable(), usuario = $bindable() }: Prop = $props();
 
 	let imagen = $state(!!usuario?.profileImageUrl);
-	let fallback = usuario?.displayName;
 
 	let cargando = $state(false);
 	let error = $state('');
+
 	async function onsubmit(e: SubmitEvent) {
 		e.preventDefault();
 		cargando = true;
-		let ret: { displayName: string } | string = await updateUsuario({
+		const data = {
 			id: usuario?.id || '',
 			bio: usuario?.bio || '',
 			displayName: usuario?.displayName || '',
-			oldImageUrl: usuario?.profileImageUrl || '',
-			profileImage: imagen
-		});
+			profileImage: imagen,
+			profileImageUrl: imagen ? null : usuario?.profileImageUrl
+		};
+		console.log(data);
+		let ret: { displayName: string } | string = await updateUsuario(data);
 		if (typeof ret === 'string') {
 			error = ret;
 		} else {

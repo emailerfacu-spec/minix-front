@@ -7,7 +7,7 @@ export async function updatePost(post: Post, callbackfn: Function, message: stri
 	try {
     const formData = new FormData();
     formData.append("content", post.content);
-    formData.append("imageUrl", post.imageUrl||"");
+    formData.append("image", post.image||"");
 
 		const req = await fetch(get(apiBase) + `/api/posts/${post.id}`, {
 			method: 'PUT',

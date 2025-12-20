@@ -44,6 +44,16 @@
 	let cargandoLike = $state(false);
 	let errorLike = $state(false);
 
+	let contenido = $derived(() => {
+		let t = post.content.replaceAll('\n', '<br>');
+		t = t.replace(
+			/#\w*/gm,
+			(match) =>
+				`<a class="hover:text-blue-200 text-blue-400" href="/htag/${match.replace('#', '')}">${match}</a>`
+		);
+		return t;
+	});
+
 	async function handleBorrar() {
 		await deletePost(
 			post,
@@ -85,7 +95,7 @@
 				<div class="flex gap-3">
 					<a href={`/${post.authorName}`}>
 						<Avatar>
-							<AvatarImage></AvatarImage>
+							<AvatarImage src={post.authorImageUrl}></AvatarImage>
 							<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
 						</Avatar>
 					</a>
@@ -126,12 +136,17 @@
 			</div>
 		</div>
 	</CardHeader>
-	<Content class="mx-5 -mt-4 rounded-full bg-accent p-6">
-		<p class=" text-sm">{post.content}</p>
-		{#if post.imageUrl}
-			<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
-		{/if}
+	<Content class="mx-5 -mt-4 rounded-lg bg-accent p-3">
+		<p class=" text-sm">{@html contenido()}</p>
 	</Content>
+
+	{#if post.imageUrl}
+		<div class="flex justify-center">
+			<Content class="mx-5 max-w-[25%] rounded-4xl bg-accent p-6">
+				<img src={post.imageUrl} alt="Post" class="mt-2 rounded-md" />
+			</Content>
+		</div>
+	{/if}
 	<CardFooter>
 		<div class="-mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
 			<Button

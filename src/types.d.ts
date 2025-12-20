@@ -7,6 +7,7 @@ export interface Post {
 	authorName: string;
 	content: string;
 	imageUrl?: string;
+	image?: File | null;
 	parentPostId?: string;
 	likesCount: number;
 	repliesCount: number;
@@ -83,9 +84,18 @@ export interface UserResponseDto {
 	displayName: string;
 	email: string;
 	bio: string;
+  imageUrl: string?;
 	profileImageUrl: string;
 	followersCount: number;
 	followingCount: number;
 	createdAt: string;
 	postsCount: number;
+}
+
+export interface UpdateUserRequest {
+  username: string?;
+  displayName: string?;
+  bio: string?;
+  email: string?;
+  profileImage: File?;
 }
