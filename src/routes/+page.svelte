@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Card from '@/components/ui/card/card.svelte';
 	import { Content } from '@/components/ui/card';
-	import { apiBase } from '@/stores/url';
 	import { sesionStore } from '@/stores/usuario';
 	import CrearPost from '@/components/crear-post.svelte';
 	import { posts, setPosts, updatePostStore } from '@/stores/posts';

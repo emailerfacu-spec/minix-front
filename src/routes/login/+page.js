@@ -1,5 +1,5 @@
 export function load({ url }) {
-    return {
-        message: url.searchParams.get('msg')
-    };
+	return {
+		message: url.searchParams.get('msg')
+	};
 }

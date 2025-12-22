@@ -3,12 +3,8 @@
 	import Ban from '@lucide/svelte/icons/ban';
 	import PenLine from '@lucide/svelte/icons/pen-line';
 	import Card from '@/components/ui/card/card.svelte';
-	import Avatar from '@/components/ui/avatar/avatar.svelte';
-	import AvatarImage from '@/components/ui/avatar/avatar-image.svelte';
-	import AvatarFallback from '@/components/ui/avatar/avatar-fallback.svelte';
 	import { CardContent } from '@/components/ui/card';
 	import type { Post } from '../../types.js';
-	import Spinner from '@/components/ui/spinner/spinner.svelte';
 	import { fade, slide } from 'svelte/transition';
 	import PostCard from '@/components/PostCard.svelte';
 	import { posts, setPosts, updatePostStore } from '@/stores/posts.js';
@@ -19,7 +15,6 @@
 	import { Dialog } from '@/components/ui/dialog/index.js';
 	import CrearPost from '@/components/crear-post.svelte';
 	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
-	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
 	import { sesionStore } from '@/stores/usuario.js';
 	import CardHeader from '@/components/ui/card/card-header.svelte';
