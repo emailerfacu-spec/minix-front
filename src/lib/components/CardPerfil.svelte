@@ -11,6 +11,9 @@
 	import { updateUsuario } from '@/hooks/updateUsuario';
 	import { sesionStore } from '@/stores/usuario';
 	import { obtenerUsuarioPorUsername } from '@/hooks/obtenerUsuario';
+	import CardHeader from './ui/card/card-header.svelte';
+	import CardTitle from './ui/card/card-title.svelte';
+	import Badge from './ui/badge/badge.svelte';
 
 	let { data = $bindable() } = $props();
 
@@ -43,9 +46,8 @@
 		hoverimg = false;
 	}
 </script>
-
-<!-- <Button onclick={() => (cargando = !cargando)}>a</Button> -->
-<Card class="mb-2 flex w-3/4 overflow-hidden">
+<!-- {$inspect(data)} -->
+<Card class="mb-2 flex overflow-hidden">
 	<CardContent>
 		{#if cargando}
 			<div class="flex flex-col items-center space-y-4">
@@ -54,31 +56,34 @@
 				<Skeleton class="h-16 w-3/4 rounded-full" />
 			</div>
 		{:else if $sesionStore?.isAdmin || $sesionStore?.username == data.username}
-			<button
-				class="relative flex w-full items-center justify-center"
-				onmouseenter={() => (hoverimg = true)}
-				onmouseleave={() => (hoverimg = false)}
-				onclick={cambiarFotoDePerfil}
-			>
-				<Avatar
-					class={{
-						'brightness-0': hoverimg,
-						'relative z-0 mt-2 scale-250 border-2 border-slate-950 transition-all': true
-					}}
-				>
-					<AvatarImage src={data.imageUrl} alt="Imagen de perfil"></AvatarImage>
-					<AvatarFallback class="select-none">
-						{data.displayName?.[0]?.toUpperCase() || ''}
-					</AvatarFallback>
-				</Avatar>
-				<div
-					class="absolute inset-0 top-1/2 left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center"
-					class:opacity-100={hoverimg}
-					class:opacity-0={!hoverimg}
-				>
-					<Pen class="text-white" />
-				</div>
-			</button>
+    		<div class="w-full flex justify-center">
+    			<button
+    				class="relative flex  items-center justify-center"
+    				onmouseenter={() => (hoverimg = true)}
+    				onmouseleave={() => (hoverimg = false)}
+    				onclick={cambiarFotoDePerfil}
+    			>
+    				<Avatar
+    					class={{
+    						'brightness-0': hoverimg,
+    						'relative z-0 mt-2 scale-250 border-2 border-slate-950 transition-all': true
+    					}}
+    				>
+    					<AvatarImage src={data.imageUrl} alt="Imagen de perfil"></AvatarImage>
+    					<AvatarFallback class="select-none">
+    						{data.displayName?.[0]?.toUpperCase() || ''}
+    					</AvatarFallback>
+    				</Avatar>
+                    <div
+                        class="absolute inset-0 flex justify-center items-center"
+                        class:opacity-100={hoverimg}
+                        class:opacity-0={!hoverimg}
+                    >
+                        <Pen class="text-white" />
+                    </div>
+   	            </button>
+    		</div>
+
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
 				{data.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
@@ -106,6 +111,46 @@
 			<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
 				{data.bio}
 			</p>
-		{/if}
+			{/if}
+		<div class="flex gap-2 mt-2">
+			<Card class="w-full">
+				<CardContent>
+					<CardHeader class="flex justify-between">
+						<CardTitle>Seguidos:</CardTitle>
+						<Badge variant="secondary">{data.seguidos.response.length}</Badge>
+					</CardHeader>
+					<CardContent>
+						{#if data.seguidos.response.length === 0}
+							<h3>No hay Seguidos</h3>
+						{:else}
+							{#each data.seguidos.response as seguidos (seguidos.id)}
+								<p class="text-muted-foreground">
+									{seguidos.username}
+								</p>
+							{/each}
+						{/if}
+					</CardContent>
+				</CardContent>
+			</Card>
+			<Card class="w-full">
+				<CardContent>
+					<CardHeader class="flex justify-between">
+						<CardTitle>Seguidores:</CardTitle>
+						<Badge variant="secondary">{data.seguidores.response.length}</Badge>
+					</CardHeader>
+					<CardContent>
+						{#if data.seguidores.response.length === 0}
+							<h3>No hay Seguidores</h3>
+						{:else}
+							{#each data.seguidores.response as seguidores (seguidores.id)}
+								<p class="text-muted-foreground">
+									{seguidores.username}
+								</p>
+							{/each}
+						{/if}
+					</CardContent>
+				</CardContent>
+			</Card>
+		</div>
 	</CardContent>
 </Card>

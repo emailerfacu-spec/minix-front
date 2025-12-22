@@ -80,50 +80,7 @@
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		<div class="flex gap-2">
 			<CardPerfil bind:data />
-			<aside class="flex w-1/4 flex-col gap-2">
-				<Card class="w-full">
-					<CardContent>
-						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidos:</CardTitle>
-							<Badge variant="secondary">{data.seguidos.length}</Badge>
-						</CardHeader>
-						<CardContent>
-							{#if data.seguidos.length === 0}
-								<h3>No hay Seguidos</h3>
-							{:else}
-								{#each data.seguidos as seguidos (seguidos.id)}
-									<p class="text-muted-foreground">
-										{seguidos.username}
-									</p>
-								{/each}
-							{/if}
-						</CardContent>
-					</CardContent>
-				</Card>
-				<Card class="w-full">
-					<CardContent>
-						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidores:</CardTitle>
-							<Badge variant="secondary">{data.seguidores.length}</Badge>
-						</CardHeader>
-						<CardContent>
-							{#if data.seguidores.length === 0}
-								<h3>No hay Seguidores</h3>
-							{:else}
-								{#each data.seguidores as seguidores (seguidores.id)}
-									<p class="text-muted-foreground">
-										{seguidores.username}
-									</p>
-								{/each}
-							{/if}
-						</CardContent>
-					</CardContent>
-				</Card>
-			</aside>
-		</div>
-
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>

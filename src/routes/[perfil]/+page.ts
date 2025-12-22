@@ -5,11 +5,13 @@ import { obtenerSeguidosPorUsuario } from '@/hooks/obtenerSeguidosPorUsuario.js'
 import { obtenerSeguidoresPorUsuario } from '@/hooks/obtenerSeguidoresPorUsuario.js';
 
 export async function load({ params }) {
-  const usuario: UserResponseDto | null = await obtenerUsuarioPorUsername(params.perfil);
-  if(!usuario) error(404, 'No se encontro el usuario, ' + params.perfil);
+	const usuario: UserResponseDto | null = await obtenerUsuarioPorUsername(params.perfil);
+	if (!usuario) error(404, 'No se encontro el usuario, ' + params.perfil);
 
-  const seguidos = await obtenerSeguidosPorUsuario(usuario.id, 3);
-  const seguidores = await obtenerSeguidoresPorUsuario(usuario.id, 3);
+	const [seguidos, seguidores] = await Promise.all([
+		obtenerSeguidosPorUsuario(usuario.id, 3),
+		obtenerSeguidoresPorUsuario(usuario.id, 3)
+	]);
 
-  return { ...usuario, seguidos, seguidores };
+	return { ...usuario, seguidos, seguidores };
 }

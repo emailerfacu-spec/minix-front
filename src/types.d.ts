@@ -84,18 +84,34 @@ export interface UserResponseDto {
 	displayName: string;
 	email: string;
 	bio: string;
-  imageUrl: string?;
+	imageUrl: string?;
 	profileImageUrl: string;
 	followersCount: number;
 	followingCount: number;
 	createdAt: string;
 	postsCount: number;
 }
+export interface UsersResponseDto {
+	response: {
+		id: string;
+		username: string;
+		displayName: string;
+		email: string;
+		bio: string;
+		imageUrl?: string;
+		profileImageUrl: string;
+		followersCount: number;
+		followingCount: number;
+		createdAt: string;
+		postsCount: number;
+	}[];
+	totalCount: number;
+}
 
 export interface UpdateUserRequest {
-  username: string?;
-  displayName: string?;
-  bio: string?;
-  email: string?;
-  profileImage: File?;
+	username: string?;
+	displayName: string?;
+	bio: string?;
+	email: string?;
+	profileImage: File?;
 }
