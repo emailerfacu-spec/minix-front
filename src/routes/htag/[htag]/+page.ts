@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 export async function load({ params }) {
 	let { htag } = params;
 
-	const cantidad = await obtenerCantidadDeUsosdeHtag(htag);
-	if (cantidad == null || cantidad.lenght == 0) return error(404, 'no existe el #(hashtag)');
-	return { htag, cantidad };
+	const posts = await obtenerCantidadDeUsosdeHtag(htag);
+	// if (cantidad == null || posts.lenght == 0) return error(404, 'no existe el #(hashtag)');
+	return { htag, posts };
 }

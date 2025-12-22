@@ -1,7 +1,6 @@
 <script lang="ts">
 	import PostCard from '@/components/PostCard.svelte';
 	import CardContent from '@/components/ui/card/card-content.svelte';
-	import CardHeader from '@/components/ui/card/card-header.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
 	import Card from '@/components/ui/card/card.svelte';
 	import type { Post } from '../../../types.js';
@@ -14,18 +13,24 @@
 	interface props {
 		data: {
 			htag: string;
-			cantidad: [Post];
+			posts: {
+				count: number;
+				response: [Post];
+			};
 		};
 	}
+
 	let { data }: props = $props();
-	let posts = $state(data.cantidad);
+
+	let posts = $state(data.posts.response);
+	let postAModificar: Post | null = $state(null);
+
 	let postsfiltro = $derived(
 		posts.filter((x) => {
 			const regex = new RegExp(`#${data.htag}\\b`, 'gm');
 			return regex.test(x.content);
 		})
 	);
-	let postAModificar: Post | null = $state(null);
 
 	async function handleEditar(e: SubmitEvent) {
 		e.preventDefault();
@@ -41,27 +46,27 @@
 </script>
 
 <div class="flex min-h-fit w-full flex-col items-center justify-center pt-2">
-	<div class="w-full max-w-6xl">
-		<Card>
-			<CardHeader>
-				<CardTitle>
-					<h1
-						class="mb-2 scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl"
-					>
-						#{data.htag}
-					</h1>
-					<Separator></Separator>
-					Uso del hashtag:
-					<span class="text-blue-500"> </span>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<p>El hashtag se ha utilizado {data.cantidad} veces</p>
-			</CardContent>
-		</Card>
+	<div class=" w-full max-w-6xl flex-col items-center">
+		<div class="flex justify-center">
+			<Card class="w-fit">
+				<CardContent>
+					<CardTitle>
+						<h1
+							class="mb-2 scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-blue-500 lg:text-5xl"
+						>
+							#{data.htag}
+						</h1>
+						<Separator></Separator>
+					</CardTitle>
+					<p>
+						El hashtag se ha utilizado {data.posts.count} ve{#if data.posts.count > 1}ces{:else}z{/if}
+					</p>
+				</CardContent>
+			</Card>
+		</div>
 		<hr class="my-2" />
 
-		<div class="mt-1">
+		<div class="mt-1 flex flex-col gap-3">
 			{#each postsfiltro as post}
 				<PostCard {post} bind:postAModificar />
 			{/each}
