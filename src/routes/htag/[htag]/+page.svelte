@@ -9,6 +9,7 @@
 	import { updatePostStore } from '@/stores/posts';
 	import { updatePost } from '@/hooks/updatePost';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import { page } from '$app/state';
 
 	interface props {
 		data: {
@@ -78,3 +79,11 @@
 		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
+
+<svelte:head>
+	<meta property="og:title" content="Mini-x" />
+	<meta property="og:description" content={`Buscando #${page.params.htag}`} />
+	<meta property="og:image" content="https://minix-front.vercel.app/x.png" />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
+	<meta property="og:type" content="website" />
+</svelte:head>

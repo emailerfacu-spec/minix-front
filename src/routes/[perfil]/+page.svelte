@@ -177,3 +177,10 @@
 		</DialogContent>
 	</Dialog>
 </div>
+<svelte:head>
+	<meta property="og:title" content="Mini-x" />
+	<meta property="og:description" content={`viendo el perfil de @${data.username}`} />
+	<meta property="og:image" content={data.imageUrl} />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
+	<meta property="og:type" content="website" />
+</svelte:head>

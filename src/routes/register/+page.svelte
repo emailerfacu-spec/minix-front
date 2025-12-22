@@ -32,3 +32,11 @@
 		{/if}
 	</div>
 </div>
+
+<svelte:head>
+	<meta property="og:title" content="Mini-x" />
+	<meta property="og:description" content={`Registra un usuario`} />
+	<meta property="og:image" content="https://minix-front.vercel.app/x.png" />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
+	<meta property="og:type" content="website" />
+</svelte:head>

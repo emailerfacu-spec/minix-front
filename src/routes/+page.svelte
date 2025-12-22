@@ -33,6 +33,14 @@
 	}
 </script>
 
+<svelte:head>
+	<meta property="og:title" content="Mini-x" />
+	<meta property="og:description" content="Pagina Principal" />
+	<meta property="og:image" content="https://tusitio.com/x.png" />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
+	<meta property="og:type" content="website" />
+</svelte:head>
+
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		<div class="flex flex-col gap-2">
