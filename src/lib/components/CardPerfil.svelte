@@ -20,6 +20,7 @@
 	let cargando = $state(false);
 	let hoverimg = $state(false);
 	let image: File | null = $state(null);
+	let usu = $state({displayName: data.displayName, bio: data.bio})
 
 	async function cambiarFotoDePerfil() {
 		const input = document.createElement('input');
@@ -85,11 +86,11 @@
     		</div>
 
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{data.displayName}
+				{usu.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
-				{data.bio}
+			<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
+				{@html usu.bio.replaceAll("\n", "<br>")}
 			</p>
 		{:else}
 			<div class="relative flex w-full items-center justify-center">
@@ -106,11 +107,11 @@
 				</Avatar>
 			</div>
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{data.displayName}
+				{usu.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
-				{data.bio}
+			<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
+				{@html usu.bio.replaceAll("\n", "<br>")}
 			</p>
 			{/if}
 		<div class="flex gap-2 mt-2">

@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { apiBase } from '@/stores/url';
-	import Ban from '@lucide/svelte/icons/ban';
 	import PenLine from '@lucide/svelte/icons/pen-line';
-	import Card from '@/components/ui/card/card.svelte';
-	import { CardContent } from '@/components/ui/card';
 	import type { Post } from '../../types.js';
 	import { fade, slide } from 'svelte/transition';
 	import PostCard from '@/components/PostCard.svelte';
@@ -17,13 +14,10 @@
 	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
 	import { sesionStore } from '@/stores/usuario.js';
-	import CardHeader from '@/components/ui/card/card-header.svelte';
-	import CardTitle from '@/components/ui/card/card-title.svelte';
-	import Badge from '@/components/ui/badge/badge.svelte';
 	import CardCargando from '@/components/CardCargando.svelte';
 	import CardError from '@/components/CardError.svelte';
 	import CardPerfil from '@/components/CardPerfil.svelte';
-	import UserPen from '@lucide/svelte/icons/user-pen';
+	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 
 	let { params } = $props();
 
@@ -78,7 +72,7 @@
 		postAModificar = null;
 	}
 </script>
-
+{$inspect(data)}
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 			<CardPerfil bind:data />
@@ -136,11 +130,7 @@
 	</Dialog>
 </div>
 
-<div class="fixed bottom-8 right-8">
-    <Button variant="default" size="icon-lg" >
-      <UserPen/>
-    </Button>
-</div>
+<DialogModificarUsuario bind:data />
 
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
