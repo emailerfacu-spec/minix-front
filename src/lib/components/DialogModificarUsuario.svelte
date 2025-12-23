@@ -44,7 +44,8 @@
 		cargando = false;
 		open = false;
 		// invalidateAll();
-		invalidate(page.url);
+		// invalidate(page.url);
+		location.reload();
 	}
 
 
