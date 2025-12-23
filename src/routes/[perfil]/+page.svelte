@@ -23,6 +23,7 @@
 	import CardCargando from '@/components/CardCargando.svelte';
 	import CardError from '@/components/CardError.svelte';
 	import CardPerfil from '@/components/CardPerfil.svelte';
+	import UserPen from '@lucide/svelte/icons/user-pen';
 
 	let { params } = $props();
 
@@ -134,6 +135,13 @@
 		</DialogContent>
 	</Dialog>
 </div>
+
+<div class="fixed bottom-8 right-8">
+    <Button variant="default" size="icon-lg" >
+      <UserPen/>
+    </Button>
+</div>
+
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
 	<meta property="og:description" content={`viendo el perfil de @${data.username}`} />
