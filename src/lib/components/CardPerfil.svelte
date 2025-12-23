@@ -107,6 +107,7 @@
 			</div>
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
 				{data.displayName}
+				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
 			<p class="mt-4 rounded-full bg-accent p-4 text-center text-muted-foreground">
 				{data.bio}
