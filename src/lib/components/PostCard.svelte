@@ -45,16 +45,13 @@
 	let errorLike = $state(false);
 
 	let contenido = $derived(() => {
-		let t = '';
-		t = post.content
+		let t = post.content
 			.replaceAll('&', '')
 			.replaceAll('<', '')
 			.replaceAll('>', '')
-			.replaceAll('"', '&quot;')
-			.replaceAll("'", '&#039;')
-			.replaceAll('fetch', '');
+			.replaceAll('fetch', '')
+			.replaceAll('\n', '<br>');
 
-		t = post.content.replaceAll('\n', '<br>');
 		t = t.replaceAll(
 			/#\p{L}*/gu,
 			(match) =>
