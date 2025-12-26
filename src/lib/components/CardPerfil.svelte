@@ -48,7 +48,7 @@
 	}
 </script>
 
-{$inspect(data)}
+<!-- {$inspect(data)} -->
 <Card class="mb-2 flex overflow-hidden">
 	<CardContent>
 		{#if cargando}
