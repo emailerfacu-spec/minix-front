@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { Post } from '../../types';
 
-export const posts = writable<Post[]>([]);
+export const posts = writable<Post[]>(undefined);
 
 export const setPosts = (newPosts: Post[]) => {
 	posts.set(newPosts);
