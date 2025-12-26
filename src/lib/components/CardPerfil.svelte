@@ -38,7 +38,7 @@
 		});
 		if (image === null) return;
 		cargando = true;
-		await updateUsuario({ id: data.id, profileImage: true, image: image });
+		await updateUsuario({ id: data.id, profileImage: false, image: image });
 		let ret = await obtenerUsuarioPorUsername(data.username);
 		if (ret) {
 			data = { ...data, ...ret };
