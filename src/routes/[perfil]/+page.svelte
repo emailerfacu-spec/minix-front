@@ -127,7 +127,9 @@
 	</Dialog>
 </div>
 
-<DialogModificarUsuario bind:data />
+{#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
+	<DialogModificarUsuario bind:data />
+{/if}
 
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
