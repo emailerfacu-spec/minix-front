@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { Post } from '../../types';
 
-export const posts = writable<Post[]>(undefined);
+export const posts = writable<Post[] | undefined>(undefined);
 
 export const setPosts = (newPosts: Post[]) => {
 	posts.set(newPosts);
@@ -20,9 +20,10 @@ export const updatePostStore = (postId: string, updatedData: Partial<Post>) => {
 export const removePost = (postId: string) => {
 	posts.update((currentPosts) => {
 		const a = currentPosts.filter((post) => post.id !== postId);
-		console.log(a);
 		return a;
 	});
+};
 
-	console.log(postId);
+export const resetPosts = () => {
+	posts.set(undefined);
 };
