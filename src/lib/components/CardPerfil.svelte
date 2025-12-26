@@ -124,12 +124,12 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidos:</CardTitle>
-						{#if data.seguidos.response.length !== undefined}
+						{#if Array.isArray(data.seguidos.response)}
 							<Badge variant="secondary">{data.seguidos.response.length || 0}</Badge>
 						{/if}
 					</CardHeader>
 					<CardContent>
-						{#if data.seguidos.response.length || 0 === 0}
+						{#if (data.seguidos.response?.length || 0) === 0}
 							<h3>No hay Seguidos</h3>
 						{:else}
 							{#each data.seguidos.response as seguidos (seguidos.id)}
@@ -145,12 +145,12 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidores:</CardTitle>
-						{#if data.seguidores.response.length !== undefined}
+						{#if Array.isArray(data.seguidores.response)}
 							<Badge variant="secondary">{data.seguidores.response.length || 0}</Badge>
 						{/if}
 					</CardHeader>
 					<CardContent>
-						{#if data.seguidores.response.length || 0 === 0}
+						{#if (data.seguidores.response?.length || 0) === 0}
 							<h3>No hay Seguidores</h3>
 						{:else}
 							{#each data.seguidores.response as seguidores (seguidores.id)}
