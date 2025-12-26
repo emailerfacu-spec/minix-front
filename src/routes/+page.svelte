@@ -3,15 +3,17 @@
 	import { Content } from '@/components/ui/card';
 	import { sesionStore } from '@/stores/usuario';
 	import CrearPost from '@/components/crear-post.svelte';
-	import { posts, setPosts, updatePostStore } from '@/stores/posts';
+	import { posts, resetPosts, setPosts, updatePostStore } from '@/stores/posts';
 	import PostCard from '@/components/PostCard.svelte';
 	import type { Post } from '../types';
 	import ModalEditar from './[perfil]/modalEditar.svelte';
 	import { updatePost } from '@/hooks/updatePost';
 	import { fade, slide } from 'svelte/transition';
 	import { getPosts } from '@/hooks/getPosts';
+	import Spinner from '@/components/ui/spinner/spinner.svelte';
 
 	$effect(() => {
+		resetPosts();
 		(async () => {
 			setPosts(await getPosts());
 		})();
@@ -49,7 +51,14 @@
 			{/if}
 			<hr />
 
-			{#if $posts.length <= 0}
+			{#if $posts === undefined}
+				<Card>
+					<Content class="flex items-center justify-center gap-2">
+						<Spinner class="h-10 w-10" />
+						<p>Cargando</p>
+					</Content>
+				</Card>
+			{:else if $posts.length <= 0}
 				<Card>
 					<Content>
 						<p class=" text-center leading-7 not-first:mt-6">No hay Posts que mostrar</p>

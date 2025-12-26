@@ -38,7 +38,7 @@
 		});
 		if (image === null) return;
 		cargando = true;
-		await updateUsuario({ id: data.id, profileImage: true, image: image });
+		await updateUsuario({ id: data.id, profileImage: false, image: image });
 		let ret = await obtenerUsuarioPorUsername(data.username);
 		if (ret) {
 			data = { ...data, ...ret };
@@ -92,7 +92,8 @@
 			</h1>
 			{#if usu.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-					{@html usu.bio.replaceAll('\n', '<br>')}
+					{usu.bio.replaceAll('\n', '<br>')}
+					<!-- {@html usu.bio.replaceAll('\n', '<br>')} -->
 				</p>
 			{/if}
 		{:else}
