@@ -20,7 +20,7 @@
 	let cargando = $state(false);
 	let hoverimg = $state(false);
 	let image: File | null = $state(null);
-	let usu = $state({displayName: data.displayName, bio: data.bio})
+	let usu = $state({ displayName: data.displayName, bio: data.bio });
 
 	async function cambiarFotoDePerfil() {
 		const input = document.createElement('input');
@@ -47,6 +47,7 @@
 		hoverimg = false;
 	}
 </script>
+
 <!-- {$inspect(data)} -->
 <Card class="mb-2 flex overflow-hidden">
 	<CardContent>
@@ -57,33 +58,33 @@
 				<Skeleton class="h-16 w-3/4 rounded-full" />
 			</div>
 		{:else if $sesionStore?.isAdmin || $sesionStore?.username == data.username}
-    		<div class="w-full flex justify-center">
-    			<button
-    				class="relative flex  items-center justify-center"
-    				onmouseenter={() => (hoverimg = true)}
-    				onmouseleave={() => (hoverimg = false)}
-    				onclick={cambiarFotoDePerfil}
-    			>
-    				<Avatar
-    					class={{
-    						'brightness-0': hoverimg,
-    						'relative z-0 mt-2 scale-250 border-2 border-slate-950 transition-all': true
-    					}}
-    				>
-    					<AvatarImage src={data.imageUrl} alt="Imagen de perfil"></AvatarImage>
-    					<AvatarFallback class="select-none">
-    						{data.displayName?.[0]?.toUpperCase() || ''}
-    					</AvatarFallback>
-    				</Avatar>
-                    <div
-                        class="absolute inset-0 flex justify-center items-center"
-                        class:opacity-100={hoverimg}
-                        class:opacity-0={!hoverimg}
-                    >
-                        <Pen class="text-white" />
-                    </div>
-   	            </button>
-    		</div>
+			<div class="flex w-full justify-center">
+				<button
+					class="relative flex items-center justify-center"
+					onmouseenter={() => (hoverimg = true)}
+					onmouseleave={() => (hoverimg = false)}
+					onclick={cambiarFotoDePerfil}
+				>
+					<Avatar
+						class={{
+							'brightness-0': hoverimg,
+							'relative z-0 mt-2 scale-250 border-2 border-slate-950 transition-all': true
+						}}
+					>
+						<AvatarImage src={data.imageUrl} alt="Imagen de perfil"></AvatarImage>
+						<AvatarFallback class="select-none">
+							{data.displayName?.[0]?.toUpperCase() || ''}
+						</AvatarFallback>
+					</Avatar>
+					<div
+						class="absolute inset-0 flex items-center justify-center"
+						class:opacity-100={hoverimg}
+						class:opacity-0={!hoverimg}
+					>
+						<Pen class="text-white" />
+					</div>
+				</button>
+			</div>
 
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
 				{usu.displayName}
