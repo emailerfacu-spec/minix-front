@@ -45,9 +45,17 @@
 	let errorLike = $state(false);
 
 	let contenido = $derived(() => {
-		let t = post.content.replaceAll('\n', '<br>');
-		t = post.content.replaceAll('<', '');
-		t = t.replace(
+		let t = '';
+		t = post.content
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#039;')
+			.replaceAll('fetch', '');
+
+		t = post.content.replaceAll('\n', '<br>');
+		t = t.replaceAll(
 			/#\p{L}*/u,
 			(match) =>
 				`<a class="hover:text-blue-200 text-blue-400" href="/htag/${match.replace('#', '')}">${match}</a>`
