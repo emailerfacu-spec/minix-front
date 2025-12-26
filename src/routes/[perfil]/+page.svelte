@@ -26,7 +26,6 @@
 	let postAModificar: Post | null = $state(null);
 
 	let showCrearPost = $state(false);
-	const toggleCrearPost = () => (showCrearPost = !showCrearPost);
 
 	let data = $derived(page.data);
 
