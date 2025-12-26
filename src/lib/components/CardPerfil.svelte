@@ -48,7 +48,7 @@
 	}
 </script>
 
-<!-- {$inspect(data)} -->
+{$inspect(data)}
 <Card class="mb-2 flex overflow-hidden">
 	<CardContent>
 		{#if cargando}
@@ -124,7 +124,9 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidos:</CardTitle>
-						<Badge variant="secondary">{data.seguidos.response.length || 0}</Badge>
+						{#if data.seguidos.response.length !== undefined}
+							<Badge variant="secondary">{data.seguidos.response.length || 0}</Badge>
+						{/if}
 					</CardHeader>
 					<CardContent>
 						{#if data.seguidos.response.length || 0 === 0}
@@ -143,7 +145,9 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidores:</CardTitle>
-						<Badge variant="secondary">{data.seguidores.response.length || 0}</Badge>
+						{#if data.seguidores.response.length !== undefined}
+							<Badge variant="secondary">{data.seguidores.response.length || 0}</Badge>
+						{/if}
 					</CardHeader>
 					<CardContent>
 						{#if data.seguidores.response.length || 0 === 0}
