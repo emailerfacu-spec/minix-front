@@ -56,7 +56,7 @@
 
 		t = post.content.replaceAll('\n', '<br>');
 		t = t.replaceAll(
-			/#\p{L}*/u,
+			/#\p{L}*/gu,
 			(match) =>
 				`<a class="hover:text-blue-200 text-blue-400" href="/htag/${match.replace('#', '')}">${match}</a>`
 		);
