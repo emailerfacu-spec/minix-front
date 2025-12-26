@@ -124,7 +124,7 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidos:</CardTitle>
-						{#if Array.isArray(data.seguidos.response)}
+						{#if Array.isArray(data?.seguidos?.response)}
 							<Badge variant="secondary">{data.seguidos.response.length || 0}</Badge>
 						{/if}
 					</CardHeader>
@@ -145,7 +145,7 @@
 				<CardContent>
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidores:</CardTitle>
-						{#if Array.isArray(data.seguidores.response)}
+						{#if Array.isArray(data?.seguidores?.response)}
 							<Badge variant="secondary">{data.seguidores.response.length || 0}</Badge>
 						{/if}
 					</CardHeader>
