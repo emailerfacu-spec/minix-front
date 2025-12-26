@@ -3,9 +3,14 @@ import type { UserResponseDto } from '../../types';
 import { get } from 'svelte/store';
 import { sesionStore } from '@/stores/usuario';
 
-export async function obtenerUsuarioPorUsername(username: string): Promise<UserResponseDto | null> {
+export async function obtenerUsuarioPorUsername(
+	username: string,
+	fetch2?: Function
+): Promise<UserResponseDto | null> {
 	try {
-		const response = await fetch(`${get(apiBase)}/api/users/username/${username}`, {
+		const fetchFunction = fetch2 || fetch;
+
+		const response = await fetchFunction(`${get(apiBase)}/api/users/username/${username}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

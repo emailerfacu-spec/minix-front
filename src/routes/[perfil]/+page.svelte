@@ -1,14 +1,7 @@
 <script lang="ts">
 	import { apiBase } from '@/stores/url';
-	import Ban from '@lucide/svelte/icons/ban';
 	import PenLine from '@lucide/svelte/icons/pen-line';
-	import Card from '@/components/ui/card/card.svelte';
-	import Avatar from '@/components/ui/avatar/avatar.svelte';
-	import AvatarImage from '@/components/ui/avatar/avatar-image.svelte';
-	import AvatarFallback from '@/components/ui/avatar/avatar-fallback.svelte';
-	import { CardContent } from '@/components/ui/card';
 	import type { Post } from '../../types.js';
-	import Spinner from '@/components/ui/spinner/spinner.svelte';
 	import { fade, slide } from 'svelte/transition';
 	import PostCard from '@/components/PostCard.svelte';
 	import { posts, setPosts, updatePostStore } from '@/stores/posts.js';
@@ -19,15 +12,12 @@
 	import { Dialog } from '@/components/ui/dialog/index.js';
 	import CrearPost from '@/components/crear-post.svelte';
 	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
-	import DialogHeader from '@/components/ui/dialog/dialog-header.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
 	import { sesionStore } from '@/stores/usuario.js';
-	import CardHeader from '@/components/ui/card/card-header.svelte';
-	import CardTitle from '@/components/ui/card/card-title.svelte';
-	import Badge from '@/components/ui/badge/badge.svelte';
 	import CardCargando from '@/components/CardCargando.svelte';
 	import CardError from '@/components/CardError.svelte';
 	import CardPerfil from '@/components/CardPerfil.svelte';
+	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 
 	let { params } = $props();
 
@@ -38,13 +28,7 @@
 	let showCrearPost = $state(false);
 	const toggleCrearPost = () => (showCrearPost = !showCrearPost);
 
-	const { subscribe } = apiBase;
-	let baseUrl: string = '';
-	let data = $state(page.data);
-
-	subscribe((value) => {
-		baseUrl = value;
-	})();
+	let data = $derived(page.data);
 
 	$effect(() => {
 		obtenerPosts();
@@ -52,7 +36,7 @@
 
 	async function obtenerPosts() {
 		try {
-			const req = await fetch(baseUrl + '/api/posts/user/' + params.perfil, {
+			const req = await fetch($apiBase + '/api/posts/user/' + params.perfil, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${$sesionStore?.accessToken}`
@@ -83,52 +67,12 @@
 	}
 </script>
 
+<!-- {$inspect(data)} -->
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		<div class="flex gap-2">
+		{#key data}
 			<CardPerfil bind:data />
-			<aside class="flex w-1/4 flex-col gap-2">
-				<Card class="w-full">
-					<CardContent>
-						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidos:</CardTitle>
-							<Badge variant="secondary">{data.seguidos.length}</Badge>
-						</CardHeader>
-						<CardContent>
-							{#if data.seguidos.length === 0}
-								<h3>No hay Seguidos</h3>
-							{:else}
-								{#each data.seguidos as seguidos (seguidos.id)}
-									<p class="text-muted-foreground">
-										{seguidos.username}
-									</p>
-								{/each}
-							{/if}
-						</CardContent>
-					</CardContent>
-				</Card>
-				<Card class="w-full">
-					<CardContent>
-						<CardHeader class="flex justify-between">
-							<CardTitle>Seguidores:</CardTitle>
-							<Badge variant="secondary">{data.seguidores.length}</Badge>
-						</CardHeader>
-						<CardContent>
-							{#if data.seguidores.length === 0}
-								<h3>No hay Seguidores</h3>
-							{:else}
-								{#each data.seguidores as seguidores (seguidores.id)}
-									<p class="text-muted-foreground">
-										{seguidores.username}
-									</p>
-								{/each}
-							{/if}
-						</CardContent>
-					</CardContent>
-				</Card>
-			</aside>
-		</div>
-
+		{/key}
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>
@@ -182,3 +126,15 @@
 		</DialogContent>
 	</Dialog>
 </div>
+
+{#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
+	<DialogModificarUsuario bind:data />
+{/if}
+
+<svelte:head>
+	<meta property="og:title" content="Mini-x" />
+	<meta property="og:description" content={`viendo el perfil de @${data.username}`} />
+	<meta property="og:image" content={data.imageUrl} />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
+	<meta property="og:type" content="website" />
+</svelte:head>

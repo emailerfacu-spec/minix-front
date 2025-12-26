@@ -47,7 +47,7 @@
 	let contenido = $derived(() => {
 		let t = post.content.replaceAll('\n', '<br>');
 		t = t.replace(
-			/#\w*/gm,
+			/#\p{L}*/u,
 			(match) =>
 				`<a class="hover:text-blue-200 text-blue-400" href="/htag/${match.replace('#', '')}">${match}</a>`
 		);
