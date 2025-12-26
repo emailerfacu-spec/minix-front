@@ -46,6 +46,7 @@
 
 	let contenido = $derived(() => {
 		let t = post.content.replaceAll('\n', '<br>');
+		t = post.content.replaceAll('<', '');
 		t = t.replace(
 			/#\p{L}*/u,
 			(match) =>
