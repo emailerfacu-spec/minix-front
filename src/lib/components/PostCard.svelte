@@ -47,9 +47,9 @@
 	let contenido = $derived(() => {
 		let t = '';
 		t = post.content
-			.replaceAll('&', '&amp;')
-			.replaceAll('<', '&lt;')
-			.replaceAll('>', '&gt;')
+			.replaceAll('&', '')
+			.replaceAll('<', '')
+			.replaceAll('>', '')
 			.replaceAll('"', '&quot;')
 			.replaceAll("'", '&#039;')
 			.replaceAll('fetch', '');
