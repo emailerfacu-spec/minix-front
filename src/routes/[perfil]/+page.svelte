@@ -28,13 +28,7 @@
 	let showCrearPost = $state(false);
 	const toggleCrearPost = () => (showCrearPost = !showCrearPost);
 
-	const { subscribe } = apiBase;
-	let baseUrl: string = '';
-	let data = $state(page.data);
-
-	subscribe((value) => {
-		baseUrl = value;
-	})();
+	let data = $derived(page.data);
 
 	$effect(() => {
 		obtenerPosts();
@@ -42,7 +36,7 @@
 
 	async function obtenerPosts() {
 		try {
-			const req = await fetch(baseUrl + '/api/posts/user/' + params.perfil, {
+			const req = await fetch($apiBase + '/api/posts/user/' + params.perfil, {
 				method: 'GET',
 				headers: {
 					Authorization: `Bearer ${$sesionStore?.accessToken}`
@@ -72,10 +66,13 @@
 		postAModificar = null;
 	}
 </script>
-{$inspect(data)}
+
+<!-- {$inspect(data)} -->
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
+		{#key data}
 			<CardPerfil bind:data />
+		{/key}
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>

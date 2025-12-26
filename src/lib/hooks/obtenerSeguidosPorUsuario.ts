@@ -5,10 +5,13 @@ import { get } from 'svelte/store';
 
 export async function obtenerSeguidosPorUsuario(
 	id: string,
-	limit: number = 20
+	limit: number = 20,
+	fetch2?: Function
 ): Promise<UsersResponseDto | null> {
 	try {
-		const response = await fetch(`${get(apiBase)}/api/users/${id}/following?limit=${limit}`, {
+		const fetchFunc = fetch2 || fetch;
+
+		const response = await fetchFunc(`${get(apiBase)}/api/users/${id}/following?limit=${limit}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
