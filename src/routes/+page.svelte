@@ -3,7 +3,7 @@
 	import { Content } from '@/components/ui/card';
 	import { sesionStore } from '@/stores/usuario';
 	import CrearPost from '@/components/crear-post.svelte';
-	import { posts, setPosts, updatePostStore } from '@/stores/posts';
+	import { posts, resetPosts, setPosts, updatePostStore } from '@/stores/posts';
 	import PostCard from '@/components/PostCard.svelte';
 	import type { Post } from '../types';
 	import ModalEditar from './[perfil]/modalEditar.svelte';
@@ -13,6 +13,7 @@
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
 
 	$effect(() => {
+		resetPosts();
 		(async () => {
 			setPosts(await getPosts());
 		})();
