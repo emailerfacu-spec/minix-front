@@ -92,7 +92,8 @@
 			</h1>
 			{#if usu.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-					{@html usu.bio.replaceAll('\n', '<br>')}
+					{usu.bio.replaceAll('\n', '<br>')}
+					<!-- {@html usu.bio.replaceAll('\n', '<br>')} -->
 				</p>
 			{/if}
 		{:else}
