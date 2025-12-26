@@ -90,9 +90,11 @@
 				{usu.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-				{@html usu.bio.replaceAll("\n", "<br>")}
-			</p>
+			{#if usu.bio}
+				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
+					{@html usu.bio.replaceAll('\n', '<br>')}
+				</p>
+			{/if}
 		{:else}
 			<div class="relative flex w-full items-center justify-center">
 				<Avatar
@@ -111,11 +113,13 @@
 				{usu.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-				{@html usu.bio.replaceAll("\n", "<br>")}
-			</p>
+			{#if usu.bio}
+				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
+					{@html usu.bio.replaceAll('\n', '<br>')}
+				</p>
 			{/if}
-		<div class="flex gap-2 mt-2">
+		{/if}
+		<div class="mt-2 flex gap-2">
 			<Card class="w-full">
 				<CardContent>
 					<CardHeader class="flex justify-between">
