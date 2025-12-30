@@ -26,6 +26,7 @@
 	import InputGroup from './ui/input-group/input-group.svelte';
 	import InputGroupAddon from './ui/input-group/input-group-addon.svelte';
 	import InputGroupInput from './ui/input-group/input-group-input.svelte';
+	import AgregarUsuario from './admin/AgregarUsuario.svelte';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -108,7 +109,8 @@
 		openBorrar = true;
 		usuarioBorrar = usuario;
 	}
-
+	
+let opencrearUsuario = $state(false);
 	// $inspect(usuarios);
 </script>
 
@@ -117,7 +119,7 @@
 		<InputGroupAddon align="inline-start"><Search></Search></InputGroupAddon>
 		<InputGroupInput type="text" placeholder="Buscar usuario..." bind:value={search} />
 	</InputGroup>
-	<Button variant="secondary" class="bg-blue-500/20"><Plus /></Button>
+	<Button onclick={() =>opencrearUsuario = !opencrearUsuario} variant="secondary" class="bg-blue-500/20"><Plus /></Button>
 </div>
 
 <Table>
@@ -198,3 +200,4 @@
 <BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />
+<AgregarUsuario bind:open={opencrearUsuario} />
