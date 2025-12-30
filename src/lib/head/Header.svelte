@@ -9,6 +9,7 @@
 	import { apiBase } from '@/stores/url';
 	import { goto } from '$app/navigation';
 	import AvatarButton from './AvatarButton.svelte';
+	import Busqueda from './Busqueda.svelte';
 
 	let menuOpen = $state(false);
 	const toggleMenu = () => (menuOpen = !menuOpen);
@@ -56,7 +57,8 @@
 		</div>
 
 		<!-- Desktop menu -->
-		<div class="flex items-center justify-end md:flex">
+		<div class="flex items-center justify-end gap-2 md:flex">
+			<Busqueda></Busqueda>
 			{#if showCerrarSesion}
 				{#if $sesionStore !== null}
 					<AvatarButton></AvatarButton>
