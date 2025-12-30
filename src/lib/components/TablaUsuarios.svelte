@@ -19,6 +19,8 @@
 	import { fade } from 'svelte/transition';
 	import type { Unsubscriber } from 'svelte/store';
 	import Input from './ui/input/input.svelte';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import BorrarUsuario from './BorrarUsuario.svelte';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -28,6 +30,9 @@
 
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
+
+	let openBorrar = $state(false);
+	let usuarioBorrar: UserResponseDto | null = $state(null);
 
 	//si ponia contraseña en español quedaba muy largo el nombre
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
@@ -84,12 +89,6 @@
 		return sortDirection === 'asc' ? '↑' : '↓';
 	}
 
-	$effect(() => {
-		if (!open) {
-			usuarioCambioPass = null;
-		}
-	});
-
 	function handleCambiarContraseña(usuario: UserResponseDto) {
 		open = true;
 		usuarioCambioPass = usuario;
@@ -99,6 +98,13 @@
 		openModificarUsuario = true;
 		usuarioModificar = usuario;
 	}
+
+	function handleBorrar(usuario: UserResponseDto) {
+		openBorrar = true;
+		usuarioBorrar = usuario;
+	}
+
+	// $inspect(usuarios);
 </script>
 
 <div class="mb-4">
@@ -156,11 +162,27 @@
 							<p>Modificar Usuario</p>
 						</TooltipContent>
 					</Tooltip>
-					<Button></Button>
+					<Tooltip>
+						<TooltipTrigger>
+							<Button
+								disabled={usuario.isAdmin}
+								onclick={() => handleBorrar(usuario)}
+								variant="destructive"><Trash_2 /></Button
+							>
+						</TooltipTrigger>
+						<TooltipContent>
+							{#if usuario.isAdmin}
+								No se pueden eliminar usuarios Admin
+							{:else}
+								Eliminar Usuario
+							{/if}
+						</TooltipContent>
+					</Tooltip>
 				</TableCell>
 			</TableRow>
 		{/each}
 	</TableBody>
 </Table>
+<BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />

@@ -99,12 +99,14 @@
 		<div class="flex flex-col">
 			<div class="flex items-center justify-between">
 				<div class="flex gap-3">
-					<a href={`/${post.authorName}`}>
-						<Avatar>
-							<AvatarImage src={post.authorImageUrl}></AvatarImage>
-							<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
-						</Avatar>
-					</a>
+					{#if post.authorName !== '[deleted]'}
+						<a href={`/${post.authorName}`}>
+							<Avatar>
+								<AvatarImage src={post.authorImageUrl}></AvatarImage>
+								<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
+							</Avatar>
+						</a>
+					{/if}
 					<div class="flex space-x-2">
 						<span class="text-lg font-medium">{post.authorDisplayName}</span>
 						<span class="text-lg text-muted-foreground">@{post.authorName}</span>

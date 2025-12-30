@@ -6,7 +6,8 @@ import type { UserResponseDto } from '../../../types.js';
 
 export const ssr = false;
 
-export async function load({}) {
+export async function load({ depends }) {
+	depends('admin:load');
 	const response = await fetch(get(apiBase) + '/api/admin/users', {
 		method: 'GET',
 		headers: {
