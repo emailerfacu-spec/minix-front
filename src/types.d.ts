@@ -1,5 +1,4 @@
 export interface Post {
-	_id: string;
 	id: string;
 	authorId: string;
 	authorDisplayName: string;
@@ -76,6 +75,7 @@ export interface PostResponseDto {
 	isEdited: boolean;
 	visibility: string;
 	hashtags: string[]?;
+	isLiked: boolean?;
 }
 
 export interface UserResponseDto {
