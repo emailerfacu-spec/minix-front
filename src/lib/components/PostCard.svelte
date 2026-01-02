@@ -82,6 +82,7 @@
 			likePost(post),
 			new Promise((resolve) => setTimeout(resolve, 300))
 		]);
+		console.log(1);
 		if (ok) {
 			if (post.isLiked) {
 				post.likesCount--;
@@ -93,7 +94,9 @@
 			errorLike = true;
 			mensajeError = message;
 		}
+		console.log(1);
 		updatePostStore(post.id, post);
+		console.log(1);
 		cargandoLike = false;
 	}
 </script>

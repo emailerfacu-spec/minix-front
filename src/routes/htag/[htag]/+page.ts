@@ -1,5 +1,4 @@
 import { obtenerCantidadDeUsosdeHtag } from '@/hooks/obtenerCantidadDeUsosdeHtag.js';
-import { error } from '@sveltejs/kit';
 
 export async function load({ params, fetch }) {
 	let { htag } = params;
