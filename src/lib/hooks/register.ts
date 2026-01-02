@@ -1,8 +1,14 @@
 import { apiBase } from '@/stores/url';
 import { goto } from '$app/navigation';
 import type { RegisterDto } from '../../types';
+import { get } from 'svelte/store';
 
-export async function register(e: SubmitEvent, dto: RegisterDto, callbackfn: () => void) {
+export async function register(
+	e: SubmitEvent,
+	dto: RegisterDto,
+	callbackfn: () => void,
+	admin: boolean = false
+) {
 	e.preventDefault();
 	if (
 		dto.password == '' ||
@@ -12,13 +18,7 @@ export async function register(e: SubmitEvent, dto: RegisterDto, callbackfn: () 
 	)
 		return;
 	try {
-		const { subscribe } = apiBase;
-		let baseUrl: string = '';
-
-		subscribe((value) => {
-			baseUrl = value;
-		})();
-		const req = await fetch(baseUrl + '/api/auth/register', {
+		const req = await fetch(get(apiBase) + '/api/auth/register', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ export async function register(e: SubmitEvent, dto: RegisterDto, callbackfn: () 
 		});
 		if (req.ok) {
 			const data = await req.json();
-			goto('/login?msg=' + data.message);
+			if (!admin) goto('/login?msg=' + data.message);
 		} else {
 			callbackfn();
 		}

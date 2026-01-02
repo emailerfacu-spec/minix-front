@@ -8,6 +8,7 @@
 	import Spinner from '../ui/spinner/spinner.svelte';
 	import { register } from '@/hooks/register';
 	import type { RegisterDto } from '../../../types';
+	import { invalidate } from '$app/navigation';
 
 	interface Prop {
 		open: boolean;
@@ -29,9 +30,18 @@
 		cargando = true;
 		error = '';
 
-		await register(e, dto, () => {
-			error = 'Error al registrar el usuario';
-		});
+		await register(
+			e,
+			dto,
+			() => {
+				error = 'Error al registrar el usuario';
+			},
+			true
+		);
+		if (error == '') {
+			invalidate('admin:load');
+			open = false;
+		}
 
 		cargando = false;
 	}
@@ -57,11 +67,7 @@
 					</InputGroup>
 
 					<InputGroup>
-						<InputGroupInput
-							type="email"
-							disabled={cargando}
-							bind:value={dto.email}
-						/>
+						<InputGroupInput type="email" disabled={cargando} bind:value={dto.email} />
 						<InputGroupAddon>Email</InputGroupAddon>
 					</InputGroup>
 
@@ -71,11 +77,7 @@
 					</InputGroup>
 
 					<InputGroup>
-						<InputGroupInput
-							type="password"
-							disabled={cargando}
-							bind:value={dto.password}
-						/>
+						<InputGroupInput type="password" disabled={cargando} bind:value={dto.password} />
 						<InputGroupAddon>Contraseña</InputGroupAddon>
 					</InputGroup>
 
@@ -90,11 +92,7 @@
 							{/if}
 						</Button>
 
-						<Button
-							variant="secondary"
-							disabled={cargando}
-							onclick={() => (open = false)}
-						>
+						<Button variant="secondary" disabled={cargando} onclick={() => (open = false)}>
 							Cancelar
 						</Button>
 					</div>
