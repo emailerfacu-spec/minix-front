@@ -23,11 +23,10 @@
 
 	let { data }: props = $props();
 
-	let posts = $state(data.posts.response);
 	let postAModificar: Post | null = $state(null);
 
 	let postsfiltro = $derived(
-		posts.filter((x) => {
+		data.posts.response.filter((x) => {
 			const regex = new RegExp(`#${data.htag}\\b`, 'gm');
 			return regex.test(x.content);
 		})
@@ -68,9 +67,11 @@
 		<hr class="my-2" />
 
 		<div class="mt-1 flex flex-col gap-3">
-			{#each postsfiltro as post}
-				<PostCard {post} bind:postAModificar />
-			{/each}
+			{#key data.posts.response}
+				{#each postsfiltro as post}
+					<PostCard {post} bind:postAModificar />
+				{/each}
+			{/key}
 		</div>
 	</div>
 </div>
