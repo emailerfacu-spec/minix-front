@@ -19,6 +19,7 @@
 	import Label from '@/components/ui/label/label.svelte';
 	import { resolve } from '$app/paths';
 	import { busquedaHashtags } from '@/hooks/busquedaHashtags';
+	import Separator from '@/components/ui/separator/separator.svelte';
 
 	let search: string = $state('');
 	let open = $state(false);
@@ -55,16 +56,18 @@
 <svelte:document onkeydown={handleKeydown} />
 
 <InputGroup class="group">
-	<InputGroupAddon align="inline-start"><Search /></InputGroupAddon>
+	<InputGroupAddon class="me-3" align="inline-start"><Search /></InputGroupAddon>
+	<Separator orientation="vertical"></Separator>
+
 	<InputGroupInput
 		type="text"
 		placeholder="Buscar Usuario o Hashtag"
 		bind:value={search}
 		oninput={() => (open = true)}
-		class="max-w-0 transition-[max-width] duration-1000 ease-out group-hover:max-w-xs focus:max-w-xs"
+		class="max-w-0 p-1! transition-[max-width] duration-1000 ease-out group-hover:max-w-xs focus:max-w-xs"
 	/>
-	<InputGroupAddon align="inline-end" class="flex gap-0">
-		<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>
+	<InputGroupAddon align="inline-end">
+		<Kbd>Ctrl+K</Kbd>
 	</InputGroupAddon>
 </InputGroup>
 <CommandDialog bind:open>
