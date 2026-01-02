@@ -23,9 +23,11 @@
 			</CardHeader>
 			<CardContent>
 				{#if page.data.usuarios.length === 0}
-					<CardDescription>No hay posts que mostar</CardDescription>
+					<CardDescription>No hay usuarios que mostar</CardDescription>
 				{:else}
-					<TablaUsuarios bind:usuarios></TablaUsuarios>
+					{#key page.data.usuarios}
+						<TablaUsuarios bind:usuarios></TablaUsuarios>
+					{/key}
 				{/if}
 			</CardContent>
 		</Card>

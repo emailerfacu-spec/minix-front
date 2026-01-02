@@ -5,11 +5,12 @@
 	import Card from '@/components/ui/card/card.svelte';
 	import type { Post } from '../../../types.js';
 	import ModalEditar from '../../[perfil]/modalEditar.svelte';
-	import { fade } from 'svelte/transition';
-	import { updatePostStore } from '@/stores/posts';
+	import { fade, slide } from 'svelte/transition';
+	import { posts, setPosts, updatePostStore } from '@/stores/posts';
 	import { updatePost } from '@/hooks/updatePost';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { page } from '$app/state';
+	import { onMount } from 'svelte';
 
 	interface props {
 		data: {
@@ -23,11 +24,13 @@
 
 	let { data }: props = $props();
 
-	let posts = $state(data.posts.response);
+	//seteo los posts en el store
+	$effect(() => setPosts(data.posts.response));
+
 	let postAModificar: Post | null = $state(null);
 
 	let postsfiltro = $derived(
-		posts.filter((x) => {
+		$posts?.filter((x) => {
 			const regex = new RegExp(`#${data.htag}\\b`, 'gm');
 			return regex.test(x.content);
 		})
@@ -68,8 +71,10 @@
 		<hr class="my-2" />
 
 		<div class="mt-1 flex flex-col gap-3">
-			{#each postsfiltro as post}
-				<PostCard {post} bind:postAModificar />
+			{#each postsfiltro as post (post.id)}
+				<div transition:slide>
+					<PostCard {post} bind:postAModificar />
+				</div>
 			{/each}
 		</div>
 	</div>

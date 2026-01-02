@@ -77,7 +77,12 @@
 
 	async function likeHandler() {
 		cargandoLike = true;
-		let { message, ok } = await likePost(post);
+		//para que se vea el spinner
+		let [{ message, ok }] = await Promise.all([
+			likePost(post),
+			new Promise((resolve) => setTimeout(resolve, 300))
+		]);
+		console.log(1);
 		if (ok) {
 			if (post.isLiked) {
 				post.likesCount--;
@@ -89,7 +94,9 @@
 			errorLike = true;
 			mensajeError = message;
 		}
+		console.log(1);
 		updatePostStore(post.id, post);
+		console.log(1);
 		cargandoLike = false;
 	}
 </script>
@@ -99,12 +106,14 @@
 		<div class="flex flex-col">
 			<div class="flex items-center justify-between">
 				<div class="flex gap-3">
-					<a href={`/${post.authorName}`}>
-						<Avatar>
-							<AvatarImage src={post.authorImageUrl}></AvatarImage>
-							<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
-						</Avatar>
-					</a>
+					{#if post.authorName !== '[deleted]'}
+						<a href={`/${post.authorName}`}>
+							<Avatar>
+								<AvatarImage src={post.authorImageUrl}></AvatarImage>
+								<AvatarFallback>{post.authorDisplayName[0].toUpperCase()}</AvatarFallback>
+							</Avatar>
+						</a>
+					{/if}
 					<div class="flex space-x-2">
 						<span class="text-lg font-medium">{post.authorDisplayName}</span>
 						<span class="text-lg text-muted-foreground">@{post.authorName}</span>
@@ -157,14 +166,18 @@
 		<div class="-mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
 			<Button
 				variant="ghost"
-				disabled={!$sesionStore?.accessToken}
+				disabled={!$sesionStore?.accessToken || cargandoLike}
 				class={`${post.isLiked ? 'bg-blue-500/30' : 'bg-accent'} flex items-center gap-2 rounded-full p-3 text-lg`}
 				onclick={() => likeHandler()}
 			>
 				<p>
 					{post.likesCount}
 				</p>
-				<ThumbsUp />
+				{#if cargandoLike}
+					<Spinner />
+				{:else}
+					<ThumbsUp />
+				{/if}
 			</Button>
 			<Button variant="ghost" class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg">
 				<p>

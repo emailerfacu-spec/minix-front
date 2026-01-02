@@ -9,6 +9,9 @@
 	import { apiBase } from '@/stores/url';
 	import { goto } from '$app/navigation';
 	import AvatarButton from './AvatarButton.svelte';
+	import Busqueda from './Busqueda.svelte';
+	import Avatar from '@/components/ui/avatar/avatar.svelte';
+	import AvatarImage from '@/components/ui/avatar/avatar-image.svelte';
 
 	let menuOpen = $state(false);
 	const toggleMenu = () => (menuOpen = !menuOpen);
@@ -48,7 +51,11 @@
 	<div class="mx-4 ms-2 flex h-12 items-center justify-between">
 		<div class="flex items-center">
 			<a href="/" class="mr-6 flex items-center space-x-2">
-				<p class="leading-7 not-first:mt-6">Mini-X</p>
+				<Avatar
+					class="transform rounded-sm! transition-transform duration-300 ease-in-out hover:scale-130 hover:rotate-12"
+				>
+					<AvatarImage src="/x.png" alt="minix" />
+				</Avatar>
 			</a>
 			<nav class="me-2 items-center space-x-6 text-sm font-medium md:flex">
 				<ButtonTheme />
@@ -56,7 +63,8 @@
 		</div>
 
 		<!-- Desktop menu -->
-		<div class="flex items-center justify-end md:flex">
+		<div class="flex items-center justify-end gap-2 md:flex">
+			<Busqueda></Busqueda>
 			{#if showCerrarSesion}
 				{#if $sesionStore !== null}
 					<AvatarButton></AvatarButton>

@@ -9,6 +9,8 @@
 	import Button from './ui/button/button.svelte';
 	import KeyIcon from '@lucide/svelte/icons/key';
 	import UserPen from '@lucide/svelte/icons/user-pen';
+	import Search from '@lucide/svelte/icons/search';
+	import Plus from '@lucide/svelte/icons/plus';
 	import { Tooltip } from './ui/tooltip';
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
@@ -19,6 +21,12 @@
 	import { fade } from 'svelte/transition';
 	import type { Unsubscriber } from 'svelte/store';
 	import Input from './ui/input/input.svelte';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import BorrarUsuario from './BorrarUsuario.svelte';
+	import InputGroup from './ui/input-group/input-group.svelte';
+	import InputGroupAddon from './ui/input-group/input-group-addon.svelte';
+	import InputGroupInput from './ui/input-group/input-group-input.svelte';
+	import AgregarUsuario from './admin/AgregarUsuario.svelte';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -28,6 +36,9 @@
 
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
+
+	let openBorrar = $state(false);
+	let usuarioBorrar: UserResponseDto | null = $state(null);
 
 	//si ponia contraseña en español quedaba muy largo el nombre
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
@@ -84,12 +95,6 @@
 		return sortDirection === 'asc' ? '↑' : '↓';
 	}
 
-	$effect(() => {
-		if (!open) {
-			usuarioCambioPass = null;
-		}
-	});
-
 	function handleCambiarContraseña(usuario: UserResponseDto) {
 		open = true;
 		usuarioCambioPass = usuario;
@@ -99,15 +104,22 @@
 		openModificarUsuario = true;
 		usuarioModificar = usuario;
 	}
+
+	function handleBorrar(usuario: UserResponseDto) {
+		openBorrar = true;
+		usuarioBorrar = usuario;
+	}
+	
+let opencrearUsuario = $state(false);
+	// $inspect(usuarios);
 </script>
 
-<div class="mb-4">
-	<Input
-		type="text"
-		placeholder="Buscar usuario..."
-		bind:value={search}
-		class="w-full rounded border px-3 py-2"
-	/>
+<div class="mb-4 flex gap-2">
+	<InputGroup>
+		<InputGroupAddon align="inline-start"><Search></Search></InputGroupAddon>
+		<InputGroupInput type="text" placeholder="Buscar usuario..." bind:value={search} />
+	</InputGroup>
+	<Button onclick={() =>opencrearUsuario = !opencrearUsuario} variant="secondary" class="bg-blue-500/20"><Plus /></Button>
 </div>
 
 <Table>
@@ -129,38 +141,63 @@
 		</TableRow>
 	</TableHeader>
 	<TableBody>
-		{#each usuariosFiltrados as usuario}
+		{#if usuariosFiltrados.length == 0}
 			<TableRow>
-				<TableCell
-					>@<a href={'/' + usuario.username}>
-						{usuario.username}
-					</a>
+				<TableCell colspan={5}>
+					<p class="text-center">No hay usuarios por el nombre de: {search}</p>
 				</TableCell>
-				<TableCell>{usuario.displayName}</TableCell>
-				<TableCell class="text-center">{usuario.postsCount}</TableCell>
-				<TableCell>{usuario.createdAt.replace('Z', ' ').replace('T', ' | ')}</TableCell>
-				<TableCell class="flex gap-2">
-					<Tooltip>
-						<TooltipTrigger>
-							<Button onclick={() => handleCambiarContraseña(usuario)}><KeyIcon></KeyIcon></Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>Recuperar Contraseña</p>
-						</TooltipContent>
-					</Tooltip>
-					<Tooltip>
-						<TooltipTrigger>
-							<Button onclick={() => handleModificar(usuario)}><UserPen /></Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>Modificar Usuario</p>
-						</TooltipContent>
-					</Tooltip>
-					<Button></Button>
-				</TableCell>
-			</TableRow>
-		{/each}
+			</TableRow>{:else}
+			{#each usuariosFiltrados as usuario}
+				<TableRow>
+					<TableCell
+						>@<a href={'/' + usuario.username}>
+							{usuario.username}
+						</a>
+					</TableCell>
+					<TableCell>{usuario.displayName}</TableCell>
+					<TableCell class="text-center">{usuario.postsCount}</TableCell>
+					<TableCell>{usuario.createdAt.replace('Z', ' ').replace('T', ' | ')}</TableCell>
+					<TableCell class="flex gap-2">
+						<Tooltip>
+							<TooltipTrigger>
+								<Button onclick={() => handleCambiarContraseña(usuario)}><KeyIcon></KeyIcon></Button
+								>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Recuperar Contraseña</p>
+							</TooltipContent>
+						</Tooltip>
+						<Tooltip>
+							<TooltipTrigger>
+								<Button onclick={() => handleModificar(usuario)}><UserPen /></Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Modificar Usuario</p>
+							</TooltipContent>
+						</Tooltip>
+						<Tooltip>
+							<TooltipTrigger>
+								<Button
+									disabled={usuario.isAdmin}
+									onclick={() => handleBorrar(usuario)}
+									variant="destructive"><Trash_2 /></Button
+								>
+							</TooltipTrigger>
+							<TooltipContent>
+								{#if usuario.isAdmin}
+									No se pueden eliminar usuarios Admin
+								{:else}
+									Eliminar Usuario
+								{/if}
+							</TooltipContent>
+						</Tooltip>
+					</TableCell>
+				</TableRow>
+			{/each}
+		{/if}
 	</TableBody>
 </Table>
+<BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />
+<AgregarUsuario bind:open={opencrearUsuario} />

@@ -90,6 +90,7 @@ export interface UserResponseDto {
 	followingCount: number;
 	createdAt: string;
 	postsCount: number;
+	isAdmin?: bool;
 }
 export interface UsersResponseDto {
 	response: {

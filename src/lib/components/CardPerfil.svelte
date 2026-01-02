@@ -22,6 +22,17 @@
 	let image: File | null = $state(null);
 	let usu = $state({ displayName: data.displayName, bio: data.bio });
 
+	let contenido = $derived(() => {
+		let t = data.bio
+			.replaceAll('&', '')
+			.replaceAll('<', '')
+			.replaceAll('>', '')
+			.replaceAll('fetch', '')
+			.replaceAll('\n', '<br>');
+
+		return t;
+	});
+
 	async function cambiarFotoDePerfil() {
 		const input = document.createElement('input');
 		input.type = 'file';
@@ -92,7 +103,8 @@
 			</h1>
 			{#if usu.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-					{usu.bio.replaceAll('<', '')}
+					{@html contenido()}
+					<!-- {usu.bio.replaceAll('<', '')} -->
 					<!-- {@html usu.bio.replaceAll('\n', '<br>')} -->
 				</p>
 			{/if}
