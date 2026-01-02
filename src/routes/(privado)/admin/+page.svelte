@@ -9,8 +9,10 @@
 	import type { UserResponseDto } from '../../../types';
 
 	interface Prop {
-		usuarios?: UserResponseDto[];
-		error: boolean;
+		data: {
+			usuarios?: UserResponseDto[];
+			error: boolean;
+		};
 	}
 
 	let { data }: Prop = $props();
