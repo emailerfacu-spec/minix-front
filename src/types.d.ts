@@ -75,6 +75,7 @@ export interface PostResponseDto {
 	isEdited: boolean;
 	visibility: string;
 	hashtags: string[]?;
+	isLiked: boolean?;
 }
 
 export interface UserResponseDto {
