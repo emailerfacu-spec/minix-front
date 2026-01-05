@@ -132,7 +132,7 @@
 			{post.content}
 		</p>
 		{#if post.imageUrl}
-			<img src={post.imageUrl} alt="Imagen de respuesta" class="mt-2 h-auto max-w-full rounded" />
+			<img src={post.imageUrl} alt="Imagen de respuesta" class="mt-2 h-auto max-w-[50%] rounded" />
 		{/if}
 		<div class="mt-2 flex gap-2">
 			<button
