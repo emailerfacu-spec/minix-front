@@ -30,13 +30,16 @@
 	import DialogDescription from './ui/dialog/dialog-description.svelte';
 	import { sesionStore } from '@/stores/usuario';
 	import { likePost } from '@/hooks/likePost';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	interface postProp {
 		post: Post;
 		postAModificar: Post | null;
+		update?: Function;
 	}
 
-	let { post, postAModificar = $bindable() }: postProp = $props();
+	let { post, postAModificar = $bindable(), update }: postProp = $props();
 
 	let cargandoBorrar = $state(false);
 	let mensajeError = $state('');
@@ -82,7 +85,7 @@
 			likePost(post),
 			new Promise((resolve) => setTimeout(resolve, 300))
 		]);
-		console.log(1);
+		// console.log(1);
 		if (ok) {
 			if (post.isLiked) {
 				post.likesCount--;
@@ -94,9 +97,10 @@
 			errorLike = true;
 			mensajeError = message;
 		}
-		console.log(1);
-		updatePostStore(post.id, post);
-		console.log(1);
+		// console.log(2);
+		if (update) update();
+		else updatePostStore(post.id, post);
+		// console.log(3);
 		cargandoLike = false;
 	}
 </script>
@@ -179,7 +183,12 @@
 					<ThumbsUp />
 				{/if}
 			</Button>
-			<Button variant="ghost" class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg">
+
+			<Button
+				variant="ghost"
+				class="flex items-center gap-2 rounded-full bg-accent p-3 text-lg"
+				onclick={() => goto(resolve('/post/[idpost]', { idpost: post.id }))}
+			>
 				<p>
 					{post.repliesCount}
 				</p>

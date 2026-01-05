@@ -13,6 +13,9 @@
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import { publicarPost } from '@/hooks/publicarPost';
 	import { filtrarImagen } from '@/utils';
+	import { invalidate } from '$app/navigation';
+
+	let { placeholder, parentPostId }: { placeholder?: string; parentPostId?: string } = $props();
 
 	let mensaje = $state('');
 	let imagen: File | null = $state(null);
@@ -29,13 +32,14 @@
 		if (imagen) {
 			formData.append('image', imagen);
 		}
-		// formData.append('parentPostId', '');
+		if (parentPostId) formData.append('parentPostId', parentPostId);
 		mostrarError = await publicarPost(formData);
 		if (mostrarError == '') {
 			mensaje = '';
 			imagen = null;
 		}
 		cargando = false;
+		if (parentPostId) invalidate('post:respuestas');
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -73,7 +77,7 @@
 			}}
 			ondrop={handleDrop}
 			maxlength={280}
-			placeholder="Alguna novedad?"
+			placeholder={placeholder ? placeholder : 'Alguna novedad?'}
 			onkeydown={handleKeydown}
 		></InputGroupTextarea>
 
