@@ -35,6 +35,8 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
-		"mode-watcher": "^1.1.0"
+		"@resvg/resvg-js": "^2.6.2",
+		"mode-watcher": "^1.1.0",
+		"satori": "^0.18.3"
 	}
 }
