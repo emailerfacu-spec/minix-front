@@ -186,8 +186,9 @@ export const GET: RequestHandler = async ({ params, fetch, request }) => {
 		}
 	};
 
-	const fontPath = join(process.cwd(), 'src', 'lib', 'assets', 'fonts', 'Ubuntu-Regular.ttf');
-	const fontData = readFileSync(fontPath);
+	const font = await fetch(`${new URL(request.url).origin}/fonts/Ubuntu-Regular.ttf`).then((r) =>
+		r.arrayBuffer()
+	);
 
 	const svg = await satori(element, {
 		width: 600,
@@ -195,7 +196,8 @@ export const GET: RequestHandler = async ({ params, fetch, request }) => {
 		fonts: [
 			{
 				name: 'Inter',
-				data: fontData,
+
+				data: font,
 				weight: 400,
 				style: 'normal'
 			}
