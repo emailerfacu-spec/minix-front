@@ -186,7 +186,7 @@ export const GET: RequestHandler = async ({ params, fetch, request }) => {
 		}
 	};
 
-	const fontPath = join(process.cwd(), 'static', 'fonts', 'Ubuntu-Regular.ttf');
+	const fontPath = join(process.cwd(), 'src', 'lib', 'assets', 'fonts', 'Ubuntu-Regular.ttf');
 	const fontData = readFileSync(fontPath);
 
 	const svg = await satori(element, {
