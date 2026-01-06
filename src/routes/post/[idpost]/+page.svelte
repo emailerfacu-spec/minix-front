@@ -65,7 +65,11 @@
 			: ''}
 	</title>
 	<meta name="og:description" content={data.post?.content?.slice(0, 150)} />
-	<meta name="og:image" content={`/post/img/${data.post.id}`} />
+	{#if data.post?.imageUrl}
+		<meta name="og:image" content={data.post.imageUrl} />
+	{:else}
+		<meta name="og:image" content={`/post/img/${data.post.id}`} />
+	{/if}
 </svelte:head>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
