@@ -38,7 +38,7 @@
 		postAModificar = null;
 	}
 
-	async function likeHandler(post) {
+	async function likeHandler(post: Post) {
 		//para que se vea el spinner
 		let [{ message, ok }] = await Promise.all([
 			likePost(post),
