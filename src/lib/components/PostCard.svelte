@@ -32,6 +32,7 @@
 	import { likePost } from '@/hooks/likePost';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import BotonSeguir from './BotonSeguir.svelte';
 
 	interface postProp {
 		post: Post;
@@ -43,7 +44,6 @@
 
 	let cargandoBorrar = $state(false);
 	let mensajeError = $state('');
-	let cargandoEditar = $state(false);
 	let cargandoLike = $state(false);
 	let errorLike = $state(false);
 
@@ -123,6 +123,7 @@
 						<span class="text-lg text-muted-foreground">@{post.authorName}</span>
 					</div>
 				</div>
+				<BotonSeguir {post} />
 				{#if post.authorName === $sesionStore?.username}
 					<DropdownMenu>
 						<DropdownMenuTrigger>

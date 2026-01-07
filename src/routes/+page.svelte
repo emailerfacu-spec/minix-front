@@ -38,7 +38,7 @@
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
 	<meta property="og:description" content="Pagina Principal" />
-	<meta property="og:image" content="https://tusitio.com/x.png" />
+	<meta property="og:image" content="/x.png" />
 	<meta property="og:url" content="https://minix-front.vercel.app/" />
 	<meta property="og:type" content="website" />
 </svelte:head>
