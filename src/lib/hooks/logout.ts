@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { cacheSeguidos } from '@/stores/cacheSeguidos.svelte';
 import { apiBase } from '@/stores/url';
 import { sesionStore } from '@/stores/usuario';
 import { get } from 'svelte/store';
@@ -15,6 +16,7 @@ export async function logout(menuOpen: boolean) {
 		});
 		if (req.ok) {
 			sesionStore.reset();
+			cacheSeguidos.clear();
 			menuOpen = false;
 		}
 	} catch {
