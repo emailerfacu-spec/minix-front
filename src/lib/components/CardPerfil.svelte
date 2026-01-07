@@ -14,6 +14,7 @@
 	import CardHeader from './ui/card/card-header.svelte';
 	import CardTitle from './ui/card/card-title.svelte';
 	import Badge from './ui/badge/badge.svelte';
+	import { resolve } from '$app/paths';
 
 	let { data = $bindable() } = $props();
 
@@ -145,11 +146,18 @@
 						{#if (data.seguidos.response?.length || 0) === 0}
 							<h3>No hay Seguidos</h3>
 						{:else}
-							{#each data.seguidos.response as seguidos (seguidos.id)}
-								<p class="text-muted-foreground">
-									{seguidos.username}
-								</p>
-							{/each}
+							<div class="flex -space-x-2">
+								{#each data.seguidos.response as seguidos (seguidos.id)}
+									<a href={resolve('/[perfil]', { perfil: seguidos.username })}>
+										<Avatar class="h-8 w-8 border-2 border-background">
+											<AvatarImage src={seguidos.imageUrl} alt={seguidos.username} />
+											<AvatarFallback class="text-xs">
+												{seguidos.displayName?.[0] || ''}
+											</AvatarFallback>
+										</Avatar>
+									</a>
+								{/each}
+							</div>
 						{/if}
 					</CardContent>
 				</CardContent>
@@ -166,11 +174,18 @@
 						{#if (data.seguidores.response?.length || 0) === 0}
 							<h3>No hay Seguidores</h3>
 						{:else}
-							{#each data.seguidores.response as seguidores (seguidores.id)}
-								<p class="text-muted-foreground">
-									{seguidores.username}
-								</p>
-							{/each}
+							<div class="flex -space-x-2">
+								{#each data.seguidores.response as seguidores (seguidores.id)}
+									<a href={resolve('/[perfil]', { perfil: seguidores.username })}>
+										<Avatar class="h-8 w-8 border-2 border-background">
+											<AvatarImage src={seguidores.imageUrl} alt={seguidores.username} />
+											<AvatarFallback class="text-xs">
+												{seguidores.displayName?.[0] || ''}
+											</AvatarFallback>
+										</Avatar>
+									</a>
+								{/each}
+							</div>
 						{/if}
 					</CardContent>
 				</CardContent>
