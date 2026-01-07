@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { UserResponseDto } from '../../types';
+	import BotonSeguir from './BotonSeguir.svelte';
 	import AvatarFallback from './ui/avatar/avatar-fallback.svelte';
 	import AvatarImage from './ui/avatar/avatar-image.svelte';
 	import Avatar from './ui/avatar/avatar.svelte';
@@ -31,7 +32,7 @@
 				<p class="text-sm text-muted-foreground">@{usu.username}</p>
 			</a>
 			<div>
-				<Button variant="outline">Seguir</Button>
+				<BotonSeguir post={{ authorId: usu.id }} />
 			</div>
 		</div>
 		{#if usu.bio}

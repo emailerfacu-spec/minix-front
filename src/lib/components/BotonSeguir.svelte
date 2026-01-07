@@ -15,7 +15,8 @@
 	import DialogContent from './ui/dialog/dialog-content.svelte';
 	import Dialog from './ui/dialog/dialog.svelte';
 
-	let { post }: { post: Post } = $props();
+	let { post }: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string } } = $props();
+
 	let seguido: Boolean | null = $state(null);
 
 	if (typeof window !== 'undefined') {
@@ -56,10 +57,9 @@
 	<Tooltip>
 		<TooltipTrigger>
 			<Button
-				variant={seguido == true ? 'destructive' : 'default'}
+				variant={seguido == true ? 'destructive' : 'outline'}
 				disabled={seguido == null}
-				size="icon-sm"
-				class="ml-auto rounded-full p-1 text-sm"
+				size="icon-lg"
 				onclick={async () => {
 					if (seguido == null) return;
 					const anteriorEstado = seguido;

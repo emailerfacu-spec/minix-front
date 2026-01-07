@@ -18,6 +18,7 @@
 	import CardError from '@/components/CardError.svelte';
 	import CardPerfil from '@/components/CardPerfil.svelte';
 	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
+	import BotonSeguir from '@/components/BotonSeguir.svelte';
 
 	let { params } = $props();
 
@@ -79,6 +80,7 @@
 			{#if params.perfil == $sesionStore?.username}
 				<Button
 					variant="ghost"
+					size="icon-sm"
 					class="m-1 rounded-full bg-blue-600"
 					onclick={() => {
 						showCrearPost = true;
@@ -86,6 +88,8 @@
 				>
 					<PenLine />
 				</Button>
+			{:else if $posts?.length == 0}
+				<BotonSeguir post={{ authorId: data.id }} />
 			{/if}
 		</h1>
 
