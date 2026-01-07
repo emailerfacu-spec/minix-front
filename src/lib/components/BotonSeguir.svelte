@@ -12,8 +12,6 @@
 	import type { Post } from '../../types';
 	import CardError from './CardError.svelte';
 	import { cacheSeguidos } from '@/stores/cacheSeguidos.svelte';
-	import DialogContent from './ui/dialog/dialog-content.svelte';
-	import Dialog from './ui/dialog/dialog.svelte';
 
 	let { post }: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string } } = $props();
 
