@@ -123,7 +123,10 @@
 						<span class="text-lg text-muted-foreground">@{post.authorName}</span>
 					</div>
 				</div>
-				<BotonSeguir {post} />
+				{#if $sesionStore?.accessToken}
+					<BotonSeguir {post} />
+				{/if}
+
 				{#if post.authorName === $sesionStore?.username}
 					<DropdownMenu>
 						<DropdownMenuTrigger>
