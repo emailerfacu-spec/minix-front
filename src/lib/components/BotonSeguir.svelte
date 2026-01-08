@@ -19,9 +19,11 @@
 
 	if (typeof window !== 'undefined') {
 		window.addEventListener('followCacheUpdated', ((
-			event: CustomEvent<{ userId: string; isFollowed: boolean }>
+			event: CustomEvent<{ userId: string; isFollowed: boolean } | { clearAll: true }>
 		) => {
-			if (event.detail.userId === post.authorId) {
+			if ('clearAll' in event.detail && event.detail.clearAll === true) {
+				cargarSeguido();
+			} else if ('userId' in event.detail && event.detail.userId === post.authorId) {
 				seguido = event.detail.isFollowed;
 			}
 		}) as EventListener);
