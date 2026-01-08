@@ -18,7 +18,7 @@
 	let { usu }: Props = $props();
 </script>
 
-<Card class="w-[50%]">
+<Card>
 	<CardContent>
 		<div class="flex justify-between">
 			<a class="flex items-center gap-2" href={resolve(`/${usu.username}`)}>

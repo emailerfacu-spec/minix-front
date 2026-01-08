@@ -16,6 +16,7 @@
 	import CardTitle from './ui/card/card-title.svelte';
 	import Badge from './ui/badge/badge.svelte';
 	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 
 	let { data = $bindable() } = $props();
 
@@ -161,7 +162,11 @@
 									{/each}
 								</div>
 								{#if data.seguidos.response?.length < data.countSeguidos}
-									<Button variant="ghost" class="mt-1 ml-4">Ver más<ArrowRight /></Button>
+									<Button variant="ghost" class="mt-1 ml-4">
+										<a href="/{data.username}/seguidos" class="flex items-center gap-2">
+											Ver más<ArrowRight />
+										</a>
+									</Button>
 								{/if}
 							</div>
 						{/if}
@@ -194,7 +199,15 @@
 									{/each}
 								</div>
 								{#if data.seguidores.response?.length < data.countSeguidores}
-									<Button variant="ghost" class="mt-1 ml-4">Ver más<ArrowRight /></Button>
+									<Button
+										variant="ghost"
+										onclick={() => goto(`/${data.username}/seguidores`)}
+										class="mt-1 ml-4"
+									>
+										<a href="/{data.username}/seguidores" class="flex items-center gap-2">
+											Ver más<ArrowRight />
+										</a>
+									</Button>
 								{/if}
 							</div>
 						{/if}
