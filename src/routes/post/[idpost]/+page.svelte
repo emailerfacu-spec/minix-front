@@ -17,6 +17,7 @@
 	import { likePost } from '@/hooks/likePost';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 	import { TamañoPantalla } from './TamañoPantalla.svelte';
+	import BotonSeguir from '@/components/BotonSeguir.svelte';
 
 	interface Prop {
 		data: {
@@ -115,22 +116,29 @@
 
 {#snippet Respuesta(post: Post)}
 	<div class="ml-2 flex-1">
-		<div class="flex items-center space-x-1">
-			{#if post.authorImageUrl}
-				<img
-					src={post.authorImageUrl}
-					alt={post.authorDisplayName}
-					class="h-8 w-8 shrink-0 rounded-full object-cover"
-				/>
-			{:else}
-				<div
-					class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium text-white"
-				>
-					{post.authorName?.charAt(0).toUpperCase()}
+		<div class="flex justify-between">
+			<div class="flex items-center space-x-1">
+				{#if post.authorImageUrl}
+					<img
+						src={post.authorImageUrl}
+						alt={post.authorDisplayName}
+						class="h-8 w-8 shrink-0 rounded-full object-cover"
+					/>
+				{:else}
+					<div
+						class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium text-white"
+					>
+						{post.authorName?.charAt(0).toUpperCase()}
+					</div>
+				{/if}
+				<span class="text-sm font-semibold">@{post.authorName}</span>
+				<span class="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</span>
+			</div>
+			{#key $sesionStore?.accessToken}
+				<div class="flex gap-2">
+					<BotonSeguir {post} variant="icon-sm" />
 				</div>
-			{/if}
-			<span class="text-sm font-semibold">@{post.authorName}</span>
-			<span class="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</span>
+			{/key}
 		</div>
 		<p class=" mt-1 line-clamp-2 rounded-md p-2 text-lg">
 			{post.content}

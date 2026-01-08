@@ -13,7 +13,10 @@
 	import CardError from './CardError.svelte';
 	import { cacheSeguidos } from '@/stores/cacheSeguidos.svelte';
 
-	let { post }: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string } } = $props();
+	let {
+		post,
+		variant = 'icon-lg'
+	}: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string }; variant?: string } = $props();
 
 	let seguido: Boolean | null = $state(null);
 
@@ -59,7 +62,7 @@
 			<Button
 				variant={seguido == true ? 'destructive' : 'outline'}
 				disabled={seguido == null}
-				size="icon-lg"
+				size={variant}
 				onclick={async () => {
 					if (seguido == null) return;
 					const anteriorEstado = seguido;
