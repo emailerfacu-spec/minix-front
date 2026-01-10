@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Pen from '@lucide/svelte/icons/pen';
+	import ArrowRight from '@lucide/svelte/icons/chevron-right';
 	import AvatarFallback from './ui/avatar/avatar-fallback.svelte';
 	import AvatarImage from './ui/avatar/avatar-image.svelte';
 	import Avatar from './ui/avatar/avatar.svelte';
@@ -14,6 +15,8 @@
 	import CardHeader from './ui/card/card-header.svelte';
 	import CardTitle from './ui/card/card-title.svelte';
 	import Badge from './ui/badge/badge.svelte';
+	import { resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
 
 	let { data = $bindable() } = $props();
 
@@ -138,18 +141,34 @@
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidos:</CardTitle>
 						{#if Array.isArray(data?.seguidos?.response)}
-							<Badge variant="secondary">{data.seguidos.response.length || 0}</Badge>
+							<Badge variant="secondary">{data.countSeguidos || 0}</Badge>
 						{/if}
 					</CardHeader>
 					<CardContent>
 						{#if (data.seguidos.response?.length || 0) === 0}
 							<h3>No hay Seguidos</h3>
 						{:else}
-							{#each data.seguidos.response as seguidos (seguidos.id)}
-								<p class="text-muted-foreground">
-									{seguidos.username}
-								</p>
-							{/each}
+							<div class="flex items-center justify-between">
+								<div class="flex -space-x-2">
+									{#each data.seguidos.response as seguidos (seguidos.id)}
+										<a href={resolve('/[perfil]', { perfil: seguidos.username })}>
+											<Avatar class="h-8 w-8 border-2 border-background">
+												<AvatarImage src={seguidos.imageUrl} alt={seguidos.username} />
+												<AvatarFallback class="text-xs">
+													{seguidos.displayName?.[0] || ''}
+												</AvatarFallback>
+											</Avatar>
+										</a>
+									{/each}
+								</div>
+								{#if data.seguidos.response?.length < data.countSeguidos}
+									<Button variant="ghost" class="mt-1 ml-4">
+										<a href="/{data.username}/seguidos" class="flex items-center gap-2">
+											Ver más<ArrowRight />
+										</a>
+									</Button>
+								{/if}
+							</div>
 						{/if}
 					</CardContent>
 				</CardContent>
@@ -159,18 +178,38 @@
 					<CardHeader class="flex justify-between">
 						<CardTitle>Seguidores:</CardTitle>
 						{#if Array.isArray(data?.seguidores?.response)}
-							<Badge variant="secondary">{data.seguidores.response.length || 0}</Badge>
+							<Badge variant="secondary">{data.countSeguidores || 0}</Badge>
 						{/if}
 					</CardHeader>
 					<CardContent>
 						{#if (data.seguidores.response?.length || 0) === 0}
 							<h3>No hay Seguidores</h3>
 						{:else}
-							{#each data.seguidores.response as seguidores (seguidores.id)}
-								<p class="text-muted-foreground">
-									{seguidores.username}
-								</p>
-							{/each}
+							<div class="flex items-center justify-between">
+								<div class="flex -space-x-2">
+									{#each data.seguidores.response as seguidores (seguidores.id)}
+										<a href={resolve('/[perfil]', { perfil: seguidores.username })}>
+											<Avatar class="h-8 w-8 border-2 border-background">
+												<AvatarImage src={seguidores.imageUrl} alt={seguidores.username} />
+												<AvatarFallback class="text-xs">
+													{seguidores.displayName?.[0] || ''}
+												</AvatarFallback>
+											</Avatar>
+										</a>
+									{/each}
+								</div>
+								{#if data.seguidores.response?.length < data.countSeguidores}
+									<Button
+										variant="ghost"
+										onclick={() => goto(`/${data.username}/seguidores`)}
+										class="mt-1 ml-4"
+									>
+										<a href="/{data.username}/seguidores" class="flex items-center gap-2">
+											Ver más<ArrowRight />
+										</a>
+									</Button>
+								{/if}
+							</div>
 						{/if}
 					</CardContent>
 				</CardContent>
