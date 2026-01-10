@@ -9,6 +9,7 @@
 	import Button from './ui/button/button.svelte';
 	import KeyIcon from '@lucide/svelte/icons/key';
 	import UserPen from '@lucide/svelte/icons/user-pen';
+	import Shield from '@lucide/svelte/icons/shield';
 	import Search from '@lucide/svelte/icons/search';
 	import Plus from '@lucide/svelte/icons/plus';
 	import { Tooltip } from './ui/tooltip';
@@ -27,6 +28,7 @@
 	import InputGroupAddon from './ui/input-group/input-group-addon.svelte';
 	import InputGroupInput from './ui/input-group/input-group-input.svelte';
 	import AgregarUsuario from './admin/AgregarUsuario.svelte';
+	import DarAdmin from './admin/DarAdmin.svelte';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -36,14 +38,18 @@
 
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
-
+	let openDarAdmin = $state(false);
 	let openBorrar = $state(false);
+	let opencrearUsuario = $state(false);
+
 	let usuarioBorrar: UserResponseDto | null = $state(null);
 
 	//si ponia contraseña en español quedaba muy largo el nombre
 	let usuarioCambioPass: UserResponseDto | null = $state(null);
 
 	let usuarioModificar: UserResponseDto | null = $state(null);
+
+	let usuarioDarAdmin: UserResponseDto | null = $state(null);
 
 	let search = $state('');
 
@@ -109,8 +115,12 @@
 		openBorrar = true;
 		usuarioBorrar = usuario;
 	}
-	
-let opencrearUsuario = $state(false);
+
+	function handleDarAdmin(usuario: UserResponseDto) {
+		openDarAdmin = true;
+		usuarioDarAdmin = usuario;
+	}
+
 	// $inspect(usuarios);
 </script>
 
@@ -119,7 +129,11 @@ let opencrearUsuario = $state(false);
 		<InputGroupAddon align="inline-start"><Search></Search></InputGroupAddon>
 		<InputGroupInput type="text" placeholder="Buscar usuario..." bind:value={search} />
 	</InputGroup>
-	<Button onclick={() =>opencrearUsuario = !opencrearUsuario} variant="secondary" class="bg-blue-500/20"><Plus /></Button>
+	<Button
+		onclick={() => (opencrearUsuario = !opencrearUsuario)}
+		variant="secondary"
+		class="bg-blue-500/20"><Plus /></Button
+	>
 </div>
 
 <Table>
@@ -191,6 +205,24 @@ let opencrearUsuario = $state(false);
 								{/if}
 							</TooltipContent>
 						</Tooltip>
+
+						<Tooltip>
+							<TooltipTrigger>
+								<Button
+									onclick={() => handleDarAdmin(usuario)}
+									variant={usuario.isAdmin ? 'destructive' : 'default'}
+								>
+									<Shield />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent>
+								{#if usuario.isAdmin}
+									Sacar admin
+								{:else}
+									Dar Admin
+								{/if}
+							</TooltipContent>
+						</Tooltip>
 					</TableCell>
 				</TableRow>
 			{/each}
@@ -201,3 +233,4 @@ let opencrearUsuario = $state(false);
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />
 <AgregarUsuario bind:open={opencrearUsuario} />
+<DarAdmin bind:open={openDarAdmin} usuario={usuarioDarAdmin} />
