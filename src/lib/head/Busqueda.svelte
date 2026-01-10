@@ -20,6 +20,7 @@
 	import { resolve } from '$app/paths';
 	import { busquedaHashtags } from '@/hooks/busquedaHashtags';
 	import Separator from '@/components/ui/separator/separator.svelte';
+	import { goto } from '$app/navigation';
 
 	let search: string = $state('');
 	let open = $state(false);
@@ -76,6 +77,12 @@
 		placeholder="Buscar Usuario o Hashtag"
 		bind:value={search}
 		oninput={buscar}
+		onkeydown={(e) => {
+			if (e.key === 'Enter') {
+				open = false;
+				goto(resolve(`/search/${encodeURIComponent(search)}`));
+			}
+		}}
 	/>
 	{#if search}
 		<ul class="m-2 space-y-2">

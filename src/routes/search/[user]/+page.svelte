@@ -5,9 +5,13 @@
 </script>
 
 <div class="flex min-h-fit w-full flex-col items-center justify-center gap-2 p-6 md:p-10">
-	{#each data.usuarios as usu}
-		<UserCard {usu} />
-	{/each}
+	<div class="flex w-full max-w-6xl flex-col gap-2">
+		{#each data.usuarios as usu}
+			<div class="w-full">
+				<UserCard {usu} />
+			</div>
+		{/each}
+	</div>
 </div>
 
 <svelte:head>
