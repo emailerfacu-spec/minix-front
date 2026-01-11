@@ -37,7 +37,7 @@
 	}
 	// $inspect(usuarios, loading);
 
-	let timeoutId: number | undefined;
+	let timeoutId: ReturnType<typeof setTimeout> | number | undefined;
 	function buscar() {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
