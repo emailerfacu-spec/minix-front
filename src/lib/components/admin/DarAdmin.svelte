@@ -11,7 +11,7 @@
 
 	interface Props {
 		open: boolean;
-		usuario: UserResponseDto;
+		usuario: UserResponseDto | null;
 	}
 
 	let { open = $bindable(), usuario }: Props = $props();
@@ -51,7 +51,7 @@
 				try {
 					const req = await fetch(`${$apiBase}/api/admin/give`, {
 						method: 'PATCH',
-						body: JSON.stringify({ isAdmin: usuario.isAdmin, id: usuario.id }),
+						body: JSON.stringify({ isAdmin: usuario?.isAdmin || false, id: usuario?.id || '' }),
 						headers: {
 							'Content-Type': 'application/json',
 							Authorization: `Bearer ${$sesionStore?.accessToken}`
