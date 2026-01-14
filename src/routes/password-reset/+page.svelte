@@ -14,6 +14,7 @@
 
 	let estado: 'email' | 'otp' | 'nuevapass' = $state('email');
 	let email: string = $state('');
+	let otp: string = $state('');
 </script>
 
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
@@ -22,10 +23,12 @@
 		<div class="mt-6">
 			{#if estado === 'email'}
 				<IngresarEmail bind:estado bind:email />
-			{:else if estado === 'otp'}
-				<Otp bind:estado />
-			{:else if estado === 'nuevapass'}
-				<NuevaPass />
+			{/if}
+			{#if estado === 'otp'}
+				<Otp bind:estado {email} bind:otp />
+			{/if}
+			{#if estado === 'nuevapass'}
+				<NuevaPass {otp} {email} />
 			{/if}
 		</div>
 	</div>

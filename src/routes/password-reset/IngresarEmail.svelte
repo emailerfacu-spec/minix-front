@@ -1,10 +1,14 @@
 <script lang="ts">
+	import CardError from '@/components/CardError.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import CardContent from '@/components/ui/card/card-content.svelte';
 	import Card from '@/components/ui/card/card.svelte';
+	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
+	import Dialog from '@/components/ui/dialog/dialog.svelte';
 	import Input from '@/components/ui/input/input.svelte';
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
 	import { checkEmail } from '@/hooks/checkEmail';
+	import { apiBase } from '@/stores/url';
 	import Check from '@lucide/svelte/icons/check';
 	import Cross from '@lucide/svelte/icons/x';
 	import { slide } from 'svelte/transition';
@@ -13,24 +17,43 @@
 
 	let checkeado = $state<Boolean | null>(null);
 	let esEmailExistente = $state<boolean>(false);
+	let mensajeError = $state('');
+	let lastemail: string;
 
 	$effect(() => {
-		if (email == '') {
+		if (email == '' || !email.includes('@')) {
 			checkeado = null;
 			return;
 		}
+		let timeoutId: ReturnType<typeof setTimeout> | undefined;
 		(async () => {
-			checkeado = true;
-			await Promise.all([checkEmaill(), new Promise((resolve) => setTimeout(resolve, 100))]);
-			checkeado = false;
+			if (timeoutId) clearTimeout(timeoutId);
+			timeoutId = setTimeout(async () => {
+				checkeado = true;
+				await checkEmaill();
+				checkeado = false;
+			}, 1000);
 		})();
 	});
 
 	async function checkEmaill() {
-		esEmailExistente = !(await checkEmail(email));
+		try {
+			if (lastemail == email) return;
+			lastemail = email;
+			esEmailExistente = !(await checkEmail(email));
+		} catch {
+			esEmailExistente = false;
+		}
 	}
 </script>
 
+{#if mensajeError}
+	<Dialog open={!!mensajeError} onOpenChange={() => (mensajeError = '')}>
+		<DialogContent>
+			<CardError {mensajeError} />
+		</DialogContent>
+	</Dialog>
+{/if}
 <div transition:slide>
 	<Card>
 		<CardContent>
@@ -47,16 +70,31 @@
 						<Cross class="text-red-500" />
 					{/if}
 				</h2>
-				<Input type="email" placeholder="correo@ejemplo.com" bind:value={email} />
-				<Button
-					disabled={!esEmailExistente}
-					onclick={async () => {
-						///WIP
-						estado = 'otp';
+				<form
+					onsubmit={async (e) => {
+						e.preventDefault();
+						try {
+							const formData = new FormData();
+							formData.append('email', email);
+							const req = await fetch(`${$apiBase}/api/password-reset/otp`, {
+								method: 'POST',
+								body: formData
+							});
+							if (req.ok) {
+								estado = 'otp';
+								return;
+							}
+							mensajeError = await req.text();
+						} catch {
+							mensajeError = 'No se pudo alcanzar el servidor';
+						}
 					}}
 				>
-					Enviar código
-				</Button>
+					<div class="flex flex-col gap-2">
+						<Input type="email" placeholder="correo@ejemplo.com" bind:value={email} />
+						<Button type="submit" disabled={!esEmailExistente}>Enviar código</Button>
+					</div>
+				</form>
 			</div>
 		</CardContent>
 	</Card>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto, replaceState } from '$app/navigation';
 	import Card from '@/components/ui/card/card.svelte';
 	import { Content } from '@/components/ui/card';
 	import { sesionStore } from '@/stores/usuario';
@@ -11,6 +12,9 @@
 	import { fade, slide } from 'svelte/transition';
 	import { getPosts } from '@/hooks/getPosts';
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
+	import { page } from '$app/state';
+	import Dialog from '@/components/ui/dialog/dialog.svelte';
+	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
 
 	$effect(() => {
 		resetPosts();
@@ -33,7 +37,22 @@
 		);
 		postAModificar = null;
 	}
+	let from = $state(page.url.searchParams.get('from'));
+	$effect(() => {
+		goto('/', { replaceState: true });
+	});
 </script>
+
+{#if from == 'cambio_contraseña'}
+	<Dialog
+		open={true}
+		onOpenChange={() => {
+			from = '';
+		}}
+	>
+		<DialogContent>Se cambio la contraseña del usuario exitosamente</DialogContent>
+	</Dialog>
+{/if}
 
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
