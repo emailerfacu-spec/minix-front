@@ -20,6 +20,8 @@
 	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
 	import UserPen from '@lucide/svelte/icons/user-pen';
+	import DialogResetPassword from '@/components/DialogResetPassword.svelte';
+	import Key from '@lucide/svelte/icons/key';
 
 	let { params } = $props();
 
@@ -132,13 +134,18 @@
 </div>
 
 {#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
-	<DialogModificarUsuario bind:data>
-		<div class="fixed right-8 bottom-8">
+	<div class="fixed right-8 bottom-8 flex flex-col gap-2">
+		<DialogModificarUsuario bind:data>
 			<Button variant="default" size="icon-lg">
 				<UserPen />
 			</Button>
-		</div>
-	</DialogModificarUsuario>
+		</DialogModificarUsuario>
+		<DialogResetPassword bind:data>
+			<Button variant="default" size="icon-lg">
+				<Key />
+			</Button>
+		</DialogResetPassword>
+	</div>
 {/if}
 
 <svelte:head>
