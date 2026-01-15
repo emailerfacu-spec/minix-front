@@ -1,5 +1,4 @@
 <script lang="ts">
-	import UserPen from '@lucide/svelte/icons/user-pen';
 	import Button, { buttonVariants } from './ui/button/button.svelte';
 	import { Dialog } from './ui/dialog';
 	import DialogTrigger from './ui/dialog/dialog-trigger.svelte';
@@ -15,10 +14,10 @@
 	import { updateUsuario } from '@/hooks/updateUsuario';
 	import DialogFooter from './ui/dialog/dialog-footer.svelte';
 	import Spinner from './ui/spinner/spinner.svelte';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { invalidate } from '$app/navigation';
 	import { page } from '$app/state';
 
-	let { data = $bindable() } = $props();
+	let { data = $bindable(), children } = $props();
 
 	let usuario: UserResponseDto = $state({
 		id: data.id,
@@ -57,11 +56,7 @@
 
 <Dialog bind:open>
 	<DialogTrigger>
-		<div class="fixed right-8 bottom-8">
-			<Button variant="default" size="icon-lg">
-				<UserPen />
-			</Button>
-		</div>
+		{@render children?.()}
 	</DialogTrigger>
 	<form {onsubmit}>
 		<DialogContent>

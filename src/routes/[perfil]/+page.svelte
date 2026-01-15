@@ -19,6 +19,7 @@
 	import CardPerfil from '@/components/CardPerfil.svelte';
 	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
+	import UserPen from '@lucide/svelte/icons/user-pen';
 
 	let { params } = $props();
 
@@ -131,7 +132,13 @@
 </div>
 
 {#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
-	<DialogModificarUsuario bind:data />
+	<DialogModificarUsuario bind:data>
+		<div class="fixed right-8 bottom-8">
+			<Button variant="default" size="icon-lg">
+				<UserPen />
+			</Button>
+		</div>
+	</DialogModificarUsuario>
 {/if}
 
 <svelte:head>
