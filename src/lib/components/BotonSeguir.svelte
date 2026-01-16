@@ -25,7 +25,6 @@
 			event: CustomEvent<{ userId: string; isFollowed: boolean } | { clearAll: true }>
 		) => {
 			if ('clearAll' in event.detail && event.detail.clearAll === true) {
-				cargarSeguido();
 			} else if ('userId' in event.detail && event.detail.userId === post.authorId) {
 				seguido = event.detail.isFollowed;
 			}
