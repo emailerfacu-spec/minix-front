@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
-	import { onMount } from 'svelte';
 	import Card from '@/components/ui/card/card.svelte';
 	import { Content } from '@/components/ui/card';
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
@@ -11,21 +10,17 @@
 	import PostCard from '@/components/PostCard.svelte';
 	import ModalEditar from './[perfil]/modalEditar.svelte';
 	import { sesionStore } from '@/stores/usuario';
-	import {
-		posts,
-		updatePostStore,
-		loadingPosts
-	} from '@/stores/posts';
+	import { posts, updatePostStore, loadingPosts } from '@/stores/posts';
 	import { updatePost } from '@/hooks/updatePost';
 	import { loadMorePosts } from '@/hooks/loadMorePosts';
 	import type { Post } from '../types';
 	import { fade, slide } from 'svelte/transition';
 
-	let postAModificar: Post | null = null;
-	let mensajeError = '';
+	let postAModificar: Post | null = $state(null);
+	let mensajeError = $state('');
 	let sentinel: HTMLDivElement;
 
-	onMount(() => {
+	$effect(() => {
 		loadMorePosts();
 
 		const observer = new IntersectionObserver(
@@ -47,8 +42,7 @@
 
 		await updatePost(
 			postAModificar,
-			(postNuevo: Post) =>
-				updatePostStore(postAModificar!.id, postNuevo),
+			(postNuevo: Post) => updatePostStore(postAModificar!.id, postNuevo),
 			mensajeError
 		);
 		postAModificar = null;
@@ -63,9 +57,7 @@
 
 {#if from === 'cambio_contraseña'}
 	<Dialog open>
-		<DialogContent>
-			Se cambió la contraseña del usuario exitosamente
-		</DialogContent>
+		<DialogContent>Se cambió la contraseña del usuario exitosamente</DialogContent>
 	</Dialog>
 {/if}
 
@@ -92,18 +84,15 @@
 						<p>Cargando</p>
 					</Content>
 				</Card>
-
 			{:else if $posts.length === 0}
 				<Card>
 					<Content>
-						<p class="text-center leading-7">
-							No hay Posts que mostrar
-						</p>
+						<p class="text-center leading-7">No hay Posts que mostrar</p>
 					</Content>
 				</Card>
 			{:else}
 				{#each $posts as post (post.id)}
-					<div transition:slide>
+					<div animate:slide>
 						<PostCard {post} bind:postAModificar />
 					</div>
 				{/each}
@@ -120,9 +109,6 @@
 </div>
 {#if postAModificar}
 	<div in:fade>
-		<ModalEditar
-			callbackfn={handleEditar}
-			bind:post={postAModificar}
-		/>
+		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
