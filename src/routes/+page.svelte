@@ -92,7 +92,7 @@
 				</Card>
 			{:else}
 				{#each $posts as post (post.id)}
-					<div animate:slide>
+					<div transition:slide>
 						<PostCard {post} bind:postAModificar />
 					</div>
 				{/each}
