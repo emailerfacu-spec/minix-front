@@ -44,7 +44,7 @@
 		}
 		cargando = true;
 		try {
-			await cambiarContraseñaUsuario(data.id, passwordData.oldPassword, passwordData.newPassword);
+			await cambiarContraseñaUsuario(passwordData.oldPassword, passwordData.newPassword, data.id);
 			cargando = false;
 			open = false;
 			passwordData.oldPassword = '';
@@ -103,7 +103,7 @@
 					/>
 				</Field>
 			</FieldGroup>
-			<Button type="submit" disabled={!coinsiden || cargando}>
+			<Button type="submit" class="mt-6" disabled={!coinsiden || cargando}>
 				{#if cargando}
 					<Spinner />
 				{:else}

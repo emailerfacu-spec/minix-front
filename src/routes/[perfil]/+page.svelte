@@ -19,14 +19,16 @@
 	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
 	import DialogResetPassword from '@/components/DialogResetPassword.svelte';
-	import { onMount } from 'svelte';
+	import Key from '@lucide/svelte/icons/key';
+	import UserPen from '@lucide/svelte/icons/user-pen';
+	import PenLine from '@lucide/svelte/icons/pen-line';
 
 	let { params } = $props();
 
 	let cargando = $state(false);
 	let finished = $state(false);
 	let pageNumber = $state(1);
-	let sentinel: HTMLDivElement;
+	let sentinel = $state<HTMLDivElement | null>(null);
 
 	let mensajeError = $state('');
 	let postAModificar: Post | null = $state(null);
@@ -83,17 +85,21 @@
 		obtenerPosts();
 	});
 
-	onMount(() => {
+	$effect(() => {
+		if (!sentinel) return;
+
+		if (finished) return;
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				if (entry.isIntersecting) {
+				if (entry.isIntersecting && !fetching) {
 					obtenerPosts();
 				}
 			},
-			{ rootMargin: '200px' }
+			{ rootMargin: '100px' }
 		);
 
-		if (sentinel) observer.observe(sentinel);
+		observer.observe(sentinel);
 
 		return () => observer.disconnect();
 	});
@@ -113,76 +119,86 @@
 	}
 </script>
 
+<!-- {$inspect(data)} -->
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		{#key data}
+		{#key data.id}
 			<CardPerfil bind:data />
 		{/key}
-
-		<h1 class="mt-10 flex justify-between text-3xl font-extrabold">
+		<h1
+			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
+		>
 			Posts:
-			{#if params.perfil === $sesionStore?.username}
+			{#if params.perfil == $sesionStore?.username}
 				<Button
 					variant="ghost"
 					size="icon-sm"
-					class="rounded-full bg-blue-600"
-					onclick={() => (showCrearPost = true)}
+					class="m-1 rounded-full bg-blue-600"
+					onclick={() => {
+						showCrearPost = true;
+					}}
 				>
-					+
+					<PenLine />
 				</Button>
-			{:else if $posts.length === 0}
+			{:else if $posts?.length == 0}
 				<BotonSeguir post={{ authorId: data.id, id: data.id }} />
 			{/if}
 		</h1>
 
 		<hr class="mb-8" />
-
-		{#if cargando && $posts.length === 0}
-			<CardCargando />
-		{:else if mensajeError}
-			<CardError {mensajeError} />
-		{:else if $posts.length === 0}
-			<CardError mensajeError="Este usuario no tiene posts" />
-		{:else}
-			<div class="flex flex-col gap-2">
-				{#each $posts as post (post.id)}
-					<div transition:slide>
-						<PostCard {post} bind:postAModificar />
-					</div>
-				{/each}
-			</div>
-		{/if}
-
-		<div bind:this={sentinel} class="h-1"></div>
-
-		{#if cargando && $posts.length > 0}
-			<div class="flex justify-center py-4">
+			{#if cargando && !finished}
 				<CardCargando />
-			</div>
-		{/if}
+			{:else if mensajeError !== ''}
+				<CardError {mensajeError} />
+			{:else}
+				<div class="flex flex-col gap-2">
+					{#each $posts as post (post.id)}
+						<div transition:slide>
+							<PostCard {post} bind:postAModificar />
+						</div>
+					{/each}
+
+					<div bind:this={sentinel} class="h-1"></div>
+
+					{#if cargando && !finished}
+						<CardCargando />
+					{/if}
+				</div>
+			{/if}
 	</div>
 </div>
-
 {#if postAModificar}
 	<div in:fade>
 		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
 
-<Dialog open={showCrearPost} onOpenChange={() => (showCrearPost = false)}>
-	<DialogContent>
-		<DialogTitle>Crear publicación</DialogTitle>
-		<CrearPost />
-	</DialogContent>
-</Dialog>
+<div transition:fade>
+	<Dialog open={showCrearPost} onOpenChange={() => (showCrearPost = false)}>
+		<DialogContent
+			onkeydown={(e: KeyboardEvent) => {
+				if (e.ctrlKey && e.key === 'Enter') {
+					showCrearPost = false;
+				}
+			}}
+		>
+			<DialogTitle>Crear Publicacion</DialogTitle>
+			<CrearPost />
+		</DialogContent>
+	</Dialog>
+</div>
 
-{#if $sesionStore?.isAdmin || $sesionStore?.username === params.perfil}
+{#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
 	<div class="fixed right-8 bottom-8 flex flex-col gap-2">
 		<DialogModificarUsuario bind:data>
-			<Button>Modificar Usuario</Button>
+			<Button variant="default" size="icon-lg">
+				<UserPen />
+			</Button>
 		</DialogModificarUsuario>
 		<DialogResetPassword bind:data>
-			<Button>Reset Password</Button>
+			<Button variant="default" size="icon-lg">
+				<Key />
+			</Button>
 		</DialogResetPassword>
 	</div>
 {/if}
@@ -191,5 +207,6 @@
 	<meta property="og:title" content="Mini-x" />
 	<meta property="og:description" content={`viendo el perfil de @${data.username}`} />
 	<meta property="og:image" content={data.imageUrl} />
+	<meta property="og:url" content="https://minix-front.vercel.app/" />
 	<meta property="og:type" content="website" />
 </svelte:head>
