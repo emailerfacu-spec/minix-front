@@ -39,6 +39,7 @@ export interface Sesion {
 	displayName: string;
 	username: string;
 	isAdmin: boolean;
+	isFirebase: boolean;
 }
 
 export interface LoginDto {
@@ -46,11 +47,24 @@ export interface LoginDto {
 	password: string?;
 }
 
+export interface LoginSsoDto {
+	accessToken: string;
+	uid: string;
+}
+
 export interface RegisterDto {
 	username: string;
 	email: string;
 	password: string?;
 	displayName: string;
+}
+
+export interface RegisterSsoDto {
+	username: string;
+	email: string;
+	displayName: string;
+	token: string;
+	uid: string;
 }
 
 export interface CreatePostDto {

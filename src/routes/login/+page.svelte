@@ -4,6 +4,9 @@
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 	import { fade, fly } from 'svelte/transition';
 	import Info from '@lucide/svelte/icons/info';
+	import Card from '@/components/ui/card/card.svelte';
+	import CardContent from '@/components/ui/card/card-content.svelte';
+	import FireBaseButton from '@/components/FireBaseButton.svelte';
 
 	let { data } = $props();
 
@@ -41,6 +44,12 @@
 			</div>
 		{/if}
 		<LoginForm bind:showAlert id="1" />
+
+		<Card class="mt-2">
+			<CardContent>
+				<FireBaseButton mode="login" />
+			</CardContent>
+		</Card>
 		{#if showAlert}
 			<div class="mt-2" transition:fade>
 				<Alert.Root variant="destructive">

@@ -27,7 +27,7 @@
 
 		<Card class="mt-2">
 			<CardContent>
-				<FireBaseButton />
+				<FireBaseButton mode="register" />
 			</CardContent>
 		</Card>
 		{#if showAlert}
