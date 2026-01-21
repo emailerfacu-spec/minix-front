@@ -17,8 +17,7 @@ export async function loginFirebase(dto: LoginSsoDto, callbackfn: () => void) {
 		});
 		if (req.ok) {
 			const token: Sesion = await req.json();
-			console.log(token);
-			sesionStore.set(token);
+			sesionStore.set({ ...token, accessToken: dto.accessToken });
 			goto('/');
 		} else {
 			callbackfn();

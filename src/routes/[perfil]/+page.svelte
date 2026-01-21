@@ -32,6 +32,7 @@
 	let showCrearPost = $state(false);
 
 	let data = $derived(page.data);
+	$inspect(data);
 
 	$effect(() => {
 		obtenerPosts();

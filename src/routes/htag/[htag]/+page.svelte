@@ -10,8 +10,8 @@
 	import { updatePost } from '@/hooks/updatePost';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { page } from '$app/state';
-	import { onMount } from 'svelte';
 
+	export const ssr = false;
 	interface props {
 		data: {
 			htag: string;
