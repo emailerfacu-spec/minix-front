@@ -11,7 +11,6 @@
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { page } from '$app/state';
 
-	export const ssr = false;
 	interface props {
 		data: {
 			htag: string;
