@@ -74,10 +74,6 @@
 					<FieldLabel>bio</FieldLabel>
 					<Textarea id="bio" bind:value={usuario.bio}></Textarea>
 				</Field>
-				<Field>
-					<FieldLabel>Email</FieldLabel>
-					<Input id="email" type="email" bind:value={usuario.email} />
-				</Field>
 			</FieldGroup>
 			<Button type="submit" class="mt-2">
 				{#if cargando}

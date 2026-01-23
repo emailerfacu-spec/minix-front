@@ -39,6 +39,7 @@ export interface Sesion {
 	displayName: string;
 	username: string;
 	isAdmin: boolean;
+	email: string;
 	isFirebase: boolean;
 }
 

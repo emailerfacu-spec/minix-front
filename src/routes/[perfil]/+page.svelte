@@ -141,11 +141,13 @@
 				<UserPen />
 			</Button>
 		</DialogModificarUsuario>
-		<DialogResetPassword bind:data>
-			<Button variant="default" size="icon-lg">
-				<Key />
-			</Button>
-		</DialogResetPassword>
+		{#if !$sesionStore.isFirebase}
+			<DialogResetPassword bind:data>
+				<Button variant="default" size="icon-lg">
+					<Key />
+				</Button>
+			</DialogResetPassword>
+		{/if}
 	</div>
 {/if}
 
