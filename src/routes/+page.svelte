@@ -10,7 +10,7 @@
 	import PostCard from '@/components/PostCard.svelte';
 	import ModalEditar from './[perfil]/modalEditar.svelte';
 	import { sesionStore } from '@/stores/usuario';
-	import { posts, updatePostStore, loadingPosts } from '@/stores/posts';
+	import { posts, updatePostStore, loadingPosts, resetPosts } from '@/stores/posts';
 	import { updatePost } from '@/hooks/updatePost';
 	import { loadMorePosts } from '@/hooks/loadMorePosts';
 	import type { Post } from '../types';
@@ -20,6 +20,7 @@
 	let mensajeError = $state('');
 	let sentinel: HTMLDivElement;
 
+	resetPosts();
 	$effect(() => {
 		loadMorePosts();
 
