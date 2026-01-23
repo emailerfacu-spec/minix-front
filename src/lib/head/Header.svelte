@@ -20,7 +20,7 @@
 
 	onMount(() => {
 		sesionStore.subscribe((value) => {
-			showCerrarSesion = !!value?.accessToken;
+			showCerrarSesion = !!value?.username;
 		});
 	});
 

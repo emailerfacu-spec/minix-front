@@ -1,4 +1,5 @@
 import { obtenerCantidadDeUsosdeHtag } from '@/hooks/obtenerCantidadDeUsosdeHtag.js';
+export const ssr = false;
 
 export async function load({ params, fetch }) {
 	let { htag } = params;

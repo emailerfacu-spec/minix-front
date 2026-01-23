@@ -58,8 +58,8 @@
 	<DialogTrigger>
 		{@render children?.()}
 	</DialogTrigger>
-	<form {onsubmit}>
-		<DialogContent>
+	<DialogContent>
+		<form {onsubmit}>
 			<DialogHeader>
 				<DialogTitle>
 					<h1 class="text-2xl font-bold">Modificar Usuario</h1>
@@ -74,20 +74,14 @@
 					<FieldLabel>bio</FieldLabel>
 					<Textarea id="bio" bind:value={usuario.bio}></Textarea>
 				</Field>
-				<Field>
-					<FieldLabel>Email</FieldLabel>
-					<Input id="email" type="email" bind:value={usuario.email} />
-				</Field>
 			</FieldGroup>
-			<DialogFooter>
-				<Button type="submit">
-					{#if cargando}
-						<Spinner />
-					{:else}
-						Modificar
-					{/if}
-				</Button>
-			</DialogFooter>
-		</DialogContent>
-	</form>
+			<Button type="submit" class="mt-2">
+				{#if cargando}
+					<Spinner />
+				{:else}
+					Modificar
+				{/if}
+			</Button>
+		</form>
+	</DialogContent>
 </Dialog>
