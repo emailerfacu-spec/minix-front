@@ -21,9 +21,9 @@ export const sesionStore = {
 	reset: () => currentSesion.set(null)
 };
 
-sesionStore.subscribe((value) => {
-	console.log(value);
-});
+// sesionStore.subscribe((value) => {
+// 	console.log(value);
+// });
 
 if (browser) {
 	currentSesion.subscribe((value) => {

@@ -35,7 +35,7 @@
 	let showCrearPost = $state(false);
 
 	let data = $derived(page.data);
-	$inspect(data);
+	// $inspect(data);
 
 	let fetching = false;
 	// svelte-ignore state_referenced_locally
