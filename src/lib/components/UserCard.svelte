@@ -35,8 +35,5 @@
 				<BotonSeguir post={{ authorId: usu.id }} />
 			</div>
 		</div>
-		{#if usu.bio}
-			<div class="mt-4 rounded-full bg-accent p-4 text-muted-foreground">{usu.bio}</div>
-		{/if}
 	</CardContent>
 </Card>

@@ -13,8 +13,8 @@ export const load: PageLoad = async ({ params, depends, fetch }) => {
 	if (!usuario) error(404, 'No se encontro el usuario, ' + params.perfil);
 
 	const [seguidos, seguidores, countSeguidores, countSeguidos] = await Promise.all([
-		obtenerSeguidosPorUsuario(usuario.id, 5, fetch),
-		obtenerSeguidoresPorUsuario(usuario.id, 5, fetch),
+		obtenerSeguidosPorUsuario(usuario.id, 1, 5, fetch),
+		obtenerSeguidoresPorUsuario(usuario.id, 1, 5, fetch),
 		obtenerCantidadDeSeguidores(usuario.id, fetch),
 		obtenerCantidadDeSeguidos(usuario.id, fetch)
 	]);

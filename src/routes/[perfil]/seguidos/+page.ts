@@ -10,12 +10,14 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 	const seguidosResponse: UsersResponseDto | null = await obtenerSeguidosPorUsuario(
 		usuario.id,
+		1,
 		100,
 		fetch
 	);
 
 	return {
 		usuario,
-		seguidos: seguidosResponse?.response || []
+		seguidos: seguidosResponse?.response || [],
+		totalCount: seguidosResponse?.totalCount ?? 0
 	};
 };
