@@ -38,6 +38,8 @@
 	$inspect(data);
 
 	let fetching = false;
+	// svelte-ignore state_referenced_locally
+	let currentProfile = $state(params.perfil);
 
 	async function obtenerPosts() {
 		if (fetching || finished) return;
@@ -46,15 +48,14 @@
 		cargando = true;
 
 		try {
-			
 			const res = await fetch(
-					`${$apiBase}/api/posts/user/${params.perfil}?page=${pageNumber}&pageSize=20`,
-					{
-						headers: {
-							Authorization: `Bearer ${$sesionStore?.accessToken}`
-						}
+				`${$apiBase}/api/posts/user/${params.perfil}?page=${pageNumber}&pageSize=20`,
+				{
+					headers: {
+						Authorization: `Bearer ${$sesionStore?.accessToken}`
 					}
-				);
+				}
+			);
 			const nuevosPosts: Post[] = await res.json();
 
 			if (nuevosPosts.length === 0) {
@@ -69,6 +70,8 @@
 			if (nuevosPosts.length < 20) {
 				finished = true;
 			}
+		} catch (error) {
+			mensajeError = 'Error al cargar los posts';
 		} finally {
 			fetching = false;
 			cargando = false;
@@ -76,24 +79,24 @@
 	}
 
 	$effect(() => {
-		params.perfil;
+		if (currentProfile !== params.perfil) {
+			currentProfile = params.perfil;
+			setPosts([]);
+			pageNumber = 1;
+			finished = false;
+			mensajeError = '';
+			fetching = false;
 
-		setPosts([]);
-		pageNumber = 1;
-		finished = false;
-		mensajeError = '';
-
-		obtenerPosts();
+			obtenerPosts();
+		}
 	});
 
 	$effect(() => {
-		if (!sentinel) return;
-
-		if (finished) return;
+		if (!sentinel || finished) return;
 
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				if (entry.isIntersecting && !fetching) {
+				if (entry.isIntersecting && !fetching && !finished) {
 					obtenerPosts();
 				}
 			},
@@ -147,25 +150,27 @@
 		</h1>
 
 		<hr class="mb-8" />
-			{#if cargando && !finished}
-				<CardCargando />
-			{:else if mensajeError !== ''}
-				<CardError {mensajeError} />
-			{:else}
-				<div class="flex flex-col gap-2">
-					{#each $posts as post (post.id)}
-						<div transition:slide>
-							<PostCard {post} bind:postAModificar />
-						</div>
-					{/each}
+		{#if mensajeError !== ''}
+			<CardError {mensajeError} />
+		{:else}
+			<div class="flex flex-col gap-2">
+				{#each $posts as post (post.id)}
+					<div transition:slide>
+						<PostCard {post} bind:postAModificar />
+					</div>
+				{/each}
 
-					<div bind:this={sentinel} class="h-1"></div>
+				<div bind:this={sentinel} class="h-1"></div>
 
-					{#if cargando && !finished}
-						<CardCargando />
-					{/if}
-				</div>
-			{/if}
+				{#if cargando && !finished}
+					<CardCargando />
+				{/if}
+				
+				{#if finished && $posts.length === 0}
+					<p class="text-center text-muted-foreground">No hay posts para mostrar</p>
+				{/if}
+			</div>
+		{/if}
 	</div>
 </div>
 {#if postAModificar}
