@@ -114,8 +114,7 @@
 
 		await updatePost(
 			postAModificar,
-			(postNuevo: Post) =>
-				updatePostStore(postAModificar!.id, postNuevo),
+			(postNuevo: Post) => updatePostStore(postAModificar!.id, postNuevo),
 			mensajeError
 		);
 
@@ -165,7 +164,7 @@
 				{#if cargando && !finished}
 					<CardCargando />
 				{/if}
-				
+
 				{#if finished && $posts.length === 0}
 					<p class="text-center text-muted-foreground">No hay posts para mostrar</p>
 				{/if}
@@ -195,7 +194,7 @@
 </div>
 
 {#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
-	<div class="fixed right-8 bottom-8 flex flex-col gap-2">
+	<div class="fixed right-8 bottom-12 flex flex-col gap-2">
 		<DialogModificarUsuario bind:data>
 			<Button variant="default" size="icon-lg">
 				<UserPen />
