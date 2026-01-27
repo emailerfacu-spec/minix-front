@@ -19,4 +19,4 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		usuario,
 		seguidores: seguidoresResponse?.response || []
 	};
-}
+};

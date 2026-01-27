@@ -13,13 +13,16 @@ export async function obtenerSeguidosPorUsuario(
 		const fetchFunc = fetch2 || fetch;
 		const skip = (page - 1) * limit;
 
-		const response = await fetchFunc(`${get(apiBase)}/api/users/${id}/following?skip=${skip}&limit=${limit}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+		const response = await fetchFunc(
+			`${get(apiBase)}/api/users/${id}/following?skip=${skip}&limit=${limit}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				}
 			}
-		});
+		);
 
 		if (!response.ok) {
 			return null;

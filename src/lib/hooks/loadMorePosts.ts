@@ -24,7 +24,7 @@ export async function loadMorePosts() {
 		if (newPosts.length < PAGE_SIZE) {
 			finished = true;
 		} else {
-			page.update(p => p + 1);
+			page.update((p) => p + 1);
 		}
 	} finally {
 		loadingPosts.set(false);

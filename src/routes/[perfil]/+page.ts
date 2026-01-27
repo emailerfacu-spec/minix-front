@@ -1,5 +1,5 @@
 import { obtenerUsuarioPorUsername } from '@/hooks/obtenerUsuario.js';
-import type {UserResponseDto } from '../../types.js';
+import type { UserResponseDto } from '../../types.js';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { obtenerSeguidosPorUsuario } from '@/hooks/obtenerSeguidosPorUsuario.js';

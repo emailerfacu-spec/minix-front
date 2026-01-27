@@ -16,7 +16,10 @@
 	let {
 		post,
 		variant = 'icon-lg'
-	}: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string; id: string }; variant?: 'icon-lg' | 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' } = $props();
+	}: {
+		post: Omit<Partial<Post>, 'authorId'> & { authorId: string; id: string };
+		variant?: 'icon-lg' | 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm';
+	} = $props();
 
 	let seguido: boolean | null = $state(null);
 
