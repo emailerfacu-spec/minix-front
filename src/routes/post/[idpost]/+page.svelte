@@ -25,6 +25,7 @@
 	import TooltipContent from '@/components/ui/tooltip/tooltip-content.svelte';
 	import { deletePost } from '@/hooks/deletePost';
 	import { flip } from 'svelte/animate';
+	import { obtenerRespuestasPorId } from '@/hooks/obtenerRespuestasPorId';
 
 	interface Prop {
 		data: {
@@ -36,7 +37,17 @@
 	let tamaño = new TamañoPantalla();
 
 	let { data }: Prop = $props();
-	// $inspect(data);
+
+	let respuestasPaginadas: Post[] = $state([]);
+	let pagerespuestas: number = $state(1);
+
+	let seguirMostrandoMostrarMás = $derived.by(() => {
+		if (data.post.repliesCount <= 20) return false;
+		if (respuestasPaginadas.length == 0) return true;
+		return data.respuestas.length + respuestasPaginadas.length < data.post.repliesCount;
+	});
+	// $inspect([respuestasPaginadas, seguirMostrandoMostrarMás]);
+
 	let postAModificar: Post | null = $state(null);
 
 	async function handleEditar(e: SubmitEvent) {
@@ -104,7 +115,7 @@
 		</div>
 
 		<div class="flex flex-col gap-2">
-			{#each data.respuestas as respuesta (respuesta.id)}
+			{#each [...data.respuestas, ...respuestasPaginadas] as respuesta (respuesta.id)}
 				<div transition:fade animate:flip>
 					<!-- {#if tamaño.isMobile} -->
 					<!-- {#if true} -->
@@ -114,6 +125,22 @@
 					<!-- {/if} -->
 				</div>
 			{/each}
+			{#if seguirMostrandoMostrarMás}
+				<Button
+					variant="link"
+					onclick={async () => {
+						let ret = await obtenerRespuestasPorId(
+							data.post.id,
+							undefined,
+							undefined,
+							++pagerespuestas
+						);
+						if (ret == null) return;
+						if (typeof ret == 'string') return;
+						respuestasPaginadas.push(...ret);
+					}}>Cargar Más Respuestas</Button
+				>
+			{/if}
 		</div>
 	</div>
 </div>
