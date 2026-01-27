@@ -137,6 +137,10 @@
 						);
 						if (ret == null) return;
 						if (typeof ret == 'string') return;
+						if (ret.length == 0) {
+							seguirMostrandoMostrarMás = false;
+							return;
+						}
 						respuestasPaginadas.push(...ret);
 					}}>Cargar Más Respuestas</Button
 				>
