@@ -14,8 +14,8 @@ export async function load({ params }) {
 		return error(500, 'No se pudo alcanzar el servidor.');
 	}
 
-	if (usuarios.length == 0) {
-		return error(404, 'No se encontraron usuarios que coinsidan con la busqueda.');
+	if (usuarios.length == 0 && htags.length == 0) {
+		return error(404, 'No se encontraron usuarios ni hashtags que coinsidan con la busqueda.');
 	}
 	return { usuarios, htags };
 }
