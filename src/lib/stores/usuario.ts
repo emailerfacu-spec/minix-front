@@ -2,6 +2,7 @@ import { get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Sesion } from '../../types';
 import { apiBase } from '@/stores/url';
+import { getFirebaseApp, getFirebaseAuth } from './firebase';
 
 const { subscribe } = apiBase;
 let baseUrl: string = '';
@@ -54,9 +55,9 @@ if (browser) {
 
 		if (sesion.isFirebase) {
 			try {
-				// Simulamos la importación dinámica de Firebase
-				const { getAuth } = await import('firebase/auth');
-				const auth = getAuth();
+				getFirebaseApp();
+
+				const auth = getFirebaseAuth();
 				const user = auth.currentUser;
 
 				if (user) {
