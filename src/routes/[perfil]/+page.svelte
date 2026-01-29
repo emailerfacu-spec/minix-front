@@ -125,9 +125,9 @@
 <!-- {$inspect(data)} -->
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		{#key data.id}
-			<CardPerfil bind:data />
-		{/key}
+		<!-- {#key data.id} -->
+		<CardPerfil bind:data />
+		<!-- {/key} -->
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>

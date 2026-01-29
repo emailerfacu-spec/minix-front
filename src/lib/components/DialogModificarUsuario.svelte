@@ -14,7 +14,7 @@
 	import { updateUsuario } from '@/hooks/updateUsuario';
 	import DialogFooter from './ui/dialog/dialog-footer.svelte';
 	import Spinner from './ui/spinner/spinner.svelte';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 
 	let { data = $bindable(), children } = $props();
@@ -42,9 +42,9 @@
 		});
 		cargando = false;
 		open = false;
-		// invalidateAll();
-		await invalidate(page.url);
-		await invalidate('perfil:general');
+		await invalidateAll();
+		// await invalidate(page.url);
+		// await invalidate('perfil:general');
 	}
 
 	function onkeydown(e: KeyboardEvent) {

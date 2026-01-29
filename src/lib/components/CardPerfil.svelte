@@ -104,10 +104,10 @@
 			</div>
 
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{usu.displayName}
+				{data.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			{#if usu.bio}
+			{#if data.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
 					{@html contenido()}
 					<!-- {usu.bio.replaceAll('<', '')} -->
@@ -129,10 +129,10 @@
 				</Avatar>
 			</div>
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{usu.displayName}
+				{data.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			{#if usu.bio}
+			{#if data.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
 					{@html usu.bio.replaceAll('\n', '<br>')}
 				</p>
