@@ -25,6 +25,8 @@
 
 	let { params } = $props();
 
+	setPosts([]);
+
 	let cargando = $state(false);
 	let finished = $state(false);
 	let pageNumber = $state(1);
