@@ -1,38 +1,23 @@
-# sv
+# Minix - Front
+Este repositorio consiste del repo que contiene el codigo para poder hacer deploy de una instancia de minix
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+# ¿Que es Minix?
+Intentamos hacer algo parecido a x.com pero adaptado a nuestra vision.
 
-## Creating a project
+# Galeria 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2ebe2983-04dc-4cca-ab46-e361ec6f72ee" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/49529256-2c36-4a40-bbab-d02228028def" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/38045721-c350-4e06-a5e1-4aa271139894" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5c228110-feac-4d52-8451-222f04034f94" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9618162d-fcde-42ff-bd7e-fe334498e9c7" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/580f0ad3-89ed-4686-98c2-f8dea04f80de" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ce40fd1a-bac0-443f-b01e-d861c335236c" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ea24be47-f35a-4d68-a9d6-f6796e656911" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/adf1f792-31e0-4f10-a4f3-e8590b4f0582" />
 
-If you're seeing this, you've probably already done this step. Congrats!
+# ¿Que tecnologias usamos?
+- svelte(kit) (framework)
+- shadcn-svelte (ui)
+- firebase/auth
+- vercel (host)
 
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
