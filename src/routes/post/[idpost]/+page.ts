@@ -2,6 +2,8 @@ import { obtenerPostPorId } from '@/hooks/obtenerPostPorId.js';
 import { obtenerRespuestasPorId } from '@/hooks/obtenerRespuestasPorId';
 import { error } from '@sveltejs/kit';
 
+export const ssr = false;
+
 export async function load({ params, fetch, depends }) {
 	let ret = await obtenerPostPorId(params.idpost, fetch, depends);
 	if (ret == null) return error(404, 'no existe un post con ese id.');

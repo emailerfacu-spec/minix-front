@@ -16,16 +16,18 @@
 	let {
 		post,
 		variant = 'icon-lg'
-	}: { post: Omit<Partial<Post>, 'authorId'> & { authorId: string }; variant?: string } = $props();
+	}: {
+		post: Omit<Partial<Post>, 'authorId'> & { authorId: string; id: string };
+		variant?: 'icon-lg' | 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm';
+	} = $props();
 
-	let seguido: Boolean | null = $state(null);
+	let seguido: boolean | null = $state(null);
 
 	if (typeof window !== 'undefined') {
 		window.addEventListener('followCacheUpdated', ((
 			event: CustomEvent<{ userId: string; isFollowed: boolean } | { clearAll: true }>
 		) => {
 			if ('clearAll' in event.detail && event.detail.clearAll === true) {
-				cargarSeguido();
 			} else if ('userId' in event.detail && event.detail.userId === post.authorId) {
 				seguido = event.detail.isFollowed;
 			}
@@ -41,9 +43,11 @@
 	async function cargarSeguido() {
 		let a = cacheSeguidos.get(post.authorId);
 		if (a === undefined) {
-			const seguidoStatus = await esSeguido(post);
-			cacheSeguidos.set(post.authorId, seguidoStatus.isFollowing || false);
-			seguido = seguidoStatus.isFollowing || false;
+			const seguidoStatus = await esSeguido(post as Post);
+			if (seguidoStatus) {
+				cacheSeguidos.set(post.authorId, seguidoStatus.isFollowing || false);
+				seguido = seguidoStatus.isFollowing || false;
+			}
 			return;
 		}
 		seguido = a;

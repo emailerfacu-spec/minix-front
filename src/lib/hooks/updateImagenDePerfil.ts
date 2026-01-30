@@ -1,7 +1,4 @@
-export async function updateImagenDePerfil(){
-  try{
-
-  }catch{
-
-  }
+export async function updateImagenDePerfil() {
+	try {
+	} catch {}
 }

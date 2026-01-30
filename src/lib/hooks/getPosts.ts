@@ -1,17 +1,20 @@
-import { apiBase } from "@/stores/url";
-import { sesionStore } from "@/stores/usuario";
-import { get } from "svelte/store";
+import { apiBase } from '@/stores/url';
+import { sesionStore } from '@/stores/usuario';
+import { get } from 'svelte/store';
+import type { Post } from '../../types';
+import { PAGE_SIZE } from '../stores/posts';
 
-export async function getPosts() {
+export async function getPosts(page: number = 1): Promise<Post[]> {
+	const token = get(sesionStore)?.accessToken;
 
+	const headers: HeadersInit = {};
+	if (token) headers.Authorization = `Bearer ${token}`;
 
-	const req = await fetch(`${get(apiBase)}/timeline?pageSize=20`,{
-	headers: {
-	Authorization: `Bearer ${get(sesionStore)?.accessToken}`
-
-	}
+	const res = await fetch(`${get(apiBase)}/timeline?page=${page}&pageSize=${PAGE_SIZE}`, {
+		headers
 	});
-	if (req.ok) {
-		return await req.json();
-	}
+
+	if (!res.ok) throw new Error('Error cargando posts');
+
+	return res.json();
 }

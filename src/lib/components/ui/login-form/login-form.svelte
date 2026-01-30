@@ -36,7 +36,7 @@
 				<Field>
 					<div class="flex items-center">
 						<FieldLabel for="password-{id}">Contraseña</FieldLabel>
-						<a href="##" class="ml-auto inline-block text-sm underline">
+						<a href="/password-reset" class="ml-auto inline-block text-sm underline">
 							Te Olvidaste la contraseña?
 						</a>
 					</div>

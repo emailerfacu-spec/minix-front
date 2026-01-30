@@ -1,39 +1,66 @@
 <script lang="ts">
+	import { replaceState } from '$app/navigation';
+	import { page } from '$app/state';
 	import Card from '@/components/ui/card/card.svelte';
 	import { Content } from '@/components/ui/card';
-	import { sesionStore } from '@/stores/usuario';
-	import CrearPost from '@/components/crear-post.svelte';
-	import { posts, resetPosts, setPosts, updatePostStore } from '@/stores/posts';
-	import PostCard from '@/components/PostCard.svelte';
-	import type { Post } from '../types';
-	import ModalEditar from './[perfil]/modalEditar.svelte';
-	import { updatePost } from '@/hooks/updatePost';
-	import { fade, slide } from 'svelte/transition';
-	import { getPosts } from '@/hooks/getPosts';
 	import Spinner from '@/components/ui/spinner/spinner.svelte';
-
-	$effect(() => {
-		resetPosts();
-		(async () => {
-			setPosts(await getPosts());
-		})();
-	});
+	import Dialog from '@/components/ui/dialog/dialog.svelte';
+	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
+	import CrearPost from '@/components/crear-post.svelte';
+	import PostCard from '@/components/PostCard.svelte';
+	import ModalEditar from './[perfil]/modalEditar.svelte';
+	import { sesionStore } from '@/stores/usuario';
+	import { posts, updatePostStore, loadingPosts, resetPosts } from '@/stores/posts';
+	import { updatePost } from '@/hooks/updatePost';
+	import { loadMorePosts } from '@/hooks/loadMorePosts';
+	import type { Post } from '../types';
+	import { fade, slide } from 'svelte/transition';
 
 	let postAModificar: Post | null = $state(null);
 	let mensajeError = $state('');
+	let sentinel: HTMLDivElement;
+
+	resetPosts();
+	$effect(() => {
+		loadMorePosts();
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					loadMorePosts();
+				}
+			},
+			{ rootMargin: '200px' }
+		);
+
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	});
 
 	async function handleEditar(e: SubmitEvent) {
 		e.preventDefault();
-		if (postAModificar == null) return;
+		if (!postAModificar) return;
+
 		await updatePost(
 			postAModificar,
-			(postnuevo: Post) => updatePostStore(postAModificar!.id, postnuevo),
-
+			(postNuevo: Post) => updatePostStore(postAModificar!.id, postNuevo),
 			mensajeError
 		);
 		postAModificar = null;
 	}
+
+	let from = page.url.searchParams.get('from');
+
+	if (from) {
+		replaceState('/', {});
+	}
 </script>
+
+{#if from === 'cambio_contraseña'}
+	<Dialog open>
+		<DialogContent>Se cambió la contraseña del usuario exitosamente</DialogContent>
+	</Dialog>
+{/if}
 
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />
@@ -46,22 +73,22 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		<div class="flex flex-col gap-2">
-			{#if $sesionStore !== null}
+			{#if $sesionStore}
 				<CrearPost />
 			{/if}
 			<hr />
 
-			{#if $posts === undefined}
+			{#if $posts.length === 0 && $loadingPosts}
 				<Card>
 					<Content class="flex items-center justify-center gap-2">
 						<Spinner class="h-10 w-10" />
 						<p>Cargando</p>
 					</Content>
 				</Card>
-			{:else if $posts.length <= 0}
+			{:else if $posts.length === 0}
 				<Card>
 					<Content>
-						<p class=" text-center leading-7 not-first:mt-6">No hay Posts que mostrar</p>
+						<p class="text-center leading-7">No hay Posts que mostrar</p>
 					</Content>
 				</Card>
 			{:else}
@@ -72,6 +99,13 @@
 				{/each}
 			{/if}
 		</div>
+		<div bind:this={sentinel} class="h-1"></div>
+
+		{#if $loadingPosts && $posts.length > 0}
+			<div class="flex justify-center py-4">
+				<Spinner />
+			</div>
+		{/if}
 	</div>
 </div>
 {#if postAModificar}

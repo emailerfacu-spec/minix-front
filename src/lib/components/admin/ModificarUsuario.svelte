@@ -78,7 +78,6 @@
 							{/if}
 						</Label>
 					</div>
-					<hr class="my-2" />
 					<div class="flex justify-between">
 						<Button type="submit" disabled={cargando}>
 							{#if cargando}

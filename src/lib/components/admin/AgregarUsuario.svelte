@@ -41,6 +41,12 @@
 		if (error == '') {
 			invalidate('admin:load');
 			open = false;
+			dto = {
+				username: '',
+				email: '',
+				password: '',
+				displayName: ''
+			};
 		}
 
 		cargando = false;

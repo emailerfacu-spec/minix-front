@@ -1,20 +1,23 @@
 import { obtenerUsuarioPorUsername } from '@/hooks/obtenerUsuario';
 import { error } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
 import type { UserResponseDto, UsersResponseDto } from '../../../types';
 import { obtenerSeguidosPorUsuario } from '@/hooks/obtenerSeguidosPorUsuario';
 
-export async function load({ params, fetch }) {
+export const load: PageLoad = async ({ params, fetch }) => {
 	const usuario: UserResponseDto | null = await obtenerUsuarioPorUsername(params.perfil, fetch);
 	if (!usuario) error(404, 'No se encontro el usuario, ' + params.perfil);
 
 	const seguidosResponse: UsersResponseDto | null = await obtenerSeguidosPorUsuario(
 		usuario.id,
+		1,
 		100,
 		fetch
 	);
 
 	return {
 		usuario,
-		seguidos: seguidosResponse?.response || []
+		seguidos: seguidosResponse?.response || [],
+		totalCount: seguidosResponse?.totalCount ?? 0
 	};
-}
+};

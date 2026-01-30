@@ -5,26 +5,31 @@ import { get } from 'svelte/store';
 
 export async function obtenerSeguidosPorUsuario(
 	id: string,
+	page: number = 1,
 	limit: number = 20,
 	fetch2?: Function
 ): Promise<UsersResponseDto | null> {
 	try {
 		const fetchFunc = fetch2 || fetch;
+		const skip = (page - 1) * limit;
 
-		const response = await fetchFunc(`${get(apiBase)}/api/users/${id}/following?limit=${limit}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+		const response = await fetchFunc(
+			`${get(apiBase)}/api/users/${id}/following?skip=${skip}&limit=${limit}`,
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				}
 			}
-		});
+		);
 
 		if (!response.ok) {
 			return null;
 		}
 
-		const users: UsersResponseDto = await response.json();
-		return users;
+		const data: UsersResponseDto = await response.json();
+		return data;
 	} catch (error) {
 		return null;
 	}

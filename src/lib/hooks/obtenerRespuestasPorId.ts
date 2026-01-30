@@ -6,12 +6,13 @@ import type { Post } from '../../types';
 export async function obtenerRespuestasPorId(
 	id: string,
 	fetch2?: Function,
-	depends?: Function
+	depends?: Function,
+	page: number = 1
 ): Promise<string | Post[] | null> {
 	if (depends) depends('post:respuestas');
 	const fetchFn = fetch2 ? fetch2 : fetch;
 	try {
-		const req = await fetchFn(`${get(apiBase)}/api/posts/${id}/replies`, {
+		const req = await fetchFn(`${get(apiBase)}/api/posts/${id}/replies?page=${page}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${get(sesionStore)?.accessToken}`

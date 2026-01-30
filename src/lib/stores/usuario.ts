@@ -2,6 +2,7 @@ import { get, writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Sesion } from '../../types';
 import { apiBase } from '@/stores/url';
+import { getFirebaseApp, getFirebaseAuth } from './firebase';
 
 const { subscribe } = apiBase;
 let baseUrl: string = '';
@@ -20,6 +21,10 @@ export const sesionStore = {
 	update: currentSesion.update,
 	reset: () => currentSesion.set(null)
 };
+
+// sesionStore.subscribe((value) => {
+// 	console.log(value);
+// });
 
 if (browser) {
 	currentSesion.subscribe((value) => {
@@ -45,8 +50,31 @@ if (browser) {
 		}
 	};
 
-	const shouldRefreshToken = (sesion: Sesion | null): boolean => {
+	const shouldRefreshToken = async (sesion: Sesion | null): Promise<boolean> => {
 		if (!sesion || !sesion.accessToken) return false;
+
+		if (sesion.isFirebase) {
+			try {
+				getFirebaseApp();
+
+				const auth = getFirebaseAuth();
+				const user = auth.currentUser;
+
+				if (user) {
+					const token = await user.getIdToken(true);
+					currentSesion.update((s) => {
+						if (s) {
+							return { ...s, accessToken: token };
+						}
+						return s;
+					});
+					return false;
+				}
+			} catch (error) {
+				console.error('Error obteniendo token de Firebase:', error);
+				return false;
+			}
+		}
 
 		const decoded = decodeJWT(sesion.accessToken);
 		if (!decoded || !decoded.exp) return false;
@@ -61,28 +89,31 @@ if (browser) {
 	const refreshAccessToken = async () => {
 		try {
 			const sesion = get(currentSesion);
-			if (!shouldRefreshToken(sesion)) return;
+			if (!(await shouldRefreshToken(sesion))) return;
 
-			console.log('refrescando token');
-			const response = await fetch(get(apiBase) + '/api/auth/refresh', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				credentials: 'include'
-			});
-
-			if (response.ok) {
-				const data = await response.json();
-				currentSesion.update((sesion) => {
-					if (sesion) {
-						return { ...sesion, accessToken: data.accessToken };
-					}
-					return sesion;
+			// Solo ejecutar este código si NO es Firebase
+			if (!sesion?.isFirebase) {
+				console.log('refrescando token');
+				const response = await fetch(get(apiBase) + '/api/auth/refresh', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					credentials: 'include'
 				});
-			} else {
-				console.error('Error refrescando token:', response.statusText);
-				currentSesion.set(null);
+
+				if (response.ok) {
+					const data = await response.json();
+					currentSesion.update((sesion) => {
+						if (sesion) {
+							return { ...sesion, accessToken: data.accessToken };
+						}
+						return sesion;
+					});
+				} else {
+					console.error('Error refrescando token:', response.statusText);
+					currentSesion.set(null);
+				}
 			}
 		} catch (error) {
 			console.error('Error refrescando token:', error);
@@ -90,6 +121,9 @@ if (browser) {
 		}
 	};
 
-	setInterval(refreshAccessToken, 30 * 1000); // Check every 30 seconds
+	setInterval(() => {
+		refreshAccessToken();
+	}, 30 * 1000); // Check every 30 seconds
+
 	refreshAccessToken();
 }

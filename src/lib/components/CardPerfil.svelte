@@ -17,6 +17,9 @@
 	import Badge from './ui/badge/badge.svelte';
 	import { resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
+	import { Tooltip } from './ui/tooltip';
+	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
+	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 
 	let { data = $bindable() } = $props();
 
@@ -101,10 +104,10 @@
 			</div>
 
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{usu.displayName}
+				{data.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			{#if usu.bio}
+			{#if data.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
 					{@html contenido()}
 					<!-- {usu.bio.replaceAll('<', '')} -->
@@ -126,10 +129,10 @@
 				</Avatar>
 			</div>
 			<h1 class="mt-10 scroll-m-20 text-center text-2xl font-extrabold tracking-tight lg:text-5xl">
-				{usu.displayName}
+				{data.displayName}
 				<p class="ml-2 text-2xl font-medium text-muted-foreground">@{data.username}</p>
 			</h1>
-			{#if usu.bio}
+			{#if data.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
 					{@html usu.bio.replaceAll('\n', '<br>')}
 				</p>
@@ -151,14 +154,30 @@
 							<div class="flex items-center justify-between">
 								<div class="flex -space-x-2">
 									{#each data.seguidos.response as seguidos (seguidos.id)}
-										<a href={resolve('/[perfil]', { perfil: seguidos.username })}>
-											<Avatar class="h-8 w-8 border-2 border-background">
-												<AvatarImage src={seguidos.imageUrl} alt={seguidos.username} />
-												<AvatarFallback class="text-xs">
-													{seguidos.displayName?.[0] || ''}
-												</AvatarFallback>
-											</Avatar>
-										</a>
+										<Tooltip>
+											<TooltipTrigger>
+												<a href={resolve('/[perfil]', { perfil: seguidos.username })}>
+													<Avatar class="h-8 w-8 border-2 border-background">
+														<AvatarImage src={seguidos.imageUrl} alt={seguidos.username} />
+														<AvatarFallback class="text-xs">
+															{seguidos.displayName?.[0] || ''}
+														</AvatarFallback>
+													</Avatar>
+												</a>
+											</TooltipTrigger>
+											<TooltipContent>
+												<span class="flex items-center gap-2">
+													<Avatar class="h-8 w-8 border-2 border-background">
+														<AvatarImage src={seguidos.imageUrl} alt={seguidos.username} />
+														<AvatarFallback class="text-xs">
+															{seguidos.displayName?.[0] || ''}
+														</AvatarFallback>
+													</Avatar>
+													<span class="text-lg">{seguidos.displayName}</span>
+													<span class="text-lg text-muted-foreground">@{seguidos.username}</span>
+												</span>
+											</TooltipContent>
+										</Tooltip>
 									{/each}
 								</div>
 								{#if data.seguidos.response?.length < data.countSeguidos}
@@ -188,14 +207,30 @@
 							<div class="flex items-center justify-between">
 								<div class="flex -space-x-2">
 									{#each data.seguidores.response as seguidores (seguidores.id)}
-										<a href={resolve('/[perfil]', { perfil: seguidores.username })}>
-											<Avatar class="h-8 w-8 border-2 border-background">
-												<AvatarImage src={seguidores.imageUrl} alt={seguidores.username} />
-												<AvatarFallback class="text-xs">
-													{seguidores.displayName?.[0] || ''}
-												</AvatarFallback>
-											</Avatar>
-										</a>
+										<Tooltip>
+											<TooltipTrigger>
+												<a href={resolve('/[perfil]', { perfil: seguidores.username })}>
+													<Avatar class="h-8 w-8 border-2 border-background">
+														<AvatarImage src={seguidores.imageUrl} alt={seguidores.username} />
+														<AvatarFallback class="text-xs">
+															{seguidores.displayName?.[0] || ''}
+														</AvatarFallback>
+													</Avatar>
+												</a>
+											</TooltipTrigger>
+											<TooltipContent>
+												<span class="flex items-center gap-2">
+													<Avatar class="h-8 w-8 border-2 border-background">
+														<AvatarImage src={seguidores.imageUrl} alt={seguidores.username} />
+														<AvatarFallback class="text-xs">
+															{seguidores.displayName?.[0] || ''}
+														</AvatarFallback>
+													</Avatar>
+													<span class="text-lg">{seguidores.displayName}</span>
+													<span class="text-lg text-muted-foreground">@{seguidores.username}</span>
+												</span>
+											</TooltipContent>
+										</Tooltip>
 									{/each}
 								</div>
 								{#if data.seguidores.response?.length < data.countSeguidores}

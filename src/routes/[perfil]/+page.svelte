@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { apiBase } from '@/stores/url';
-	import PenLine from '@lucide/svelte/icons/pen-line';
 	import type { Post } from '../../types.js';
 	import { fade, slide } from 'svelte/transition';
 	import PostCard from '@/components/PostCard.svelte';
@@ -9,7 +8,7 @@
 	import ModalEditar from './modalEditar.svelte';
 	import { page } from '$app/state';
 	import Button from '@/components/ui/button/button.svelte';
-	import { Dialog } from '@/components/ui/dialog/index.js';
+	import { Dialog } from '@/components/ui/dialog';
 	import CrearPost from '@/components/crear-post.svelte';
 	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
 	import DialogTitle from '@/components/ui/dialog/dialog-title.svelte';
@@ -19,50 +18,108 @@
 	import CardPerfil from '@/components/CardPerfil.svelte';
 	import DialogModificarUsuario from '@/components/DialogModificarUsuario.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
+	import DialogResetPassword from '@/components/DialogResetPassword.svelte';
+	import Key from '@lucide/svelte/icons/key';
+	import UserPen from '@lucide/svelte/icons/user-pen';
+	import PenLine from '@lucide/svelte/icons/pen-line';
 
 	let { params } = $props();
 
-	let cargando = $state(true);
+	setPosts([]);
+
+	let cargando = $state(false);
+	let finished = $state(false);
+	let pageNumber = $state(1);
+	let sentinel = $state<HTMLDivElement | null>(null);
+
 	let mensajeError = $state('');
 	let postAModificar: Post | null = $state(null);
-
 	let showCrearPost = $state(false);
 
 	let data = $derived(page.data);
+	// $inspect(data);
 
-	$effect(() => {
-		obtenerPosts();
-	});
+	let fetching = false;
+	// svelte-ignore state_referenced_locally
+	let currentProfile = $state(params.perfil);
 
 	async function obtenerPosts() {
+		if (fetching || finished) return;
+
+		fetching = true;
+		cargando = true;
+
 		try {
-			const req = await fetch($apiBase + '/api/posts/user/' + params.perfil, {
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${$sesionStore?.accessToken}`
+			const res = await fetch(
+				`${$apiBase}/api/posts/user/${params.perfil}?page=${pageNumber}&pageSize=20`,
+				{
+					headers: {
+						Authorization: `Bearer ${$sesionStore?.accessToken}`
+					}
 				}
-			});
-			if (req.ok) {
-				setPosts(await req.json());
+			);
+			const nuevosPosts: Post[] = await res.json();
+
+			if (nuevosPosts.length === 0) {
+				finished = true;
 				return;
 			}
-			mensajeError = 'Fallo al obtener los datos';
-		} catch {
-			mensajeError = 'No se alcanzo el servidor';
+
+			posts.update((actuales = []) => [...actuales, ...nuevosPosts]);
+
+			pageNumber++;
+
+			if (nuevosPosts.length < 20) {
+				finished = true;
+			}
+		} catch (error) {
+			mensajeError = 'Error al cargar los posts';
 		} finally {
+			fetching = false;
 			cargando = false;
 		}
 	}
 
+	$effect(() => {
+		if (currentProfile !== params.perfil) {
+			currentProfile = params.perfil;
+			setPosts([]);
+			pageNumber = 1;
+			finished = false;
+			mensajeError = '';
+			fetching = false;
+
+			obtenerPosts();
+		}
+	});
+
+	$effect(() => {
+		if (!sentinel || finished) return;
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting && !fetching && !finished) {
+					obtenerPosts();
+				}
+			},
+			{ rootMargin: '100px' }
+		);
+
+		observer.observe(sentinel);
+
+		return () => observer.disconnect();
+	});
+
 	async function handleEditar(e: SubmitEvent) {
 		e.preventDefault();
-		if (postAModificar == null) return;
+		if (!postAModificar) return;
+
 		await updatePost(
 			postAModificar,
-			(postnuevo: Post) => updatePostStore(postAModificar!.id, postnuevo),
-
+			(postNuevo: Post) => updatePostStore(postAModificar!.id, postNuevo),
 			mensajeError
 		);
+
 		postAModificar = null;
 	}
 </script>
@@ -70,9 +127,9 @@
 <!-- {$inspect(data)} -->
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
-		{#key data}
-			<CardPerfil bind:data />
-		{/key}
+		<!-- {#key data.id} -->
+		<CardPerfil bind:data />
+		<!-- {/key} -->
 		<h1
 			class="mt-10 flex scroll-m-20 justify-between text-3xl font-extrabold tracking-tight lg:text-3xl"
 		>
@@ -89,14 +146,12 @@
 					<PenLine />
 				</Button>
 			{:else if $posts?.length == 0}
-				<BotonSeguir post={{ authorId: data.id }} />
+				<BotonSeguir post={{ authorId: data.id, id: data.id }} />
 			{/if}
 		</h1>
 
 		<hr class="mb-8" />
-		{#if cargando}
-			<CardCargando />
-		{:else if mensajeError !== ''}
+		{#if mensajeError !== ''}
 			<CardError {mensajeError} />
 		{:else}
 			<div class="flex flex-col gap-2">
@@ -105,6 +160,16 @@
 						<PostCard {post} bind:postAModificar />
 					</div>
 				{/each}
+
+				<div bind:this={sentinel} class="h-1"></div>
+
+				{#if cargando && !finished}
+					<CardCargando />
+				{/if}
+
+				{#if finished && $posts.length === 0}
+					<p class="text-center text-muted-foreground">No hay posts para mostrar</p>
+				{/if}
 			</div>
 		{/if}
 	</div>
@@ -131,7 +196,20 @@
 </div>
 
 {#if $sesionStore?.isAdmin || $sesionStore?.username == params.perfil}
-	<DialogModificarUsuario bind:data />
+	<div class="fixed right-8 bottom-12 flex flex-col gap-2">
+		<DialogModificarUsuario bind:data>
+			<Button variant="default" size="icon-lg">
+				<UserPen />
+			</Button>
+		</DialogModificarUsuario>
+		{#if !$sesionStore.isFirebase}
+			<DialogResetPassword bind:data>
+				<Button variant="default" size="icon-lg">
+					<Key />
+				</Button>
+			</DialogResetPassword>
+		{/if}
+	</div>
 {/if}
 
 <svelte:head>

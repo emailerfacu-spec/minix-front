@@ -3,6 +3,9 @@
 	import AlertCircleIcon from '@lucide/svelte/icons/alert-circle';
 	import * as Alert from '@/components/ui/alert';
 	import { fade } from 'svelte/transition';
+	import FireBaseButton from '@/components/FireBaseButton.svelte';
+	import Card from '@/components/ui/card/card.svelte';
+	import CardContent from '@/components/ui/card/card-content.svelte';
 
 	let showAlert: boolean = $state(false);
 
@@ -21,6 +24,12 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-sm">
 		<SignupForm bind:showAlert />
+
+		<Card class="mt-2">
+			<CardContent>
+				<FireBaseButton mode="register" />
+			</CardContent>
+		</Card>
 		{#if showAlert}
 			<div class="mt-2" transition:fade>
 				<Alert.Root variant="destructive">

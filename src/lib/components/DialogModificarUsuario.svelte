@@ -1,5 +1,4 @@
 <script lang="ts">
-	import UserPen from '@lucide/svelte/icons/user-pen';
 	import Button, { buttonVariants } from './ui/button/button.svelte';
 	import { Dialog } from './ui/dialog';
 	import DialogTrigger from './ui/dialog/dialog-trigger.svelte';
@@ -18,7 +17,7 @@
 	import { invalidate, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 
-	let { data = $bindable() } = $props();
+	let { data = $bindable(), children } = $props();
 
 	let usuario: UserResponseDto = $state({
 		id: data.id,
@@ -43,9 +42,9 @@
 		});
 		cargando = false;
 		open = false;
-		// invalidateAll();
-		await invalidate(page.url);
-		await invalidate('perfil:general');
+		await invalidateAll();
+		// await invalidate(page.url);
+		// await invalidate('perfil:general');
 	}
 
 	function onkeydown(e: KeyboardEvent) {
@@ -57,14 +56,10 @@
 
 <Dialog bind:open>
 	<DialogTrigger>
-		<div class="fixed right-8 bottom-8">
-			<Button variant="default" size="icon-lg">
-				<UserPen />
-			</Button>
-		</div>
+		{@render children?.()}
 	</DialogTrigger>
-	<form {onsubmit}>
-		<DialogContent>
+	<DialogContent>
+		<form {onsubmit}>
 			<DialogHeader>
 				<DialogTitle>
 					<h1 class="text-2xl font-bold">Modificar Usuario</h1>
@@ -79,20 +74,14 @@
 					<FieldLabel>bio</FieldLabel>
 					<Textarea id="bio" bind:value={usuario.bio}></Textarea>
 				</Field>
-				<Field>
-					<FieldLabel>Email</FieldLabel>
-					<Input id="email" type="email" bind:value={usuario.email} />
-				</Field>
 			</FieldGroup>
-			<DialogFooter>
-				<Button type="submit">
-					{#if cargando}
-						<Spinner />
-					{:else}
-						Modificar
-					{/if}
-				</Button>
-			</DialogFooter>
-		</DialogContent>
-	</form>
+			<Button type="submit" class="mt-2">
+				{#if cargando}
+					<Spinner />
+				{:else}
+					Modificar
+				{/if}
+			</Button>
+		</form>
+	</DialogContent>
 </Dialog>

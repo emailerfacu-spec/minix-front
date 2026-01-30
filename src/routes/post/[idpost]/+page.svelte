@@ -5,7 +5,7 @@
 	import type { Post } from '../../../types';
 	import PostCard from '@/components/PostCard.svelte';
 	import ModalEditar from '../../[perfil]/modalEditar.svelte';
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { updatePost } from '@/hooks/updatePost';
 	import { goto, invalidate } from '$app/navigation';
 	import Separator from '@/components/ui/separator/separator.svelte';
@@ -18,6 +18,14 @@
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
 	import { TamañoPantalla } from './TamañoPantalla.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
+	import Pen from '@lucide/svelte/icons/pen';
+	import Trash_2 from '@lucide/svelte/icons/trash-2';
+	import { Tooltip } from '@/components/ui/tooltip';
+	import TooltipTrigger from '@/components/ui/tooltip/tooltip-trigger.svelte';
+	import TooltipContent from '@/components/ui/tooltip/tooltip-content.svelte';
+	import { deletePost } from '@/hooks/deletePost';
+	import { flip } from 'svelte/animate';
+	import { obtenerRespuestasPorId } from '@/hooks/obtenerRespuestasPorId';
 
 	interface Prop {
 		data: {
@@ -29,7 +37,17 @@
 	let tamaño = new TamañoPantalla();
 
 	let { data }: Prop = $props();
-	// $inspect(data);
+
+	let respuestasPaginadas: Post[] = $state([]);
+	let pagerespuestas: number = $state(1);
+
+	let seguirMostrandoMostrarMás = $derived.by(() => {
+		if (data.post.repliesCount <= 20) return false;
+		if (respuestasPaginadas.length == 0) return true;
+		return data.respuestas.length + respuestasPaginadas.length < data.post.repliesCount;
+	});
+	// $inspect([respuestasPaginadas, seguirMostrandoMostrarMás]);
+
 	let postAModificar: Post | null = $state(null);
 
 	async function handleEditar(e: SubmitEvent) {
@@ -97,14 +115,36 @@
 		</div>
 
 		<div class="flex flex-col gap-2">
-			{#each data.respuestas as respuesta (respuesta.id)}
-				<!-- {#if tamaño.isMobile} -->
-				<!-- {#if true} -->
-				{@render Respuesta(respuesta)}
-				<!-- {:else} -->
-				<!-- <PostCard post={respuesta} bind:postAModificar update={() => invalidate('post:post')} /> -->
-				<!-- {/if} -->
+			{#each [...data.respuestas, ...respuestasPaginadas] as respuesta (respuesta.id)}
+				<div transition:fade animate:flip>
+					<!-- {#if tamaño.isMobile} -->
+					<!-- {#if true} -->
+					{@render Respuesta(respuesta)}
+					<!-- {:else} -->
+					<!-- <PostCard post={respuesta} bind:postAModificar update={() => invalidate('post:post')} /> -->
+					<!-- {/if} -->
+				</div>
 			{/each}
+			{#if seguirMostrandoMostrarMás}
+				<Button
+					variant="link"
+					onclick={async () => {
+						let ret = await obtenerRespuestasPorId(
+							data.post.id,
+							undefined,
+							undefined,
+							++pagerespuestas
+						);
+						if (ret == null) return;
+						if (typeof ret == 'string') return;
+						if (ret.length == 0) {
+							seguirMostrandoMostrarMás = false;
+							return;
+						}
+						respuestasPaginadas.push(...ret);
+					}}>Cargar Más Respuestas</Button
+				>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -134,11 +174,46 @@
 				<span class="text-sm font-semibold">@{post.authorName}</span>
 				<span class="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</span>
 			</div>
-			{#key $sesionStore?.accessToken}
-				<div class="flex gap-2">
-					<BotonSeguir {post} variant="icon-sm" />
-				</div>
-			{/key}
+			<div class="flex gap-2">
+				{#if $sesionStore?.username === post.authorName}
+					<Tooltip>
+						<TooltipTrigger>
+							<Button
+								variant="outline"
+								size="icon-sm"
+								onclick={() => {
+									postAModificar = post;
+								}}
+							>
+								<Pen />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>Editar</TooltipContent>
+					</Tooltip>
+					<Tooltip>
+						<TooltipTrigger>
+							<Button
+								variant="destructive"
+								size="icon-sm"
+								onclick={async () => {
+									await deletePost(
+										post,
+										() => {
+											invalidate('post:respuestas');
+										},
+										false,
+										''
+									);
+								}}
+							>
+								<Trash_2 />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>Borrar</TooltipContent>
+					</Tooltip>
+				{/if}
+				<BotonSeguir {post} variant="icon-sm" />
+			</div>
 		</div>
 		<p class=" mt-1 line-clamp-2 rounded-md p-2 text-lg">
 			{post.content}

@@ -2,7 +2,6 @@
 	import CardContent from '@/components/ui/card/card-content.svelte';
 	import Card from '@/components/ui/card/card.svelte';
 	import CardDescription from '@/components/ui/card/card-description.svelte';
-	import { page } from '$app/state';
 	import TablaUsuarios from '@/components/TablaUsuarios.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
 	import CardHeader from '@/components/ui/card/card-header.svelte';

@@ -5,9 +5,9 @@ import { sesionStore } from '@/stores/usuario';
 
 export async function updatePost(post: Post, callbackfn: Function, message: string) {
 	try {
-    const formData = new FormData();
-    formData.append("content", post.content);
-    formData.append("image", post.image||"");
+		const formData = new FormData();
+		formData.append('content', post.content);
+		formData.append('image', post.image || '');
 
 		const req = await fetch(get(apiBase) + `/api/posts/${post.id}`, {
 			method: 'PUT',
