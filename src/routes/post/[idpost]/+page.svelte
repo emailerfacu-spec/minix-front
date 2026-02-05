@@ -94,7 +94,7 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		{#if data.post}
-			<div class="sticky top-0 z-10 w-full rounded-xl bg-background p-2">
+			<div class="top-1 z-10 w-full rounded-xl bg-background p-2">
 				<PostCard post={data.post} bind:postAModificar update={() => invalidate('post:post')} />
 			</div>
 		{:else}
