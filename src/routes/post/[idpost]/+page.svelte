@@ -16,7 +16,6 @@
 	import { sesionStore } from '@/stores/usuario';
 	import { likePost } from '@/hooks/likePost';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
-	import { TamañoPantalla } from './TamañoPantalla.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
 	import Pen from '@lucide/svelte/icons/pen';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
@@ -26,6 +25,7 @@
 	import { deletePost } from '@/hooks/deletePost';
 	import { flip } from 'svelte/animate';
 	import { obtenerRespuestasPorId } from '@/hooks/obtenerRespuestasPorId';
+	import VolverArriba from '@/components/VolverArriba.svelte';
 
 	interface Prop {
 		data: {
@@ -33,8 +33,6 @@
 			respuestas: Post[];
 		};
 	}
-
-	let tamaño = new TamañoPantalla();
 
 	let { data }: Prop = $props();
 
@@ -153,6 +151,8 @@
 		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
+
+<VolverArriba />
 
 {#snippet Respuesta(post: Post)}
 	<div class="ml-2 flex-1">
