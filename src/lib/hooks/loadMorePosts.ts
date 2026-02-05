@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { page, loadingPosts, PAGE_SIZE } from '@/stores/posts';
+import { page, loadingPosts, PAGE_SIZE, resetPosts } from '@/stores/posts';
 import { appendPosts } from '@/stores/posts';
 import { getPosts } from './getPosts';
 
