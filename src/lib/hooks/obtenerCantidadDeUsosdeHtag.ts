@@ -9,7 +9,7 @@ export async function obtenerCantidadDeUsosdeHtag(htag: string, fetch2?: Functio
 		const req = await fetchFn(`${get(apiBase)}/api/posts/hashtag/${htag}`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				Authorization: `Bearer ${get(sesionStore)?.accessToken || ''}`
 			}
 		});
 		if (req.ok) {
