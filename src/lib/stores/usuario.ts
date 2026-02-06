@@ -61,7 +61,7 @@ if (browser) {
 				const user = auth.currentUser;
 
 				if (user) {
-					const token = await user.getIdToken(true);
+					const token = await user.getIdToken();
 					currentSesion.update((s) => {
 						if (s) {
 							return { ...s, accessToken: token };
@@ -72,6 +72,7 @@ if (browser) {
 				}
 			} catch (error) {
 				console.error('Error obteniendo token de Firebase:', error);
+				sesionStore.reset();
 				return false;
 			}
 		}
@@ -81,8 +82,14 @@ if (browser) {
 
 		const expirationTime = decoded.exp * 1000;
 		const currentTime = Date.now();
-		const timeUntilExpiration = expirationTime - currentTime;
 
+		// Si el token ya expiró, hacer reset
+		if (expirationTime < currentTime) {
+			sesionStore.reset();
+			return false;
+		}
+
+		const timeUntilExpiration = expirationTime - currentTime;
 		return timeUntilExpiration <= 60 * 1000; // 1 minuto
 	};
 
@@ -117,7 +124,7 @@ if (browser) {
 			}
 		} catch (error) {
 			console.error('Error refrescando token:', error);
-			currentSesion.set(null);
+			sesionStore.reset();
 		}
 	};
 
