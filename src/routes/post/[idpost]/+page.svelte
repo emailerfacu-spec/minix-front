@@ -103,10 +103,12 @@
 				</Content>
 			</Card>
 		{/if}
-		<div class="my-4">
-			<Separator></Separator>
-		</div>
-		<CrearPost placeholder={`Responder a @${data.post.authorName}`} parentPostId={data.post.id} />
+		{#if $sesionStore}
+			<div class="my-4">
+				<Separator></Separator>
+			</div>
+			<CrearPost placeholder={`Responder a @${data.post.authorName}`} parentPostId={data.post.id} />
+		{/if}
 
 		<div class="my-4">
 			<Separator></Separator>
@@ -211,8 +213,8 @@
 						</TooltipTrigger>
 						<TooltipContent>Borrar</TooltipContent>
 					</Tooltip>
+					<BotonSeguir {post} variant="icon-sm" />
 				{/if}
-				<BotonSeguir {post} variant="icon-sm" />
 			</div>
 		</div>
 		<p class=" mt-1 line-clamp-2 rounded-md p-2 text-lg">

@@ -15,7 +15,7 @@ export async function obtenerRespuestasPorId(
 		const req = await fetchFn(`${get(apiBase)}/api/posts/${id}/replies?page=${page}`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				Authorization: `Bearer ${get(sesionStore)?.accessToken || ''}`
 			}
 		});
 		if (req.ok) {

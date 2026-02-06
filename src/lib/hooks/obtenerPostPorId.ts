@@ -16,7 +16,7 @@ export async function obtenerPostPorId(
 		const req = await fetchFn(`${get(apiBase)}/api/posts/${idpost}`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				Authorization: `Bearer ${get(sesionStore)?.accessToken || ''}`
 			}
 		});
 		let data = await req.json();

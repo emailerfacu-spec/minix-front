@@ -29,6 +29,7 @@
 	let usu = $state({ displayName: data.displayName, bio: data.bio });
 
 	let contenido = $derived(() => {
+		if (data.bio == '') return '';
 		let t = data.bio
 			.replaceAll('&', '')
 			.replaceAll('<', '')
@@ -134,7 +135,7 @@
 			</h1>
 			{#if data.bio}
 				<p class="mt-4 rounded-4xl bg-accent p-4 text-center text-muted-foreground">
-					{@html usu.bio.replaceAll('\n', '<br>')}
+					{@html contenido()}
 				</p>
 			{/if}
 		{/if}
