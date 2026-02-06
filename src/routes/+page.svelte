@@ -20,7 +20,7 @@
 	let mensajeError = $state('');
 	let sentinel: HTMLDivElement;
 
-	$inspect($posts);
+	// $inspect($posts);
 
 	resetPosts();
 	$effect(() => {
