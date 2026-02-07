@@ -98,7 +98,7 @@
 		</div>
 	</div>
 </div>
-<div class="mt-6 flex items-center justify-center gap-4">
+<div class="mt-6 mb-12 flex items-center justify-center gap-4">
 	<button
 		class="rounded-md border bg-card p-2 hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
 		onclick={() => cargarPagina(currentPage - 1)}
