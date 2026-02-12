@@ -82,6 +82,7 @@
 			const sb = b[key].toString().toLowerCase();
 			return sortDirection === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
 		});
+		paginaActual = 1;
 	}
 
 	function getSortIcon(campo: SortKey) {
@@ -118,6 +119,7 @@
 		}
 
 		timeoutId = setTimeout(async () => {
+			paginaActual = 1;
 			if (search === '') {
 				usuariosFiltrados = usuarios;
 				return;
@@ -129,6 +131,15 @@
 			if (timeoutId) clearTimeout(timeoutId);
 		};
 	}
+	const ITEMS_POR_PAGINA = 5;
+
+	let paginaActual = $state(1);
+
+	const totalPaginas = $derived(Math.ceil(usuariosFiltrados.length / ITEMS_POR_PAGINA));
+
+	const usuariosPaginados = $derived(
+		usuariosFiltrados.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA)
+	);
 </script>
 
 <div class="mb-4 flex gap-2">
@@ -173,7 +184,7 @@
 					<p class="text-center">No hay usuarios por el nombre de: {search}</p>
 				</TableCell>
 			</TableRow>{:else}
-			{#each usuariosFiltrados as usuario}
+			{#each usuariosPaginados as usuario}
 				<TableRow>
 					<TableCell
 						>@<a href={'/' + usuario.username}>
@@ -241,6 +252,25 @@
 		{/if}
 	</TableBody>
 </Table>
+<div class="mt-4 flex items-center justify-between">
+	<p class="text-sm text-muted-foreground">
+		Página {paginaActual} de {totalPaginas}
+	</p>
+
+	<div class="flex gap-2">
+		<Button disabled={paginaActual === 1} onclick={() => paginaActual--} variant="secondary">
+			Anterior
+		</Button>
+
+		<Button
+			disabled={paginaActual === totalPaginas || totalPaginas === 0}
+			onclick={() => paginaActual++}
+			variant="secondary"
+		>
+			Siguiente
+		</Button>
+	</div>
+</div>
 <BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />
