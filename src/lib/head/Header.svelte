@@ -50,13 +50,13 @@
 <header class="border-b bg-background/95 backdrop-blur">
 	<div class="mx-4 ms-2 flex h-12 items-center justify-between">
 		<div class="flex items-center">
-			<a data-sveltekit-preload-data={false} href="/" class="mr-6 flex items-center space-x-2">
+			<button class="mr-6 flex items-center space-x-2" onclick={() => (window.location.href = '/')}>
 				<Avatar
 					class="h-8 w-8 transform rounded-sm! transition-transform duration-300 ease-in-out hover:scale-130 hover:rotate-12"
 				>
 					<AvatarImage src="/x.png" alt="minix" />
 				</Avatar>
-			</a>
+			</button>
 			<!-- <nav class="me-2 items-center space-x-6 text-sm font-medium md:flex">
 				<ButtonTheme />
 			</nav> -->

@@ -6,8 +6,12 @@
 	import FireBaseButton from '@/components/FireBaseButton.svelte';
 	import Card from '@/components/ui/card/card.svelte';
 	import CardContent from '@/components/ui/card/card-content.svelte';
+	import Dialog from '@/components/ui/dialog/dialog.svelte';
+	import DialogContent from '@/components/ui/dialog/dialog-content.svelte';
+	import Spinner from '@/components/ui/spinner/spinner.svelte';
 
 	let showAlert: boolean = $state(false);
+	let openload = $state(false);
 
 	$effect(() => {
 		resetAlert();
@@ -26,7 +30,7 @@
 		<SignupForm bind:showAlert />
 
 		<Card class="mt-2">
-			<CardContent>
+			<CardContent onclick={() => (openload = true)}>
 				<FireBaseButton mode="register" />
 			</CardContent>
 		</Card>
@@ -41,6 +45,14 @@
 		{/if}
 	</div>
 </div>
+
+{#if openload}
+	<Card class="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+		<CardContent class="flex w-fit items-center justify-center p-8">
+			<Spinner class="size-11" />
+		</CardContent>
+	</Card>
+{/if}
 
 <svelte:head>
 	<meta property="og:title" content="Mini-x" />

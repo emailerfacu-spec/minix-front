@@ -2,14 +2,18 @@ import { apiBase } from '@/stores/url';
 import { sesionStore } from '@/stores/usuario';
 import { get } from 'svelte/store';
 
-export async function obtenerCantidadDeUsosdeHtag(htag: string, fetch2?: Function) {
+export async function obtenerCantidadDeUsosdeHtag(
+	htag: string, 
+	fetch2?: Function, 
+	page: number = 1, 
+	limit: number = 20,) {
 	if (!htag) return null;
 	const fetchFn = fetch2 || fetch;
 	try {
-		const req = await fetchFn(`${get(apiBase)}/api/posts/hashtag/${htag}`, {
+		const req = await fetchFn(`${get(apiBase)}/api/posts/hashtag/${htag}?page=${page}&pageSize=${limit}`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${get(sesionStore)?.accessToken}`
+				Authorization: `Bearer ${get(sesionStore)?.accessToken || ''}`
 			}
 		});
 		if (req.ok) {

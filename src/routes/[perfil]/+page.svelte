@@ -54,7 +54,7 @@
 				`${$apiBase}/api/posts/user/${params.perfil}?page=${pageNumber}&pageSize=20`,
 				{
 					headers: {
-						Authorization: `Bearer ${$sesionStore?.accessToken}`
+						Authorization: `Bearer ${$sesionStore?.accessToken || ''}`
 					}
 				}
 			);

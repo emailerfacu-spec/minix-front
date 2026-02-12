@@ -20,6 +20,8 @@
 	let mensajeError = $state('');
 	let sentinel: HTMLDivElement;
 
+	// $inspect($posts);
+
 	resetPosts();
 	$effect(() => {
 		loadMorePosts();
@@ -78,17 +80,11 @@
 			{/if}
 			<hr />
 
-			{#if $posts.length === 0 && $loadingPosts}
+			{#if $posts === null || $posts.length === 0}
 				<Card>
 					<Content class="flex items-center justify-center gap-2">
 						<Spinner class="h-10 w-10" />
 						<p>Cargando</p>
-					</Content>
-				</Card>
-			{:else if $posts.length === 0}
-				<Card>
-					<Content>
-						<p class="text-center leading-7">No hay Posts que mostrar</p>
 					</Content>
 				</Card>
 			{:else}
@@ -101,7 +97,7 @@
 		</div>
 		<div bind:this={sentinel} class="h-1"></div>
 
-		{#if $loadingPosts && $posts.length > 0}
+		{#if $loadingPosts && $posts!.length > 0}
 			<div class="flex justify-center py-4">
 				<Spinner />
 			</div>

@@ -33,10 +33,12 @@
 
 	interface Props {
 		usuarios: UserResponseDto[];
+		hayMas: boolean;
 	}
 
-	let { usuarios = $bindable() }: Props = $props();
+	let { usuarios = $bindable(), hayMas }: Props = $props();
 
+	let hayMass = $state(hayMas);
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
 	let openDarAdmin = $state(false);
@@ -82,6 +84,7 @@
 			const sb = b[key].toString().toLowerCase();
 			return sortDirection === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
 		});
+		paginaActual = 1;
 	}
 
 	function getSortIcon(campo: SortKey) {
@@ -111,7 +114,6 @@
 
 	// $inspect(usuarios);
 	let timeoutId: ReturnType<typeof setTimeout> | number | undefined;
-
 	function buscarUsuarios() {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
@@ -119,16 +121,24 @@
 
 		timeoutId = setTimeout(async () => {
 			if (search === '') {
-				usuariosFiltrados = usuarios;
-				return;
+				search = '';
 			}
-			usuariosFiltrados = await busquedaAdminUsuarios(search);
+			let ret = await busquedaAdminUsuarios(search, ITEMS_POR_PAGINA, paginaActual);
+			usuariosFiltrados = ret.usuarios;
+			hayMass = ret.hayMas;
 		}, 200);
 
 		return () => {
 			if (timeoutId) clearTimeout(timeoutId);
 		};
 	}
+	const ITEMS_POR_PAGINA = 5;
+
+	let paginaActual = $state(1);
+
+	// const usuariosPaginados = $derived(
+	// 	usuariosFiltrados.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA)
+	// );
 </script>
 
 <div class="mb-4 flex gap-2">
@@ -241,6 +251,27 @@
 		{/if}
 	</TableBody>
 </Table>
+<div class="mt-4 flex items-center justify-between">
+	<Button
+		disabled={paginaActual === 1}
+		onclick={() => {
+			paginaActual--;
+			buscarUsuarios();
+		}}
+		variant="secondary"
+	>
+		Anterior
+	</Button>
+
+	<Button
+		disabled={!hayMass}
+		onclick={() => {
+			paginaActual++;
+			buscarUsuarios();
+		}}
+		variant="secondary">Siguiente</Button
+	>
+</div>
 <BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
 <ModificarUsuario bind:open={openModificarUsuario} bind:usuario={usuarioModificar} />

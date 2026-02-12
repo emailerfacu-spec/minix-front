@@ -10,6 +10,26 @@
 	import { updatePost } from '@/hooks/updatePost';
 	import Separator from '@/components/ui/separator/separator.svelte';
 	import { page } from '$app/state';
+	import { obtenerCantidadDeUsosdeHtag } from '@/hooks/obtenerCantidadDeUsosdeHtag';
+
+	let currentPage = $state(1);
+	let loading = $state(false);
+
+	async function cargarPagina(pageNumber: number) {
+		loading = true;
+		const res = await obtenerCantidadDeUsosdeHtag(
+			data.htag,
+			fetch,
+			pageNumber,
+			20
+		);
+
+		if (res) {
+			setPosts(res.response);
+			currentPage = pageNumber;
+		}
+		loading = false;
+	}
 
 	interface props {
 		data: {
@@ -77,6 +97,27 @@
 			{/each}
 		</div>
 	</div>
+</div>
+<div class="mt-6 mb-12 flex items-center justify-center gap-4">
+	<button
+		class="rounded-md border bg-card p-2 hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+		onclick={() => cargarPagina(currentPage - 1)}
+		disabled={currentPage === 1 || loading}
+	>
+		Anterior
+	</button>
+
+	<span class="text-sm font-semibold">
+		Página {currentPage}
+	</span>
+
+	<button
+		class="rounded-md border bg-card p-2 hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+		onclick={() => cargarPagina(currentPage + 1)}
+		disabled={loading || (postsfiltro?.length ?? 0) < 20}
+	>
+		Siguiente
+	</button>
 </div>
 {#if postAModificar}
 	<div in:fade>

@@ -10,6 +10,7 @@
 	interface Prop {
 		data: {
 			usuarios?: UserResponseDto[];
+			hayMas: boolean;
 			error: boolean;
 		};
 	}
@@ -31,7 +32,7 @@
 				{#if data.usuarios?.length === 0}
 					<CardDescription>No hay usuarios que mostar</CardDescription>
 				{:else}
-					<TablaUsuarios usuarios={data.usuarios || []}></TablaUsuarios>
+					<TablaUsuarios usuarios={data.usuarios || []} hayMas={data.hayMas}></TablaUsuarios>
 				{/if}
 			</CardContent>
 		</Card>

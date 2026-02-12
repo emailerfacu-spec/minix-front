@@ -16,7 +16,6 @@
 	import { sesionStore } from '@/stores/usuario';
 	import { likePost } from '@/hooks/likePost';
 	import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
-	import { TamañoPantalla } from './TamañoPantalla.svelte';
 	import BotonSeguir from '@/components/BotonSeguir.svelte';
 	import Pen from '@lucide/svelte/icons/pen';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
@@ -26,6 +25,7 @@
 	import { deletePost } from '@/hooks/deletePost';
 	import { flip } from 'svelte/animate';
 	import { obtenerRespuestasPorId } from '@/hooks/obtenerRespuestasPorId';
+	import VolverArriba from '@/components/VolverArriba.svelte';
 
 	interface Prop {
 		data: {
@@ -33,8 +33,6 @@
 			respuestas: Post[];
 		};
 	}
-
-	let tamaño = new TamañoPantalla();
 
 	let { data }: Prop = $props();
 
@@ -94,7 +92,7 @@
 <div class="flex min-h-fit w-full items-center justify-center p-6 md:p-10">
 	<div class="w-full max-w-6xl">
 		{#if data.post}
-			<div class="sticky top-0 z-10 w-full rounded-xl bg-background p-2">
+			<div class="top-1 z-10 w-full rounded-xl bg-background p-2">
 				<PostCard post={data.post} bind:postAModificar update={() => invalidate('post:post')} />
 			</div>
 		{:else}
@@ -105,10 +103,12 @@
 				</Content>
 			</Card>
 		{/if}
-		<div class="my-4">
-			<Separator></Separator>
-		</div>
-		<CrearPost placeholder={`Responder a @${data.post.authorName}`} parentPostId={data.post.id} />
+		{#if $sesionStore}
+			<div class="my-4">
+				<Separator></Separator>
+			</div>
+			<CrearPost placeholder={`Responder a @${data.post.authorName}`} parentPostId={data.post.id} />
+		{/if}
 
 		<div class="my-4">
 			<Separator></Separator>
@@ -153,6 +153,8 @@
 		<ModalEditar callbackfn={handleEditar} bind:post={postAModificar} />
 	</div>
 {/if}
+
+<VolverArriba />
 
 {#snippet Respuesta(post: Post)}
 	<div class="ml-2 flex-1">
@@ -211,8 +213,8 @@
 						</TooltipTrigger>
 						<TooltipContent>Borrar</TooltipContent>
 					</Tooltip>
+					<BotonSeguir {post} variant="icon-sm" />
 				{/if}
-				<BotonSeguir {post} variant="icon-sm" />
 			</div>
 		</div>
 		<p class=" mt-1 line-clamp-2 rounded-md p-2 text-lg">
