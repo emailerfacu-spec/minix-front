@@ -33,10 +33,12 @@
 
 	interface Props {
 		usuarios: UserResponseDto[];
+		hayMas: boolean;
 	}
 
-	let { usuarios = $bindable() }: Props = $props();
+	let { usuarios = $bindable(), hayMas }: Props = $props();
 
+	let hayMass = $state(hayMas);
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
 	let openDarAdmin = $state(false);
@@ -112,19 +114,18 @@
 
 	// $inspect(usuarios);
 	let timeoutId: ReturnType<typeof setTimeout> | number | undefined;
-
 	function buscarUsuarios() {
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 		}
 
 		timeoutId = setTimeout(async () => {
-			paginaActual = 1;
 			if (search === '') {
-				usuariosFiltrados = usuarios;
-				return;
+				search = '';
 			}
-			usuariosFiltrados = await busquedaAdminUsuarios(search);
+			let ret = await busquedaAdminUsuarios(search, ITEMS_POR_PAGINA, paginaActual);
+			usuariosFiltrados = ret.usuarios;
+			hayMass = ret.hayMas;
 		}, 200);
 
 		return () => {
@@ -135,11 +136,9 @@
 
 	let paginaActual = $state(1);
 
-	const totalPaginas = $derived(Math.ceil(usuariosFiltrados.length / ITEMS_POR_PAGINA));
-
-	const usuariosPaginados = $derived(
-		usuariosFiltrados.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA)
-	);
+	// const usuariosPaginados = $derived(
+	// 	usuariosFiltrados.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA)
+	// );
 </script>
 
 <div class="mb-4 flex gap-2">
@@ -184,7 +183,7 @@
 					<p class="text-center">No hay usuarios por el nombre de: {search}</p>
 				</TableCell>
 			</TableRow>{:else}
-			{#each usuariosPaginados as usuario}
+			{#each usuariosFiltrados as usuario}
 				<TableRow>
 					<TableCell
 						>@<a href={'/' + usuario.username}>
@@ -253,23 +252,25 @@
 	</TableBody>
 </Table>
 <div class="mt-4 flex items-center justify-between">
-	<p class="text-sm text-muted-foreground">
-		Página {paginaActual} de {totalPaginas}
-	</p>
+	<Button
+		disabled={paginaActual === 1}
+		onclick={() => {
+			paginaActual--;
+			buscarUsuarios();
+		}}
+		variant="secondary"
+	>
+		Anterior
+	</Button>
 
-	<div class="flex gap-2">
-		<Button disabled={paginaActual === 1} onclick={() => paginaActual--} variant="secondary">
-			Anterior
-		</Button>
-
-		<Button
-			disabled={paginaActual === totalPaginas || totalPaginas === 0}
-			onclick={() => paginaActual++}
-			variant="secondary"
-		>
-			Siguiente
-		</Button>
-	</div>
+	<Button
+		disabled={!hayMass}
+		onclick={() => {
+			paginaActual++;
+			buscarUsuarios();
+		}}
+		variant="secondary">Siguiente</Button
+	>
 </div>
 <BorrarUsuario bind:open={openBorrar} usuario={usuarioBorrar} />
 <RecuperarContraseña bind:open usuario={usuarioCambioPass} />
