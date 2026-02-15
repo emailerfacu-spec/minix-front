@@ -16,12 +16,7 @@
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import RecuperarContraseña from './admin/RecuperarContraseña.svelte';
-	import { Dialog } from './ui/dialog';
-	import DialogContent from './ui/dialog/dialog-content.svelte';
 	import ModificarUsuario from './admin/ModificarUsuario.svelte';
-	import { fade } from 'svelte/transition';
-	import type { Unsubscriber } from 'svelte/store';
-	import Input from './ui/input/input.svelte';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
 	import BorrarUsuario from './BorrarUsuario.svelte';
 	import InputGroup from './ui/input-group/input-group.svelte';
