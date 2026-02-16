@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CardContent from '@/components/ui/card/card-content.svelte';
 	import Card from '@/components/ui/card/card.svelte';
-	import CardDescription from '@/components/ui/card/card-description.svelte';
 	import TablaUsuarios from '@/components/TablaUsuarios.svelte';
 	import CardTitle from '@/components/ui/card/card-title.svelte';
 	import CardHeader from '@/components/ui/card/card-header.svelte';
@@ -9,7 +8,7 @@
 
 	interface Prop {
 		data: {
-			usuarios?: UserResponseDto[];
+			usuarios: UserResponseDto[];
 			hayMas: boolean;
 			error: boolean;
 		};
@@ -29,11 +28,7 @@
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				{#if data.usuarios?.length === 0}
-					<CardDescription>No hay usuarios que mostar</CardDescription>
-				{:else}
-					<TablaUsuarios usuarios={data.usuarios || []} hayMas={data.hayMas}></TablaUsuarios>
-				{/if}
+				<TablaUsuarios usuarios={data.usuarios} hayMas={data.hayMas}></TablaUsuarios>
 			</CardContent>
 		</Card>
 	</div>

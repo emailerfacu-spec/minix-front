@@ -2,9 +2,10 @@ import { apiBase } from '@/stores/url';
 import { sesionStore } from '@/stores/usuario';
 import { get } from 'svelte/store';
 
-export async function busquedaAdminUsuarios(q: string, limit = 5, page = 1) {
+export async function busquedaAdminUsuarios(q: string, limit = 5, page = 1, fetch2?: Function) {
 	try {
-		const response = await fetch(
+		const fetchFn = fetch2 ? fetch2 : fetch;
+		const response = await fetchFn(
 			get(apiBase) +
 				`/api/admin/users${q ? `?q=${q}` : ''}${q ? '&' : '?'}page=${page}&pageSize=${limit}`,
 			{

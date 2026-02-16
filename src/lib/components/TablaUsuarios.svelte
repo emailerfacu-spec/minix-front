@@ -16,12 +16,7 @@
 	import TooltipTrigger from './ui/tooltip/tooltip-trigger.svelte';
 	import TooltipContent from './ui/tooltip/tooltip-content.svelte';
 	import RecuperarContraseña from './admin/RecuperarContraseña.svelte';
-	import { Dialog } from './ui/dialog';
-	import DialogContent from './ui/dialog/dialog-content.svelte';
 	import ModificarUsuario from './admin/ModificarUsuario.svelte';
-	import { fade } from 'svelte/transition';
-	import type { Unsubscriber } from 'svelte/store';
-	import Input from './ui/input/input.svelte';
 	import Trash_2 from '@lucide/svelte/icons/trash-2';
 	import BorrarUsuario from './BorrarUsuario.svelte';
 	import InputGroup from './ui/input-group/input-group.svelte';
@@ -30,6 +25,7 @@
 	import AgregarUsuario from './admin/AgregarUsuario.svelte';
 	import DarAdmin from './admin/DarAdmin.svelte';
 	import { busquedaAdminUsuarios } from '@/hooks/busquedaAdminUsuarios';
+	import { invalidate, replaceState } from '$app/navigation';
 
 	interface Props {
 		usuarios: UserResponseDto[];
@@ -38,7 +34,17 @@
 
 	let { usuarios = $bindable(), hayMas }: Props = $props();
 
-	let hayMass = $state(hayMas);
+	let paginaActual = $derived.by(() => {
+		const url = new URL(window.location.href);
+		return Number(url.searchParams.get('p')) || 1;
+	});
+	let search = $derived.by(() => {
+		const url = new URL(window.location.href);
+		let ret = url.searchParams.get('q') || '';
+		return ret;
+	});
+	let hayMass = $derived(hayMas);
+
 	let open = $state(false);
 	let openModificarUsuario = $state(false);
 	let openDarAdmin = $state(false);
@@ -50,13 +56,11 @@
 	let usuarioModificar: UserResponseDto | null = $state(null);
 	let usuarioDarAdmin: UserResponseDto | null = $state(null);
 
-	let search = $state('');
-
 	type SortKey = 'username' | 'displayName' | 'postsCount' | 'createdAt';
 	let sortBy = $state<SortKey | null>(null);
 	let sortDirection = $state<'asc' | 'desc'>('asc');
 
-	let usuariosFiltrados = $state(usuarios);
+	let usuariosFiltrados = $derived(usuarios);
 
 	function ordenarPor(campo: SortKey) {
 		if (sortBy === campo) {
@@ -100,11 +104,17 @@
 		}
 
 		timeoutId = setTimeout(async () => {
-			if (search === '') {
-				search = '';
+			const url = new URL(window.location.href);
+			if (!search.trim()) {
+				url.searchParams.delete('q');
+			} else {
+				url.searchParams.set('q', search);
 			}
+			replaceState(url, {});
+
 			let ret = await busquedaAdminUsuarios(search, ITEMS_POR_PAGINA, paginaActual);
 			usuariosFiltrados = ret.usuarios;
+			// invalidate('admin:load');
 			hayMass = ret.hayMas;
 		}, 200);
 
@@ -113,8 +123,6 @@
 		};
 	}
 	const ITEMS_POR_PAGINA = 5;
-
-	let paginaActual = $state(1);
 
 	// const usuariosPaginados = $derived(
 	// 	usuariosFiltrados.slice((paginaActual - 1) * ITEMS_POR_PAGINA, paginaActual * ITEMS_POR_PAGINA)
@@ -250,7 +258,9 @@
 	<Button
 		disabled={paginaActual === 1}
 		onclick={() => {
-			paginaActual--;
+			const url = new URL(window.location.href);
+			url.searchParams.set('p', String(--paginaActual));
+			replaceState(url, {});
 			buscarUsuarios();
 		}}
 		variant="secondary"
@@ -261,7 +271,9 @@
 	<Button
 		disabled={!hayMass}
 		onclick={() => {
-			paginaActual++;
+			const url = new URL(window.location.href);
+			url.searchParams.set('p', String(++paginaActual));
+			replaceState(url, {});
 			buscarUsuarios();
 		}}
 		variant="secondary">Siguiente</Button
