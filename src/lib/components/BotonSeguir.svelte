@@ -11,7 +11,7 @@
 	import { seguirUsuario } from '@/hooks/seguirUsuario';
 	import type { Post } from '../../types';
 	import CardError from './CardError.svelte';
-	import { cacheSeguidos } from '@/stores/cacheSeguidos.svelte';
+	import { cacheSeguidos } from '@/stores/cacheSeguidos.js';
 
 	let {
 		post,
@@ -41,16 +41,13 @@
 	});
 
 	async function cargarSeguido() {
-		let a = cacheSeguidos.get(post.authorId);
-		if (a === undefined) {
-			const seguidoStatus = await esSeguido(post as Post);
-			if (seguidoStatus) {
-				cacheSeguidos.set(post.authorId, seguidoStatus.isFollowing || false);
-				seguido = seguidoStatus.isFollowing || false;
+		seguido = await cacheSeguidos.getOrFetch(
+			post.authorId,
+			async () => {
+				const seguidoStatus = await esSeguido(post as Post);
+				return seguidoStatus?.isFollowing || false;
 			}
-			return;
-		}
-		seguido = a;
+		);
 	}
 
 	let mensajeError: string | null = $state(null);

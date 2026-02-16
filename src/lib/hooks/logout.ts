@@ -1,5 +1,5 @@
 import { goto } from '$app/navigation';
-import { cacheSeguidos } from '@/stores/cacheSeguidos.svelte';
+import { cacheSeguidos } from '@/stores/cacheSeguidos';
 import { apiBase } from '@/stores/url';
 import { sesionStore } from '@/stores/usuario';
 import { get } from 'svelte/store';

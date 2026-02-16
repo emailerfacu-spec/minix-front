@@ -92,26 +92,6 @@
 		return sortDirection === 'asc' ? '↑' : '↓';
 	}
 
-	function handleCambiarContraseña(usuario: UserResponseDto) {
-		open = true;
-		usuarioCambioPass = usuario;
-	}
-
-	function handleModificar(usuario: UserResponseDto) {
-		openModificarUsuario = true;
-		usuarioModificar = usuario;
-	}
-
-	function handleBorrar(usuario: UserResponseDto) {
-		openBorrar = true;
-		usuarioBorrar = usuario;
-	}
-
-	function handleDarAdmin(usuario: UserResponseDto) {
-		openDarAdmin = true;
-		usuarioDarAdmin = usuario;
-	}
-
 	// $inspect(usuarios);
 	let timeoutId: ReturnType<typeof setTimeout> | number | undefined;
 	function buscarUsuarios() {
@@ -196,7 +176,11 @@
 					<TableCell class="flex gap-2">
 						<Tooltip>
 							<TooltipTrigger>
-								<Button onclick={() => handleCambiarContraseña(usuario)}><KeyIcon></KeyIcon></Button
+								<Button
+									onclick={() => {
+										open = true;
+										usuarioCambioPass = usuario;
+									}}><KeyIcon></KeyIcon></Button
 								>
 							</TooltipTrigger>
 							<TooltipContent>
@@ -205,7 +189,12 @@
 						</Tooltip>
 						<Tooltip>
 							<TooltipTrigger>
-								<Button onclick={() => handleModificar(usuario)}><UserPen /></Button>
+								<Button
+									onclick={() => {
+										openModificarUsuario = true;
+										usuarioModificar = usuario;
+									}}><UserPen /></Button
+								>
 							</TooltipTrigger>
 							<TooltipContent>
 								<p>Modificar Usuario</p>
@@ -215,7 +204,10 @@
 							<TooltipTrigger>
 								<Button
 									disabled={usuario.isAdmin}
-									onclick={() => handleBorrar(usuario)}
+									onclick={() => {
+										openBorrar = true;
+										usuarioBorrar = usuario;
+									}}
 									variant="destructive"><Trash_2 /></Button
 								>
 							</TooltipTrigger>
@@ -231,7 +223,10 @@
 						<Tooltip>
 							<TooltipTrigger>
 								<Button
-									onclick={() => handleDarAdmin(usuario)}
+									onclick={() => {
+										openDarAdmin = true;
+										usuarioDarAdmin = usuario;
+									}}
 									variant={usuario.isAdmin ? 'destructive' : 'default'}
 								>
 									<Shield />
