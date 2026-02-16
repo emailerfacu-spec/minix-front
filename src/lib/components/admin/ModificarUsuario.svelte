@@ -10,6 +10,7 @@
 	import Label from '../ui/label/label.svelte';
 	import Spinner from '../ui/spinner/spinner.svelte';
 	import { updateUsuario } from '@/hooks/updateUsuario';
+	import { invalidate } from '$app/navigation';
 
 	interface Prop {
 		open: boolean;
@@ -38,6 +39,7 @@
 			error = ret;
 		} else {
 			usuario!.displayName = ret.displayName;
+			invalidate('admin:load');
 			open = false;
 		}
 		cargando = false;
