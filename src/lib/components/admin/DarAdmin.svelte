@@ -30,13 +30,7 @@
 		}}
 	>
 		<DialogContent>
-			<div
-				class={esExitoso
-					? 'rounded border border-green-400 bg-green-100/10 px-4 py-3 text-green-700'
-					: 'rounded border border-red-400 bg-red-100/10 px-4 py-3 text-red-700'}
-			>
-				{mensajeResultado}
-			</div>
+			{mensajeResultado}
 		</DialogContent>
 	</Dialog>
 {/if}
